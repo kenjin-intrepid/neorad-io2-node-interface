@@ -2,3 +2,6 @@
 .idea/
 node_modules/
 build/
+dist/
+cmake-build-debug/
+!/build/Release/
