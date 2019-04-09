@@ -37,7 +37,7 @@ app.on('ready', function() {
         title: "Data logger",
         backgroundColor: "#a09ea1",
         webPreferences: {
-            devTools:false
+            // devTools:false
         }
     });
 
@@ -45,7 +45,7 @@ app.on('ready', function() {
     loadMain("canvas");
 
     // Open the DevTools.
-    // mainWindow.webContents.openDevTools();
+    mainWindow.webContents.openDevTools();
 
     mainWindow.on('closed', () => {
         mainWindow = null;
