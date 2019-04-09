@@ -111,7 +111,7 @@ input
 {
     background: black;
 }
-.theme-black-bg label, .theme-black-bg td, .theme-black-bg #ma_info, .theme-black-bg .ma_graph_sidebar_bg .ma_graph_sidebar_nav_title
+.theme-black-bg label, .theme-black-bg td, .theme-black-bg #ma_info, .theme-black-bg .ma_graph_sidebar_bg .ma_graph_sidebar_nav_title, .theme-black-bg input::placeholder
 {
     color: white;
 }

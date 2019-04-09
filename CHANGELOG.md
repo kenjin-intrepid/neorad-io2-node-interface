@@ -99,7 +99,17 @@
 ###v1.4.12
 
 #####changed
-1. changed some element colors in dark theme
-2. changed calibration buttons to slide buttons to make it clear
-3. reverted auto save in interactive calibration. Only user input would cal data be saved. Store would now work in Interactive mode.
-4. changed how auto fill works. 
+1. Changed some element colors in dark theme
+2. Changed calibration buttons to slide buttons to make it clear
+3. Reverted auto save in interactive calibration. Only user input would cal data be saved. Store would now work in Interactive mode.
+4. Changed how auto fill works. 
+
+###v1.4.13
+
+#####changed
+1. CAN type will be determined by the settings of the first bank if available
+2. Using upper case for hex values in CAN settings.
+3. electron@4.1.4
+
+#####fixed
+1. auto fill now takes hex numbers. Decimal will be converted to hex, hex will still be hex.
