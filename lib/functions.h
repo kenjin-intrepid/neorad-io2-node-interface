@@ -184,16 +184,8 @@ void neoRADIO2returnDataJSON(neoRADIO2_DeviceInfo * deviceInfo, nlohmann::json *
 
     for(int i = 0; i <= deviceInfo->LastDevice; i++)
     {
-        for(int j = 0; j < 8; j++)
-        {
-            if(deviceInfo->ChainList[i][j].serialNumber != 0 )
-            {
-                concatenateI = device + std::to_string(i);
-                concatenateJ = channel + std::to_string(j);
-                (*returnData)["chainlist"][concatenateI][concatenateJ]["settingsEnables"] = deviceInfo->ChainList[i][j].settings.config.channel_1_config;
-                (*returnData)["chainlist"][concatenateI][concatenateJ]["deviceType"] = deviceInfo->ChainList[i][j].deviceType;
-            }
-        }
+        concatenateI = device + std::to_string(i);
+        (*returnData)["chainlist"][concatenateI]["deviceType"] = deviceInfo->ChainList[i][0].deviceType;
     }
 
     (*returnData)["State"] = deviceInfo->State;
