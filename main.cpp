@@ -29,12 +29,12 @@ class Sensor : public DataWorker
             CalReadSettings = 6,
             CalSendSettings = 7,
             ClearCal = 8,
-            SetPwrRly = 9
+            SetPwrRly = 9,
+            SetAout = 10
         };
         std::string device = "device";
         std::string channel = "channel";
-        std::string concatenateI,concatenateJ;
-        std::string messageName, messageData;
+        std::string concatenateI, concatenateJ, messageName, messageData;
         bool deviceConnected = true;
         int neoRADIO2_state = DeviceIdle;
         int result, Devices;
@@ -78,6 +78,10 @@ class Sensor : public DataWorker
                 else if(messageName == "SetPwrRly")
                 {
                     neoRADIO2_state = SetPwrRly;
+                }
+                else if(messageName == "SetAout")
+                {
+                    neoRADIO2_state = SetAout;
                 }
             }
 
@@ -206,6 +210,9 @@ class Sensor : public DataWorker
                             neoRADIO2ProcessIncomingData(&deviceInfo, 1000);
                         }
                         std::this_thread::sleep_for(std::chrono::milliseconds(200));
+
+                        CusMessage toSend("settings_reply_count", std::to_string(returnValue));
+                        writeToNode(progress, toSend);
 
                         if(returnValue == -1)
                         {
@@ -356,6 +363,19 @@ class Sensor : public DataWorker
                     if(result == 0)
                     {
                         int returnValue = neoRADIO2SetPwrRly(&deviceInfo, &messageData);
+                        neoRADIO2_state = DeviceIdle;
+                    }
+                }
+                    break;
+
+                case SetAout:
+                {
+                    if(result == 0)
+                    {
+                        json reload;
+                        reload = neoRADIO2SetAoutValue(&deviceInfo, &messageData);
+                        CusMessage toSend("settings_reply", reload.dump());
+                        writeToNode(progress, toSend);
                         neoRADIO2_state = DeviceIdle;
                     }
                 }

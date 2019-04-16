@@ -103,6 +103,11 @@ input
     background-color: black!important;
     color: white;
 }
+.theme-black-bg .ma_device_wrap
+{
+    -webkit-box-shadow: 0 0 10px 10px #7a7a7a;
+    margin: 50px 0;
+}
 .theme-black-bg table
 {
     -webkit-box-shadow: 0 0 0 0;
@@ -290,7 +295,7 @@ input[type=number]::-webkit-outer-spin-button {
 }
 .neorad_temp
 {
-    height: auto;
+    height: 2.5rem;
     line-height: 2.5rem;
 }
 .neorad_rly_input
@@ -332,7 +337,6 @@ input[type=number]::-webkit-outer-spin-button {
     height: 41px;
     -webkit-appearance: none;
 }
-
 
 /*settings tab main page*/
 .ma_settings
@@ -550,10 +554,44 @@ i:hover .tooltip_text
     {
         line-height: 2rem;
     }
-
     .flex_no_align
     {
         font-size: 0.9rem;
+    }
+    .input_selector_text
+    {
+        height: 32px;
+        line-height: 32px;
+        text-indent: 8px;
+    }
+    .input_selector_bg
+    {
+        width: 61px;
+        height: 31px;
+    }
+    .input_selector
+    {
+        width: 33px;
+        height: 33px;
+    }
+}
+@media only screen and (max-width: 1400px)
+{
+    .input_selector_text
+    {
+        height: 26px;
+        line-height: 26px;
+        text-indent: 7px;
+    }
+    .input_selector_bg
+    {
+        width: 49px;
+        height: 25px;
+    }
+    .input_selector
+    {
+        width: 27px;
+        height: 27px;
     }
 }
 @media only screen and (max-width: 1200px)
@@ -581,6 +619,5 @@ i:hover .tooltip_text
     .btn
     {
         font-size: 0.8rem;
-
     }
 }

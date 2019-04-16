@@ -109,7 +109,22 @@
 #####changed
 1. CAN type will be determined by the settings of the first bank if available
 2. Using upper case for hex values in CAN settings.
-3. electron@4.1.4
+3. Electron@4.1.4
 
 #####fixed
-1. auto fill now takes hex numbers. Decimal will be converted to hex, hex will still be hex.
+1. Auto fill now takes hex numbers. Decimal will be converted to hex, hex will still be hex.
+
+###v1.4.14 & v1.4.14a
+
+#####changed
+1. Added progress status when saving device settings.
+2. Improved performance for pwrrly status change when device online.
+3. Improved UI for dark theme when multiple device displayed.
+4. Increased performance for more than 1 device connected.
+5. jQuery@3.4.0, electron-builder@20.40.2
+
+#####fixed
+1. Fixed pwrrly not working when in chain as secondary device.
+2. Fixed incorrect text description in settings and locale.
+
+TODO: Fix calibration tab perfomance issue & global data holder performance.
