@@ -127,4 +127,10 @@
 1. Fixed pwrrly not working when in chain as secondary device.
 2. Fixed incorrect text description in settings and locale.
 
-TODO: Fix calibration tab perfomance issue & global data holder performance.
+###v1.4.15
+
+#####changed
+1. Minor performance updates.
+
+#####added
+1. Added AOUT functionality

@@ -372,10 +372,7 @@ class Sensor : public DataWorker
                 {
                     if(result == 0)
                     {
-                        json reload;
-                        reload = neoRADIO2SetAoutValue(&deviceInfo, &messageData);
-                        CusMessage toSend("settings_reply", reload.dump());
-                        writeToNode(progress, toSend);
+                        neoRADIO2SetAoutValue(&deviceInfo, &messageData);
                         neoRADIO2_state = DeviceIdle;
                     }
                 }
