@@ -742,10 +742,10 @@ void neoRADIO2SetAoutValue(neoRADIO2_DeviceInfo * deviceInfo, std::string * mess
         uint8_t settingsDeviceNumber = settingsData["deviceLink"].get<unsigned int>();
         auto settingsExtraArray = settingsData["extraSettings"].get<std::vector<unsigned int>>();
 
-        uint16_t setbuf[3] = {0};
-        setbuf[0] = settingsExtraArray[0];
-        setbuf[1] = settingsExtraArray[1];
-        setbuf[2] = settingsExtraArray[2];
+        uint16_t channel1 = 0, channel2 = 0, channel3 = 0;
+        channel1 = settingsExtraArray[0];
+        channel2 = settingsExtraArray[1];
+        channel3 = settingsExtraArray[2];
 
         neoRADIO2AOUT_header aout_header = {0};
         uint8_t  txbuf[7] = {0};
@@ -755,12 +755,12 @@ void neoRADIO2SetAoutValue(neoRADIO2_DeviceInfo * deviceInfo, std::string * mess
         aout_header.bits.ch3 = 1;
 
         txbuf[0] = aout_header.byte;
-        txbuf[1] = static_cast<uint8_t>(setbuf[0] >> 8);
-        txbuf[2] = static_cast<uint8_t>(setbuf[0]);
-        txbuf[3] = static_cast<uint8_t>(setbuf[1] >> 8);
-        txbuf[4] = static_cast<uint8_t>(setbuf[1]);
-        txbuf[5] = static_cast<uint8_t>(setbuf[2] >> 8);
-        txbuf[6] = static_cast<uint8_t>(setbuf[2]);
+        txbuf[1] = static_cast<uint8_t>(channel1 >> 8);
+        txbuf[2] = static_cast<uint8_t>(channel1);
+        txbuf[3] = static_cast<uint8_t>(channel2 >> 8);
+        txbuf[4] = static_cast<uint8_t>(channel2);
+        txbuf[5] = static_cast<uint8_t>(channel3 >> 8);
+        txbuf[6] = static_cast<uint8_t>(channel3);
 
         uint8_t destination = neoRADIO2GetBankDestination(&settingsBank);
         neoRADIO2SendPacket(deviceInfo, NEORADIO2_COMMAND_WRITE_DATA, settingsDeviceNumber, destination, (uint8_t *) &txbuf, sizeof(txbuf));
