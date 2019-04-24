@@ -296,7 +296,6 @@ input[type=number]::-webkit-outer-spin-button {
 .neorad_temp
 {
     height: 2.5rem;
-    line-height: 2.5rem;
 }
 .neorad_rly_input
 {
@@ -552,7 +551,7 @@ i:hover .tooltip_text
     }
     .neorad_temp
     {
-        line-height: 2rem;
+        height: 2rem;
     }
     .flex_no_align
     {
@@ -614,7 +613,7 @@ i:hover .tooltip_text
     }
     .neorad_temp
     {
-        line-height: 1.5rem;
+        height: 1.5rem;
     }
     .btn
     {

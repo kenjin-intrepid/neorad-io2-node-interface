@@ -14,7 +14,7 @@ void neoRADIO2returnCalibrationDataJSON(neoRADIO2_DeviceInfo * deviceInfo, nlohm
 void neoRADIO2ClearCalibration(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData);
 nlohmann::json neoRADIO2returnAllCalibrationJSON(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData);
 void neoRADIO2SetCalibrationSinglePoint(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData);
-nlohmann::json neoRADIO2SetAoutValue(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData);
+void neoRADIO2SetAoutValue(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData);
 
 using json = nlohmann::json;
 
@@ -733,53 +733,47 @@ void neoRADIO2SetCalibrationSinglePoint(neoRADIO2_DeviceInfo * deviceInfo, std::
     }
 }
 
-nlohmann::json neoRADIO2SetAoutValue(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData)
+void neoRADIO2SetAoutValue(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData)
 {
-    json dataReturn;
-    json settingsData = json::parse(* messageData);
-    uint8_t settingsBank = settingsData["bank"].get<unsigned int>();
-    uint8_t settingsDeviceNumber = settingsData["deviceLink"].get<unsigned int>();
-    auto settingsExtraArray = settingsData["extraSettings"].get<std::vector<float>>();
-
-    uint16_t setbuf[3];
-    setbuf[0] = settingsExtraArray[0];
-    setbuf[1] = settingsExtraArray[1];
-    setbuf[2] = settingsExtraArray[2];
-
-    neoRADIO2AOUT_header aout_header = {0};
-    uint8_t  txbuf[7];
-
-    if(setbuf[0] != 0)
+    try
     {
+        json settingsData = json::parse(* messageData);
+        uint8_t settingsBank = settingsData["bank"].get<unsigned int>();
+        uint8_t settingsDeviceNumber = settingsData["deviceLink"].get<unsigned int>();
+        auto settingsExtraArray = settingsData["extraSettings"].get<std::vector<unsigned int>>();
+
+        uint16_t channel1 = 0, channel2 = 0, channel3 = 0;
+        channel1 = settingsExtraArray[0];
+        channel2 = settingsExtraArray[1];
+        channel3 = settingsExtraArray[2];
+
+        neoRADIO2AOUT_header aout_header = {0};
+        uint8_t  txbuf[7] = {0};
+
         aout_header.bits.ch1 = 1;
-    }
-    if(setbuf[1] != 0)
-    {
         aout_header.bits.ch2 = 1;
-    }
-    if(setbuf[2] != 0)
-    {
         aout_header.bits.ch3 = 1;
+
+        txbuf[0] = aout_header.byte;
+        txbuf[1] = static_cast<uint8_t>(channel1 >> 8);
+        txbuf[2] = static_cast<uint8_t>(channel1);
+        txbuf[3] = static_cast<uint8_t>(channel2 >> 8);
+        txbuf[4] = static_cast<uint8_t>(channel2);
+        txbuf[5] = static_cast<uint8_t>(channel3 >> 8);
+        txbuf[6] = static_cast<uint8_t>(channel3);
+
+        uint8_t destination = neoRADIO2GetBankDestination(&settingsBank);
+        neoRADIO2SendPacket(deviceInfo, NEORADIO2_COMMAND_WRITE_DATA, settingsDeviceNumber, destination, (uint8_t *) &txbuf, sizeof(txbuf));
+
+        int timeout = 300;
+        while(timeout--)
+        {
+            std::this_thread::sleep_for(std::chrono::milliseconds(1));
+            neoRADIO2ProcessIncomingData(deviceInfo, 1000);
+        }
     }
-
-    txbuf[0] = aout_header.byte;
-    txbuf[1] = static_cast<uint8_t>(setbuf[0] >> 8);
-    txbuf[2] = static_cast<uint8_t>(setbuf[0]);
-    txbuf[3] = static_cast<uint8_t>(setbuf[1] >> 8);
-    txbuf[4] = static_cast<uint8_t>(setbuf[1]);
-    txbuf[5] = static_cast<uint8_t>(setbuf[2] >> 8);
-    txbuf[6] = static_cast<uint8_t>(setbuf[2]);
-
-    uint8_t destination = neoRADIO2GetBankDestination(&settingsBank);
-    neoRADIO2SendPacket(deviceInfo, NEORADIO2_COMMAND_WRITE_DATA, settingsDeviceNumber, destination, (uint8_t *) &txbuf, sizeof(txbuf));
-
-    int timeout = 200;
-    while(timeout--)
+    catch(const std::exception& e)
     {
-        std::this_thread::sleep_for(std::chrono::milliseconds(1));
-        neoRADIO2ProcessIncomingData(deviceInfo, 1000);
+        std::cout << "Caught exception " << e.what() << std::endl;
     }
-
-    dataReturn = neoRADIO2returnChainlistJSON(deviceInfo);
-    return dataReturn;
 }
