@@ -131,6 +131,12 @@
 
 #####changed
 1. Minor performance updates.
+2. C++ code clean up.
+3. Changed status text so it makes more sense.
+
+#####fixed
+1. Fixed text style issue when no sensor connected.
+2. Fixed Function logic when in interactive calibration mode. Preventing possible program crash.
 
 #####added
-1. Added AOUT functionality
+1. Added AOUT functionality (Needs to be tested at HQ)

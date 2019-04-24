@@ -34,7 +34,8 @@ class Sensor : public DataWorker
         };
         std::string device = "device";
         std::string channel = "channel";
-        std::string concatenateI, concatenateJ, messageName, messageData;
+        std::string concatenateI, concatenateJ, messageData;
+        int messageName;
         bool deviceConnected = true;
         int neoRADIO2_state = DeviceIdle;
         int result, Devices;
@@ -49,40 +50,9 @@ class Sensor : public DataWorker
             if(fromNode.haveDataFromNode())
             {
                 CusMessage messageFromNode = fromNode.read();
-                messageName = messageFromNode.name;
+                messageName = std::stoi(messageFromNode.name);
                 messageData = messageFromNode.data;
-                if(messageName == "check")
-                {
-                    neoRADIO2_state = std::stoi(messageData);
-                }
-                else if(messageName == "settings")
-                {
-                    neoRADIO2_state = SendSettings;
-                }
-                else if(messageName == "cal_readcal")
-                {
-                    neoRADIO2_state = CalReadSettings;
-                }
-                else if(messageName == "cal_settings")
-                {
-                    neoRADIO2_state = CalSendSettings;
-                }
-                else if(messageName == "cal_inter")
-                {
-                    neoRADIO2_state = CalInteractive;
-                }
-                else if(messageName == "clear_cal")
-                {
-                    neoRADIO2_state = ClearCal;
-                }
-                else if(messageName == "SetPwrRly")
-                {
-                    neoRADIO2_state = SetPwrRly;
-                }
-                else if(messageName == "SetAout")
-                {
-                    neoRADIO2_state = SetAout;
-                }
+                neoRADIO2_state = messageName;
             }
 
             switch (neoRADIO2_state)
@@ -312,20 +282,11 @@ class Sensor : public DataWorker
                         if(fromNode.haveDataFromNode())
                         {
                             CusMessage messageFromNode = fromNode.read();
-                            messageName = messageFromNode.name;
+                            messageName = std::stoi(messageFromNode.name);
                             messageData = messageFromNode.data;
-                            if(messageName == "cal_manual")
+                            if(messageName != CalInteractive)
                             {
-                                break;
-                            }
-                            else if(messageName == "check")
-                            {
-                                neoRADIO2_state = std::stoi(messageData);
-                                break;
-                            }
-                            else if(messageName == "settings")
-                            {
-                                neoRADIO2_state = SendSettings;
+                                neoRADIO2_state = messageName;
                                 break;
                             }
                         }
@@ -336,16 +297,6 @@ class Sensor : public DataWorker
                         std::this_thread::sleep_for(std::chrono::milliseconds(1));
                     }
                     neoRADIO2_state = DeviceIdle;
-                    if(messageName == "check")
-                    {
-                        neoRADIO2_state = std::stoi(messageData);
-                        break;
-                    }
-                    else if(messageName == "settings")
-                    {
-                        neoRADIO2_state = SendSettings;
-                        break;
-                    }
                 }
                     break;
 
