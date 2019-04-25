@@ -9,10 +9,11 @@
 
 2. nodejs & npm
 
-3. yarn
+3. cmake-js
 
-## To build
-###
+4. yarn
+
+## Windows build instructions
 
 1. first install all node modules.
 
@@ -33,18 +34,32 @@
         yarn dist
         
         
-## Build node module for mac
-* the included .node file under /build/release is for PC
+## Mac OS build instructions
+* the included .node file under /build/release is for Windows
 
 1. install Xcode CLI tools
 
-2. npm install
+        xcode-select --install
 
-3. run cmake-js
+2. install all node modules first
+
+        npm install
+
+3. install cmake-js globally
+
+        npm install cmake-js -g
+
+4. run cmake-js
 
         cmake-js rebuild
         
-4. copy the icon.icns file under /lib/img/ to /build/release
+5. copy the icon.icns file under /lib/img/ to /build/release
     this is the icon file
     
-5. do the steps under To Build.
+6. use yarn to download electron-builder
+
+        yarn add electron-builder --dev
+        
+7. use yarn to build installer
+        
+        yarn dist
