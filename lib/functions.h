@@ -13,7 +13,6 @@ int neoRADIO2SetCalibrationFromJSON(neoRADIO2_DeviceInfo * deviceInfo, std::stri
 void neoRADIO2returnCalibrationDataJSON(neoRADIO2_DeviceInfo * deviceInfo, nlohmann::json * sample, std::string * messageData);
 void neoRADIO2ClearCalibration(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData);
 nlohmann::json neoRADIO2returnAllCalibrationJSON(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData);
-void neoRADIO2SetCalibrationSinglePoint(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData);
 void neoRADIO2SetAoutValue(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData);
 
 using json = nlohmann::json;
@@ -124,8 +123,8 @@ nlohmann::json neoRADIO2returnChainlistJSON(neoRADIO2_DeviceInfo * deviceInfo)
             {
                 neoRADIO2AOUT_channelConfig Channel1 = {0}, Channel2 = {0}, Channel3 = {0};
                 Channel1.u32 = deviceInfo->ChainList[i][j].settings.config.channel_1_config;
-                Channel2.u32 = deviceInfo->ChainList[i][j].settings.config.channel_2_Config;
-                Channel3.u32 = deviceInfo->ChainList[i][j].settings.config.channel_3_Config;
+                Channel2.u32 = deviceInfo->ChainList[i][j].settings.config.channel_2_config;
+                Channel3.u32 = deviceInfo->ChainList[i][j].settings.config.channel_3_config;
 
                 devices["chainlist"][concatenateI][concatenateJ]["settings1"]["enabled"] = Channel1.data.enabled;
                 devices["chainlist"][concatenateI][concatenateJ]["settings1"]["initEnabled"] = Channel1.data.initEnabled;
@@ -275,8 +274,8 @@ int neoRADIO2SetSettingsFromJSON(neoRADIO2_DeviceInfo * deviceInfo, std::string 
                 auto settingsExtraArray = settingsData["extraSettings"].get<std::vector<unsigned int>>();
                 neoRADIO2AOUT_channelConfig channel1 = {0}, channel2 = {0}, channel3 = {0};
                 channel1.u32 = deviceInfo->ChainList[settingsDeviceNumber][settingsBank].settings.config.channel_1_config;
-                channel2.u32 = deviceInfo->ChainList[settingsDeviceNumber][settingsBank].settings.config.channel_2_Config;
-                channel3.u32 = deviceInfo->ChainList[settingsDeviceNumber][settingsBank].settings.config.channel_3_Config;
+                channel2.u32 = deviceInfo->ChainList[settingsDeviceNumber][settingsBank].settings.config.channel_2_config;
+                channel3.u32 = deviceInfo->ChainList[settingsDeviceNumber][settingsBank].settings.config.channel_3_config;
 
                 if(settingsExtraArray[0] == 0)
                 {
@@ -306,8 +305,8 @@ int neoRADIO2SetSettingsFromJSON(neoRADIO2_DeviceInfo * deviceInfo, std::string 
                 }
 
                 deviceInfo->ChainList[settingsDeviceNumber][settingsBank].settings.config.channel_1_config = channel1.u32;
-                deviceInfo->ChainList[settingsDeviceNumber][settingsBank].settings.config.channel_2_Config = channel2.u32;
-                deviceInfo->ChainList[settingsDeviceNumber][settingsBank].settings.config.channel_3_Config = channel3.u32;
+                deviceInfo->ChainList[settingsDeviceNumber][settingsBank].settings.config.channel_2_config = channel2.u32;
+                deviceInfo->ChainList[settingsDeviceNumber][settingsBank].settings.config.channel_3_config = channel3.u32;
 
                 int timeout = 200;
                 while(timeout--)
@@ -413,17 +412,17 @@ nlohmann::json neoRADIO2returnCalibrationJSON(neoRADIO2_DeviceInfo * deviceInfo,
             case NEORADIO2_DEVTYPE_TC:
                 calhead->channel = 0;
                 calhead->range = 0;
-                calhead->cal_type_size = sizeof(float);
+//                calhead->cal_type_size = sizeof(float);
                 break;
             case NEORADIO2_DEVTYPE_AIN:
                 calhead->channel = 0;
                 calhead->range = *deviceRange;
-                calhead->cal_type_size = sizeof(float);
+//                calhead->cal_type_size = sizeof(float);
                 break;
             case NEORADIO2_DEVTYPE_AOUT:
                 calhead->channel = *deviceChannel;
                 calhead->range = *deviceRange;
-                calhead->cal_type_size = sizeof(uint32_t);
+//                calhead->cal_type_size = sizeof(uint32_t);
                 break;
         }
         neoRADIO2SendPacket(deviceInfo, NEORADIO2_COMMAND_READ_CALPOINTS, *device, 0xFF, (uint8_t *) &txdata, sizeof(neoRADIO2frame_calHeader));
@@ -504,6 +503,7 @@ int neoRADIO2SetCalibrationFromJSON(neoRADIO2_DeviceInfo * deviceInfo, std::stri
         uint16_t deviceChannel = settingsData["deviceChannel"].get<unsigned int>();
         uint16_t deviceRange = settingsData["deviceRange"].get<unsigned int>();
         uint8_t pointsSize = points.size();
+        uint8_t cal_type_size;
         uint8_t txdata[64];
         neoRADIO2frame_calHeader * calhead = (neoRADIO2frame_calHeader *)txdata;
         calhead->num_of_pts = pointsSize;
@@ -513,17 +513,20 @@ int neoRADIO2SetCalibrationFromJSON(neoRADIO2_DeviceInfo * deviceInfo, std::stri
             case NEORADIO2_DEVTYPE_TC:
                 calhead->channel = 0;
                 calhead->range = 0;
-                calhead->cal_type_size = sizeof(float);
+                cal_type_size = sizeof(float);
+//                calhead->cal_type_size = sizeof(float);
                 break;
             case NEORADIO2_DEVTYPE_AIN:
                 calhead->channel = deviceChannel;
                 calhead->range = deviceRange;
-                calhead->cal_type_size = sizeof(float);
+                cal_type_size = sizeof(float);
+//                calhead->cal_type_size = sizeof(float);
                 break;
             case NEORADIO2_DEVTYPE_AOUT:
                 calhead->channel = deviceChannel;
                 calhead->range = deviceRange;
-                calhead->cal_type_size = sizeof(uint32_t);
+                cal_type_size = sizeof(uint32_t);
+//                calhead->cal_type_size = sizeof(uint32_t);
                 break;
         }
 
@@ -552,8 +555,8 @@ int neoRADIO2SetCalibrationFromJSON(neoRADIO2_DeviceInfo * deviceInfo, std::stri
         for(uint8_t bank = 1; bank < 9; bank++)
         {
             uint8_t destination = neoRADIO2GetBankDestination(&bank);
-            txlen = sizeof(neoRADIO2frame_calHeader) + allbanks[bank - 1].size() * calhead->cal_type_size;
-            memcpy(&txdata[sizeof(neoRADIO2frame_calHeader)], &allbanks[bank - 1][0], allbanks[bank - 1].size() * calhead->cal_type_size);
+            txlen = sizeof(neoRADIO2frame_calHeader) + allbanks[bank - 1].size() * cal_type_size;
+            memcpy(&txdata[sizeof(neoRADIO2frame_calHeader)], &allbanks[bank - 1][0], allbanks[bank - 1].size() * cal_type_size);
             neoRADIO2SendPacket(deviceInfo, NEORADIO2_COMMAND_WRITE_CAL, device, destination, (uint8_t *) &txdata, txlen);
             timeout = 100;
             while(timeout--)
@@ -666,71 +669,6 @@ nlohmann::json neoRADIO2returnAllCalibrationJSON(neoRADIO2_DeviceInfo * deviceIn
     }
 
     return devices;
-}
-
-void neoRADIO2SetCalibrationSinglePoint(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData)
-{
-    json settingsData = json::parse(* messageData);
-    uint8_t device = settingsData["device"].get<unsigned int>();
-    uint8_t bank = settingsData["bank"].get<unsigned int>();
-    uint8_t deviceType = settingsData["type"].get<unsigned int>();
-    uint16_t deviceChannel = settingsData["deviceChannel"].get<unsigned int>();
-    uint16_t deviceRange = settingsData["deviceRange"].get<unsigned int>();
-    uint8_t points = settingsData["point"].get<unsigned int>();
-    uint8_t txdata[64];
-
-    neoRADIO2frame_calHeader * calhead = (neoRADIO2frame_calHeader *)txdata;
-    calhead->num_of_pts = 1;
-
-    switch (deviceType)
-    {
-        case NEORADIO2_DEVTYPE_TC:
-            calhead->channel = 0;
-            calhead->range = 0;
-            calhead->cal_type_size = sizeof(float);
-            break;
-        case NEORADIO2_DEVTYPE_AIN:
-            calhead->channel = deviceChannel;
-            calhead->range = deviceRange;
-            calhead->cal_type_size = sizeof(float);
-            break;
-        case NEORADIO2_DEVTYPE_AOUT:
-            calhead->channel = deviceChannel;
-            calhead->range = deviceRange;
-            calhead->cal_type_size = sizeof(uint32_t);
-            break;
-    }
-
-    unsigned int txlen = sizeof(neoRADIO2frame_calHeader) + sizeof(points);
-    memcpy(&txdata[sizeof(neoRADIO2frame_calHeader)], &points, sizeof(points));
-    neoRADIO2SendPacket(deviceInfo, NEORADIO2_COMMAND_WRITE_CALPOINTS, device, 0xFF, (uint8_t *) &txdata, txlen);
-
-    int timeout = 50;
-    while(timeout--)
-    {
-        std::this_thread::sleep_for(std::chrono::milliseconds(1));
-        neoRADIO2ProcessIncomingData(deviceInfo, 1000);
-    }
-
-    uint8_t destination = neoRADIO2GetBankDestination(&bank);
-    txlen = sizeof(neoRADIO2frame_calHeader) + calhead->cal_type_size;
-    memcpy(&txdata[sizeof(neoRADIO2frame_calHeader)], &points, calhead->cal_type_size);
-    neoRADIO2SendPacket(deviceInfo, NEORADIO2_COMMAND_WRITE_CAL, device, destination, (uint8_t *) &txdata, txlen);
-    timeout = 50;
-    while(timeout--)
-    {
-        std::this_thread::sleep_for(std::chrono::milliseconds(1));
-        neoRADIO2ProcessIncomingData(deviceInfo, 1000);
-    }
-
-    neoRADIO2SendPacket(deviceInfo, NEORADIO2_COMMAND_STORE_CAL, device, 0xFF, (uint8_t *) &txdata, txlen);
-
-    timeout = 100;
-    while(timeout--)
-    {
-        std::this_thread::sleep_for(std::chrono::milliseconds(1));
-        neoRADIO2ProcessIncomingData(deviceInfo, 1000);
-    }
 }
 
 void neoRADIO2SetAoutValue(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData)
