@@ -46,7 +46,10 @@ if(!fs.existsSync(`${mypath}\/IntrepidCS\/neoRAD-IO2\/PlotHistory`))
 window.mypath = mypath;
 
 const Addon = require("bindings")("neoRAD_IO2");
-window.Addon = Addon;
+if(Addon)
+{
+    window.Addon = Addon;
+}
 
 // crash report
 let upload = false;
