@@ -147,3 +147,8 @@
 
 #####fixed
 1. fixed an issue with locale settings preventing program to start properly.
+
+###v1.4.17
+#####changed
+1. Changed project name to RAD-io2
+2. Removed crash report upload for main.js to prevent first run crash.

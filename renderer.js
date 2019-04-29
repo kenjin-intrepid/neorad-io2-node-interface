@@ -50,17 +50,3 @@ if(Addon)
 {
     window.Addon = Addon;
 }
-
-// crash report
-let upload = false;
-if(settings.get('crash') && settings.get('crash') == "true")
-{
-    upload = true;
-}
-crashReporter.start({
-    productName: "Electron",
-    companyName: "gdinod",
-    submitURL: "https://submit.backtrace.io/gdinod/193e5505e1c918a555bfd6ce330ad1478b8fedde652392499efe2057e0d40e8d/minidump",
-    uploadToServer: upload
-});
-// crash report end

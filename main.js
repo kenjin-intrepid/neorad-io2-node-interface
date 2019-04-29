@@ -37,8 +37,8 @@ app.on('ready', function() {
         title: "Data logger",
         backgroundColor: "#a09ea1",
         webPreferences: {
-            nodeIntegration: true
-            // devTools:false
+            nodeIntegration: true,
+            devTools:false
         }
     });
 
@@ -46,7 +46,7 @@ app.on('ready', function() {
     loadMain("canvas");
 
     // Open the DevTools.
-    mainWindow.webContents.openDevTools();
+    // mainWindow.webContents.openDevTools();
 
     mainWindow.on('closed', () => {
         mainWindow = null;
@@ -173,17 +173,3 @@ app.on('ready', function() {
 app.on('window-all-closed', () => {
     app.quit();
 });
-
-// crash report
-let upload = false;
-if(settings.get('crash') && settings.get('crash') == "true")
-{
-    upload = true;
-}
-crashReporter.start({
-    productName: "Electron",
-    companyName: "gdinod",
-    submitURL: "https://submit.backtrace.io/gdinod/193e5505e1c918a555bfd6ce330ad1478b8fedde652392499efe2057e0d40e8d/minidump",
-    uploadToServer: upload
-});
-// crash report end
