@@ -427,4 +427,4 @@ DataWorker *create_worker(Nan::Callback *data, Nan::Callback *complete, Nan::Cal
     return new Sensor(data, complete, error_callback);
 }
 
-NODE_MODULE(neoRAD_IO2, StreamWorkerWrapper::Init)
+NODE_MODULE(RAD_IO2, StreamWorkerWrapper::Init)

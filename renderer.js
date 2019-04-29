@@ -29,38 +29,24 @@ if(!fs.existsSync(`${mypath}\/IntrepidCS`))
     });
 }
 
-if(!fs.existsSync(`${mypath}\/IntrepidCS\/neoRAD-IO2`))
+if(!fs.existsSync(`${mypath}\/IntrepidCS\/RAD-IO2`))
 {
-    fs.mkdir(`${mypath}\/IntrepidCS\/neoRAD-IO2`,function (err) {
+    fs.mkdir(`${mypath}\/IntrepidCS\/RAD-IO2`,function (err) {
         console.log(err);
     });
 }
 
-if(!fs.existsSync(`${mypath}\/IntrepidCS\/neoRAD-IO2\/PlotHistory`))
+if(!fs.existsSync(`${mypath}\/IntrepidCS\/RAD-IO2\/PlotHistory`))
 {
-    fs.mkdir(`${mypath}\/IntrepidCS\/neoRAD-IO2\/PlotHistory`,function (err) {
+    fs.mkdir(`${mypath}\/IntrepidCS\/RAD-IO2\/PlotHistory`,function (err) {
         console.log(err);
     });
 }
 
 window.mypath = mypath;
 
-const Addon = require("bindings")("neoRAD_IO2");
+const Addon = require("bindings")("RAD_IO2");
 if(Addon)
 {
     window.Addon = Addon;
 }
-
-// crash report
-let upload = false;
-if(settings.get('crash') && settings.get('crash') == "true")
-{
-    upload = true;
-}
-crashReporter.start({
-    productName: "Electron",
-    companyName: "gdinod",
-    submitURL: "https://submit.backtrace.io/gdinod/193e5505e1c918a555bfd6ce330ad1478b8fedde652392499efe2057e0d40e8d/minidump",
-    uploadToServer: upload
-});
-// crash report end

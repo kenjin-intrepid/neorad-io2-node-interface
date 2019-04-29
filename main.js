@@ -37,6 +37,7 @@ app.on('ready', function() {
         title: "Data logger",
         backgroundColor: "#a09ea1",
         webPreferences: {
+            nodeIntegration: true,
             devTools:false
         }
     });
@@ -56,7 +57,7 @@ app.on('ready', function() {
     });
 
     const template = require('./lib/js/temp_main');
-    let locale;
+    let locale = "en";
     let local_locale = settings.get('locale');
     if(local_locale)
     {
@@ -65,6 +66,12 @@ app.on('ready', function() {
     else
     {
         locale = app.getLocale();
+        settings.set("locale", locale);
+        if(locale !== "en" && locale !== "ja" && locale !== "jw" && locale !== "ko" && locale !== "zh" && locale !== "zh-CN" && locale !== "zh-TW")
+        {
+            locale = "en";
+            settings.set("locale", "en");
+        }
     }
 
     let menu = Menu.buildFromTemplate([
@@ -166,17 +173,3 @@ app.on('ready', function() {
 app.on('window-all-closed', () => {
     app.quit();
 });
-
-// crash report
-let upload = false;
-if(settings.get('crash') && settings.get('crash') == "true")
-{
-    upload = true;
-}
-crashReporter.start({
-    productName: "Electron",
-    companyName: "gdinod",
-    submitURL: "https://submit.backtrace.io/gdinod/193e5505e1c918a555bfd6ce330ad1478b8fedde652392499efe2057e0d40e8d/minidump",
-    uploadToServer: upload
-});
-// crash report end
