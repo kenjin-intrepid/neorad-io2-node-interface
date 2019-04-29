@@ -5,9 +5,9 @@
 #include <thread>
 #include <cstdlib>
 #include <sstream>
-#include "./lib/worker.h"
-#include "./lib/functions.h"
-#include "./lib/json.hpp"
+#include "worker.h"
+#include "functions.h"
+#include "json.hpp"
 #include <nan.h>
 
 using json = nlohmann::json;

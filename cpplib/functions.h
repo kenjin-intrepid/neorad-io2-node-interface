@@ -324,6 +324,12 @@ int neoRADIO2SetSettingsFromJSON(neoRADIO2_DeviceInfo * deviceInfo, std::string 
             }
                 break;
 
+            case NEORADIO2_DEVTYPE_BADGE:
+            {
+
+            }
+                break;
+
             default:
                 break;
         }
