@@ -330,7 +330,7 @@
                 <div>Space Mono</div>
             </div>
             <div class="modal-footer">
-                <h5>v1.4.15</h5>
+                <h5 id="version_number"></h5>
             </div>
         </div>
     </div>
@@ -339,6 +339,8 @@
 <script>
     // You can also require other files to run in this process
     require('../../renderer.js');
+    let version_number = require('../../package.json').version;
+    $('#version_number').text(version_number);
 </script>
 <script src="../../node_modules/bootstrap/dist/js/bootstrap.bundle.js"></script>
 <script src="../../node_modules/bootstrap/dist/js/bootstrap.js"></script>

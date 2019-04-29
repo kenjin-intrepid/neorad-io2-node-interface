@@ -140,3 +140,10 @@
 
 #####added
 1. Added AOUT functionality (Needs to be tested at HQ)
+
+###v1.4.16
+#####changed
+1. Electron@v4.1.5
+
+#####fixed
+1. fixed an issue with locale settings preventing program to start properly.

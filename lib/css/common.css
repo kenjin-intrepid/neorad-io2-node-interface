@@ -105,7 +105,7 @@ input
 }
 .theme-black-bg .ma_device_wrap
 {
-    -webkit-box-shadow: 0 0 10px 10px #7a7a7a;
+    -webkit-box-shadow: 0 0 5px 5px #7a7a7a;
     margin: 50px 0;
 }
 .theme-black-bg table
