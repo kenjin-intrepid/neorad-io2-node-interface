@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(neoRAD_IO2)
+project(RAD_IO2)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_C_STANDARD 11)

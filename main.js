@@ -37,7 +37,8 @@ app.on('ready', function() {
         title: "Data logger",
         backgroundColor: "#a09ea1",
         webPreferences: {
-            devTools:false
+            nodeIntegration: true
+            // devTools:false
         }
     });
 
@@ -45,7 +46,7 @@ app.on('ready', function() {
     loadMain("canvas");
 
     // Open the DevTools.
-    // mainWindow.webContents.openDevTools();
+    mainWindow.webContents.openDevTools();
 
     mainWindow.on('closed', () => {
         mainWindow = null;
@@ -56,7 +57,7 @@ app.on('ready', function() {
     });
 
     const template = require('./lib/js/temp_main');
-    let locale;
+    let locale = "en";
     let local_locale = settings.get('locale');
     if(local_locale)
     {
@@ -65,6 +66,12 @@ app.on('ready', function() {
     else
     {
         locale = app.getLocale();
+        settings.set("locale", locale);
+        if(locale !== "en" && locale !== "ja" && locale !== "jw" && locale !== "ko" && locale !== "zh" && locale !== "zh-CN" && locale !== "zh-TW")
+        {
+            locale = "en";
+            settings.set("locale", "en");
+        }
     }
 
     let menu = Menu.buildFromTemplate([

@@ -29,23 +29,23 @@ if(!fs.existsSync(`${mypath}\/IntrepidCS`))
     });
 }
 
-if(!fs.existsSync(`${mypath}\/IntrepidCS\/neoRAD-IO2`))
+if(!fs.existsSync(`${mypath}\/IntrepidCS\/RAD-IO2`))
 {
-    fs.mkdir(`${mypath}\/IntrepidCS\/neoRAD-IO2`,function (err) {
+    fs.mkdir(`${mypath}\/IntrepidCS\/RAD-IO2`,function (err) {
         console.log(err);
     });
 }
 
-if(!fs.existsSync(`${mypath}\/IntrepidCS\/neoRAD-IO2\/PlotHistory`))
+if(!fs.existsSync(`${mypath}\/IntrepidCS\/RAD-IO2\/PlotHistory`))
 {
-    fs.mkdir(`${mypath}\/IntrepidCS\/neoRAD-IO2\/PlotHistory`,function (err) {
+    fs.mkdir(`${mypath}\/IntrepidCS\/RAD-IO2\/PlotHistory`,function (err) {
         console.log(err);
     });
 }
 
 window.mypath = mypath;
 
-const Addon = require("bindings")("neoRAD_IO2");
+const Addon = require("bindings")("RAD_IO2");
 if(Addon)
 {
     window.Addon = Addon;
