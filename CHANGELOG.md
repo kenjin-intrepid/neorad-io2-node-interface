@@ -144,6 +144,7 @@
 ###v1.4.16
 #####changed
 1. Electron@v4.1.5
+2. Updated cmakelist, this will now require at least cmake-js@5.2 to build properly(Solves electron 4 delay hook without manually including cc file)
 
 #####fixed
 1. fixed an issue with locale settings preventing program to start properly.
