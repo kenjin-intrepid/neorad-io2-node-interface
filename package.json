@@ -1,7 +1,7 @@
 {
   "name": "RAD-IO2",
   "productName": "RAD-IO2",
-  "version": "1.4.16",
+  "version": "1.4.17",
   "description": "RAD-IO2 GUI app",
   "main": "main.js",
   "scripts": {
@@ -18,7 +18,7 @@
   "author": "IntrepidCS",
   "license": "MIT",
   "devDependencies": {
-    "electron": "^4.1.5",
+    "electron": "^4.2.0",
     "electron-builder": "^20.40.2"
   },
   "dependencies": {
@@ -28,7 +28,7 @@
     "electron-settings": "^3.2.0",
     "electron-window-state": "^5.0.3",
     "emit-stream": "^0.1.2",
-    "jquery": "^3.4.0",
+    "jquery": "^3.4.1",
     "nan": "^2.13.2",
     "papaparse": "^4.6.3",
     "popper.js": "^1.15.0",
@@ -36,7 +36,7 @@
   },
   "cmake-js": {
     "runtime": "electron",
-    "runtimeVersion": "4.1.5",
+    "runtimeVersion": "4.2.0",
     "arch": "x64"
   },
   "build": {
@@ -46,6 +46,7 @@
     },
     "nsis": {
       "oneClick": false,
+      "perMachine": true,
       "allowElevation": true,
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true

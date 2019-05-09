@@ -315,12 +315,12 @@
             <div class="modal-body">
                 <h5>Built with the following libraries:</h5>
                 <br>
-                <a href="https://github.com/electron/electron">electron@4.1.4</a><br>
+                <a href="https://github.com/electron/electron">electron@4.2.0</a><br>
                 <a href="https://www.npmjs.com/package/electron-builder">electron-builder@20.40.2</a><br>
                 <a href="https://www.npmjs.com/package/bootstrap">bootstrap@4.3.1</a><br>
                 <a href="https://www.npmjs.com/package/electron-settings">electron-settings@3.2.0</a><br>
                 <a href="https://www.npmjs.com/package/electron-window-state">electron-window-state@5.0.3</a><br>
-                <a href="https://www.npmjs.com/package/jquery">jQuery@3.4.0</a><br>
+                <a href="https://www.npmjs.com/package/jquery">jQuery@3.4.1</a><br>
                 <a href="https://www.npmjs.com/package/nan">NAN@2.13.2</a><br>
                 <a href="https://www.npmjs.com/package/papaparse">papaparse@4.6.3</a><br>
                 <a href="https://github.com/plotly/plotly.js">Plotly.js@1.45.3</a><br>
@@ -340,7 +340,7 @@
     // You can also require other files to run in this process
     require('../../renderer.js');
     let version_number = require('../../package.json').version;
-    $('#version_number').text(version_number);
+    document.querySelector("#version_number").textContent = version_number;
 </script>
 <script src="../../node_modules/bootstrap/dist/js/bootstrap.bundle.js"></script>
 <script src="../../node_modules/bootstrap/dist/js/bootstrap.js"></script>
