@@ -154,3 +154,7 @@
 1. Electron@v4.2.0
 2. Changed project name to RAD-io2
 3. Removed crash report upload for main.js to prevent first run crash.
+
+###v1.5.0
+#####changed
+1. Electron@v5.0.1

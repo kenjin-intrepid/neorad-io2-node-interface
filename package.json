@@ -1,7 +1,7 @@
 {
   "name": "RAD-IO2",
   "productName": "RAD-IO2",
-  "version": "1.4.17",
+  "version": "1.5.0",
   "description": "RAD-IO2 GUI app",
   "main": "main.js",
   "scripts": {
@@ -18,7 +18,7 @@
   "author": "IntrepidCS",
   "license": "MIT",
   "devDependencies": {
-    "electron": "^4.2.0",
+    "electron": "^5.0.1",
     "electron-builder": "^20.40.2"
   },
   "dependencies": {
@@ -36,7 +36,7 @@
   },
   "cmake-js": {
     "runtime": "electron",
-    "runtimeVersion": "4.2.0",
+    "runtimeVersion": "5.0.1",
     "arch": "x64"
   },
   "build": {

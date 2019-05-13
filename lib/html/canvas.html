@@ -315,15 +315,15 @@
             <div class="modal-body">
                 <h5>Built with the following libraries:</h5>
                 <br>
-                <a href="https://github.com/electron/electron">electron@4.2.0</a><br>
-                <a href="https://www.npmjs.com/package/electron-builder">electron-builder@20.40.2</a><br>
-                <a href="https://www.npmjs.com/package/bootstrap">bootstrap@4.3.1</a><br>
-                <a href="https://www.npmjs.com/package/electron-settings">electron-settings@3.2.0</a><br>
-                <a href="https://www.npmjs.com/package/electron-window-state">electron-window-state@5.0.3</a><br>
-                <a href="https://www.npmjs.com/package/jquery">jQuery@3.4.1</a><br>
-                <a href="https://www.npmjs.com/package/nan">NAN@2.13.2</a><br>
-                <a href="https://www.npmjs.com/package/papaparse">papaparse@4.6.3</a><br>
-                <a href="https://github.com/plotly/plotly.js">Plotly.js@1.45.3</a><br>
+                <a href="https://github.com/electron/electron">electron<span id="dep_elc"></span></a><br>
+                <a href="https://www.npmjs.com/package/electron-builder">electron-builder<span id="dep_elb"></span></a><br>
+                <a href="https://www.npmjs.com/package/bootstrap">bootstrap<span id="dep_bts"></span></a><br>
+                <a href="https://www.npmjs.com/package/electron-settings">electron-settings<span id="dep_els"></span></a><br>
+                <a href="https://www.npmjs.com/package/electron-window-state">electron-window-state<span id="dep_ews"></span></a><br>
+                <a href="https://www.npmjs.com/package/jquery">jQuery<span id="dep_jqy"></span></a><br>
+                <a href="https://www.npmjs.com/package/nan">NAN<span id="dep_nan"></span></a><br>
+                <a href="https://www.npmjs.com/package/papaparse">papaparse<span id="dep_par"></span></a><br>
+                <a href="https://github.com/plotly/plotly.js">Plotly.js^1.45.3</a><br>
                 <br>
                 <h5>Fonts used:</h5>
                 <div>Prime Regular</div>
@@ -339,8 +339,15 @@
 <script>
     // You can also require other files to run in this process
     require('../../renderer.js');
-    let version_number = require('../../package.json').version;
-    document.querySelector("#version_number").textContent = version_number;
+    document.querySelector("#version_number").textContent = require('../../package.json').version;
+    document.querySelector("#dep_elc").textContent = require('../../package.json').devDependencies.electron;
+    document.querySelector("#dep_elb").textContent = require('../../package.json').devDependencies["electron-builder"];
+    document.querySelector("#dep_bts").textContent = require('../../package.json').dependencies.bootstrap;
+    document.querySelector("#dep_els").textContent = require('../../package.json').dependencies["electron-settings"];
+    document.querySelector("#dep_ews").textContent = require('../../package.json').dependencies["electron-window-state"];
+    document.querySelector("#dep_jqy").textContent = require('../../package.json').dependencies.jquery;
+    document.querySelector("#dep_nan").textContent = require('../../package.json').dependencies.nan;
+    document.querySelector("#dep_par").textContent = require('../../package.json').dependencies.papaparse;
 </script>
 <script src="../../node_modules/bootstrap/dist/js/bootstrap.bundle.js"></script>
 <script src="../../node_modules/bootstrap/dist/js/bootstrap.js"></script>
