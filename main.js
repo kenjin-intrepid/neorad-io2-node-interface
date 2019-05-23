@@ -123,7 +123,7 @@ app.on('ready', function() {
                 {
                     label: template[locale]['menu_folder'],
                     click: function () {
-                        let Path = path.join(app.getPath('home'), `IntrepidCS\/neoRAD-IO2`);
+                        let Path = path.join(app.getPath('home'), `IntrepidCS\/RAD-IO2`);
                         shell.showItemInFolder(Path);
                     }
                 }
