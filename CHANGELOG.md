@@ -158,3 +158,7 @@
 ###v1.5.0
 #####changed
 1. Electron@v5.0.1
+
+###v1.5.1
+#####changed
+1. Electron@v5.0.2
