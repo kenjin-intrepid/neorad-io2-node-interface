@@ -144,11 +144,17 @@
 ###v1.4.16
 #####changed
 1. Electron@v4.1.5
+2. Updated cmakelist, this will now require at least cmake-js@5.2 to build properly(Solves electron 4 delay hook without manually including cc file)
 
 #####fixed
 1. fixed an issue with locale settings preventing program to start properly.
 
 ###v1.4.17
 #####changed
-1. Changed project name to RAD-io2
-2. Removed crash report upload for main.js to prevent first run crash.
+1. Electron@v4.2.0
+2. Changed project name to RAD-io2
+3. Removed crash report upload for main.js to prevent first run crash.
+
+###v1.5.0
+#####changed
+1. Electron@v5.0.1
