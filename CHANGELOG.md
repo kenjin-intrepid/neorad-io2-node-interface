@@ -161,4 +161,8 @@
 
 ###v1.5.1
 #####changed
-1. Electron@v5.0.2
+1. Electron@v5.0.3
+2. Electron-builder@v20.43.0
+
+####fixed
+1. Fixed an issue where wrong helper text is displayed for AIN.

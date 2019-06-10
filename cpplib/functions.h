@@ -418,17 +418,14 @@ nlohmann::json neoRADIO2returnCalibrationJSON(neoRADIO2_DeviceInfo * deviceInfo,
             case NEORADIO2_DEVTYPE_TC:
                 calhead->channel = 0;
                 calhead->range = 0;
-//                calhead->cal_type_size = sizeof(float);
                 break;
             case NEORADIO2_DEVTYPE_AIN:
                 calhead->channel = 0;
                 calhead->range = *deviceRange;
-//                calhead->cal_type_size = sizeof(float);
                 break;
             case NEORADIO2_DEVTYPE_AOUT:
                 calhead->channel = *deviceChannel;
                 calhead->range = *deviceRange;
-//                calhead->cal_type_size = sizeof(uint32_t);
                 break;
         }
         neoRADIO2SendPacket(deviceInfo, NEORADIO2_COMMAND_READ_CALPOINTS, *device, 0xFF, (uint8_t *) &txdata, sizeof(neoRADIO2frame_calHeader));
@@ -441,17 +438,18 @@ nlohmann::json neoRADIO2returnCalibrationJSON(neoRADIO2_DeviceInfo * deviceInfo,
             {
                 for (unsigned int c = 0; c < deviceInfo->rxDataCount; c++)
                 {
-                    if(deviceInfo->rxDataBuffer[c].header.start_of_frame == 0x55 && deviceInfo->rxDataBuffer[c].header.command_status == NEORADIO2_STATUS_CALPOINTS)
+                    if(deviceInfo->rxDataBuffer[c].header.start_of_frame == 0x55)
                     {
-                        uint8_t * rxdata = &deviceInfo->rxDataBuffer[c].data[sizeof(neoRADIO2frame_calHeader)];
-                        devices["calpoints"] = neoRADIO2returnFloatData(&rxdata, &(deviceInfo->rxDataBuffer[c].data[0]));
-                        timeout = 0;
-                    }
+                        if(deviceInfo->rxDataBuffer[c].header.command_status == NEORADIO2_STATUS_CALPOINTS)
+                        {
+                            uint8_t * rxdata = &deviceInfo->rxDataBuffer[c].data[sizeof(neoRADIO2frame_calHeader)];
+                            devices["calpoints"] = neoRADIO2returnFloatData(&rxdata, &(deviceInfo->rxDataBuffer[c].data[0]));
 
-                    //calibration invalid
-                    if(deviceInfo->rxDataBuffer[c].header.start_of_frame == 0x55 && deviceInfo->rxDataBuffer[c].header.command_status == NEORADIO2_STATUS_CAL)
-                    {
-                        devices["calpoints"] = "invalid";
+                        }
+                        else if(deviceInfo->rxDataBuffer[c].header.command_status == NEORADIO2_STATUS_CAL)
+                        {
+                            devices["calpoints"] = "invalid";
+                        }
                         timeout = 0;
                     }
                 }
