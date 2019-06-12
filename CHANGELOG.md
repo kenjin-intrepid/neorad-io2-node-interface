@@ -166,3 +166,7 @@
 
 ####fixed
 1. Fixed an issue where wrong helper text is displayed for AIN.
+
+###v1.5.2
+#####
+1. Updated submodule library
