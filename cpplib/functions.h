@@ -3,6 +3,7 @@
 
 uint8_t neoRADIO2GetBankDestination(uint8_t * x);
 std::vector<float> neoRADIO2returnFloatData(uint8_t * rxdata[60], uint8_t * pointSize);
+std::vector<uint32_t> neoRADIO2returnAoutData(uint8_t * rxdata[60], uint8_t * pointSize);
 nlohmann::json neoRADIO2returnChainlistJSON(neoRADIO2_DeviceInfo * deviceInfo);
 void neoRADIO2returnDataJSON(neoRADIO2_DeviceInfo * deviceInfo, nlohmann::json * returnData);
 int neoRADIO2SetSettingsFromJSON(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData);
@@ -15,6 +16,11 @@ nlohmann::json neoRADIO2returnAllCalibrationJSON(neoRADIO2_DeviceInfo * deviceIn
 void neoRADIO2SetAoutValue(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData);
 
 using json = nlohmann::json;
+
+typedef union _bytesToUint32 {
+    uint32_t u32;
+    uint8_t b[sizeof(uint32_t)];
+} bytesToUint32;
 
 uint8_t neoRADIO2GetBankDestination(uint8_t * x)
 {
@@ -34,6 +40,25 @@ std::vector<float> neoRADIO2returnFloatData(uint8_t * rxdata[60], uint8_t * poin
         }
 
         allpoints.push_back(z[i].fp);
+    }
+
+    delete []z;
+    return allpoints;
+}
+
+std::vector<uint32_t> neoRADIO2returnAoutData(uint8_t * rxdata[60], uint8_t * pointSize)
+{
+    auto * z = new bytesToUint32[* pointSize];
+    std::vector<uint32_t> allpoints;
+
+    for(int i = 0; i < * pointSize; i++)
+    {
+        for(int j = 0; j < 4; j++)
+        {
+            z[i].b[j] = (* rxdata)[j + i * 4];
+        }
+
+        allpoints.push_back(z[i].u32);
     }
 
     delete []z;
@@ -440,7 +465,14 @@ nlohmann::json neoRADIO2returnCalibrationJSON(neoRADIO2_DeviceInfo * deviceInfo,
                         if(deviceInfo->rxDataBuffer[c].header.command_status == NEORADIO2_STATUS_CALPOINTS)
                         {
                             uint8_t * rxdata = &deviceInfo->rxDataBuffer[c].data[sizeof(neoRADIO2frame_calHeader)];
-                            devices["calpoints"] = neoRADIO2returnFloatData(&rxdata, &(deviceInfo->rxDataBuffer[c].data[0]));
+                            if(*deviceType == NEORADIO2_DEVTYPE_AOUT)
+                            {
+                                devices["calpoints"] = neoRADIO2returnAoutData(&rxdata, &(deviceInfo->rxDataBuffer[c].data[0]));
+                            }
+                            else
+                            {
+                                devices["calpoints"] = neoRADIO2returnFloatData(&rxdata, &(deviceInfo->rxDataBuffer[c].data[0]));
+                            }
                         }
                         else if(deviceInfo->rxDataBuffer[c].header.command_status == NEORADIO2_STATUS_CAL)
                         {
@@ -517,19 +549,16 @@ int neoRADIO2SetCalibrationFromJSON(neoRADIO2_DeviceInfo * deviceInfo, std::stri
                 calhead->channel = 0;
                 calhead->range = 0;
                 cal_type_size = sizeof(float);
-//                calhead->cal_type_size = sizeof(float);
                 break;
             case NEORADIO2_DEVTYPE_AIN:
                 calhead->channel = deviceChannel;
                 calhead->range = deviceRange;
                 cal_type_size = sizeof(float);
-//                calhead->cal_type_size = sizeof(float);
                 break;
             case NEORADIO2_DEVTYPE_AOUT:
                 calhead->channel = deviceChannel;
-                calhead->range = deviceRange;
+                calhead->range = 0;
                 cal_type_size = sizeof(uint32_t);
-//                calhead->cal_type_size = sizeof(uint32_t);
                 break;
         }
 
@@ -664,6 +693,13 @@ nlohmann::json neoRADIO2returnAllCalibrationJSON(neoRADIO2_DeviceInfo * deviceIn
         for(int c = 0; c < 6; c++)
         {
             devices["data"][std::to_string(c)] = neoRADIO2returnCalibrationJSON(deviceInfo, &device, &deviceType, &deviceChannel,(uint8_t *) &c);
+        }
+    }
+    else if(deviceType == NEORADIO2_DEVTYPE_AOUT)
+    {
+        for(int c = 0; c < 3; c++)
+        {
+            devices["data"][std::to_string(c)] = neoRADIO2returnCalibrationJSON(deviceInfo, &device, &deviceType, (uint8_t *) &c, &deviceRange);
         }
     }
     else
