@@ -168,5 +168,9 @@
 1. Fixed an issue where wrong helper text is displayed for AIN.
 
 ###v1.5.2
-#####
-1. Updated submodule library
+#####changed
+1. Electron@v5.0.4
+2. Updated submodule library to work with calibration
+
+#####added
+1. Read calibration data for AOUT

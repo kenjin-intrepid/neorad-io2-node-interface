@@ -145,6 +145,13 @@ class Sensor : public DataWorker
                             CusMessage toSend("data_stream", sample.dump());
                             writeToNode(progress, toSend);
                         }
+                        else if(deviceInfo.State == neoRADIO2state_Connected && deviceInfo.LastDevice == 0 && deviceInfo.ChainList[0][0].deviceType == NEORADIO2_DEVTYPE_PWRRLY)
+                        {
+                            timeout = 0;
+                            neoRADIO2returnDataJSON(&deviceInfo, &sample);
+                            CusMessage toSend("data_stream", sample.dump());
+                            writeToNode(progress, toSend);
+                        }
                         else
                         {
                             if(timeout > 3000)
@@ -241,8 +248,16 @@ class Sensor : public DataWorker
                     if(result == 0)
                     {
                         json settingsData = json::parse(messageData);
+                        int returnValue = 0;
                         uint8_t deviceType = settingsData["type"].get<unsigned int>();
-                        int returnValue = neoRADIO2SetCalibrationFromJSON(&deviceInfo, &messageData);
+                        if(deviceType == NEORADIO2_DEVTYPE_AOUT)
+                        {
+                            returnValue = neoRADIO2SetCalibrationFromJSONAOut(&deviceInfo, &messageData);
+                        }
+                        else
+                        {
+                            returnValue = neoRADIO2SetCalibrationFromJSON(&deviceInfo, &messageData);
+                        }
                         if(returnValue >= 0)
                         {
                             if(deviceType != NEORADIO2_DEVTYPE_AIN)
