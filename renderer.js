@@ -44,9 +44,3 @@ if(!fs.existsSync(`${mypath}\/IntrepidCS\/RAD-IO2\/PlotHistory`))
 }
 
 window.mypath = mypath;
-
-const Addon = require("bindings")("RAD_IO2");
-if(Addon)
-{
-    window.Addon = Addon;
-}

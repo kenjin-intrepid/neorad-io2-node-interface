@@ -9,11 +9,10 @@
     <link rel="stylesheet" href="../css/common.css">
     <link rel="stylesheet" href="../css/cal.css">
     <script src="../js/plotly-basic.min.js"></script>
+    <script src="../node_modules/vue/dist/vue.js"></script>
 </head>
 <body>
-
 <nav class="navbar navbar-expand-sm navbar-dark bg-black">
-    <!--company logo goes here along with URL link-->
     <a class="navbar-brand" href="https://www.intrepidcs.com/">
         <img src="../img/logo.png" width="45" height="45">
     </a>
@@ -51,7 +50,6 @@
         </li>
     </ul>
 </nav>
-
 <!--main display area-->
 <div class="main_area">
     <!--tab1 device table-->
@@ -163,13 +161,13 @@
                     </div>
                     <div class="form-group button-group">
                         <button type="button" class="btn btn-danger" id="resetCalButton" onclick="resetCal()" disabled>Clear</button>
-                        <div class="interactive_wrapper hidden">
-                            <div class="input_selector_text offline" id="manualButton">Manual</div>
+                        <div>
+                            <div class="input_selector_text offline">Manual</div>
                             <div class="input_selector_bg">
                                 <img class="input_selector" src="../img/slide_1.png">
                                 <input class="input_selector_value hidden" id="input_selector_value" value="0" disabled>
                             </div>
-                            <div class="input_selector_text" id="interactiveButton">Interactive</div>
+                            <div class="input_selector_text">Interactive</div>
                         </div>
                     </div>
                 </div>
@@ -335,7 +333,6 @@
         </div>
     </div>
 </div>
-
 <script>
     // You can also require other files to run in this process
     require('../../renderer.js');
