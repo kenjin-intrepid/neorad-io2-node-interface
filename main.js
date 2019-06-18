@@ -39,7 +39,7 @@ app.on('ready', function() {
         backgroundColor: "#a09ea1",
         webPreferences: {
             nodeIntegration: true,
-            // devTools:false
+            devTools:false
         }
     });
 
@@ -47,7 +47,7 @@ app.on('ready', function() {
     loadMain("canvas");
 
     // Open the DevTools.
-    mainWindow.webContents.openDevTools();
+    // mainWindow.webContents.openDevTools();
 
     mainWindow.on('closed', () => {
         mainWindow = null;
