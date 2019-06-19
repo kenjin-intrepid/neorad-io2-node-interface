@@ -174,3 +174,7 @@
 
 #####added
 1. Read calibration data for AOUT
+
+###v1.5.3
+#####added
+1. Added error messages.

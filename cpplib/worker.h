@@ -65,14 +65,14 @@ class dataQ
         std::deque <Data> buffer_;
 };
 
-class CusMessage
+class CustomMessage
 {
     public:
         string name;
         string data;
 
-        CusMessage(string name, string data) : name(name), data(data) {}
-        ~CusMessage(){}
+        CustomMessage(string name, string data) : name(name), data(data) {}
+        ~CustomMessage(){}
 };
 
 class DataWorker : public Nan::AsyncProgressWorker
@@ -123,10 +123,10 @@ class DataWorker : public Nan::AsyncProgressWorker
             input_paused = 1;
         }
 
-        dataQ<CusMessage> fromNode;
+        dataQ<CustomMessage> fromNode;
 
     protected:
-        void writeToNode(const Nan::AsyncProgressWorker::ExecutionProgress &progress, CusMessage &msg)
+        void writeToNode(const Nan::AsyncProgressWorker::ExecutionProgress &progress, CustomMessage &msg)
         {
             toNode.write(msg);
             progress.Send(reinterpret_cast<const char *>(&toNode), sizeof(toNode));
@@ -144,7 +144,7 @@ class DataWorker : public Nan::AsyncProgressWorker
 
         Nan::Callback *progress;
         Nan::Callback *error_callback;
-        dataQ<CusMessage> toNode;
+        dataQ<CustomMessage> toNode;
         bool input_closed;
         int input_paused;
 
@@ -153,10 +153,10 @@ class DataWorker : public Nan::AsyncProgressWorker
         {
             Nan::HandleScope scope;
 
-            std::deque <CusMessage> contents;
+            std::deque <CustomMessage> contents;
             toNode.readAll(contents);
 
-            for (CusMessage &msg : contents)
+            for (CustomMessage &msg : contents)
             {
                 v8::Local <v8::Value> argv[] = { Nan::New<v8::String>(msg.name.c_str()).ToLocalChecked(), Nan::New<v8::String>(msg.data.c_str()).ToLocalChecked() };
                 progress->Call(2, argv);

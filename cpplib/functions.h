@@ -235,7 +235,6 @@ int neoRADIO2SetSettingsFromJSON(neoRADIO2_DeviceInfo * deviceInfo, std::string 
     try
     {
         uint8_t enables;
-
         json settingsData = json::parse(* messageData);
         auto settingsBank = settingsData["bank"].get<unsigned int>();
         auto settingsDeviceNumber = settingsData["deviceLink"].get<unsigned int>();
@@ -338,12 +337,6 @@ int neoRADIO2SetSettingsFromJSON(neoRADIO2_DeviceInfo * deviceInfo, std::string 
             }
                 break;
 
-            case NEORADIO2_DEVTYPE_BADGE:
-            {
-
-            }
-                break;
-
             default:
                 break;
         }
@@ -408,7 +401,7 @@ int neoRADIO2SetPwrRly(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageD
         buf[0] = 0xFF;
         buf[1] = settingsExtraArray[1]; //current state
         neoRADIO2SendPacket(deviceInfo, NEORADIO2_COMMAND_WRITE_DATA, settingsDeviceNumber, 1, (uint8_t *) &buf, sizeof(buf));
-        std::this_thread::sleep_for(std::chrono::milliseconds(150));
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
         return 0;
     }
     catch(const std::exception& e)
@@ -494,11 +487,11 @@ nlohmann::json neoRADIO2returnCalibrationJSON(neoRADIO2_DeviceInfo * deviceInfo,
                                 uint8_t * rxdata = &deviceInfo->rxDataBuffer[c].data[sizeof(neoRADIO2frame_calHeader)];
                                 if(*deviceType == NEORADIO2_DEVTYPE_AOUT)
                                 {
-                                    devices["datapoints"][std::to_string(deviceInfo->rxDataBuffer[c].header.bank)] = neoRADIO2returnAoutData(&rxdata, &(deviceInfo->rxDataBuffer[c].data[0]));
+                                    devices["datapoints"][deviceInfo->rxDataBuffer[c].header.bank] = neoRADIO2returnAoutData(&rxdata, &(deviceInfo->rxDataBuffer[c].data[0]));
                                 }
                                 else
                                 {
-                                    devices["datapoints"][std::to_string(deviceInfo->rxDataBuffer[c].header.bank)] = neoRADIO2returnFloatData(&rxdata, &(deviceInfo->rxDataBuffer[c].data[0]));
+                                    devices["datapoints"][deviceInfo->rxDataBuffer[c].header.bank] = neoRADIO2returnFloatData(&rxdata, &(deviceInfo->rxDataBuffer[c].data[0]));
                                 }
                                 timeout = 0;
                             }
@@ -763,19 +756,19 @@ nlohmann::json neoRADIO2returnAllCalibrationJSON(neoRADIO2_DeviceInfo * deviceIn
     {
         for(int c = 0; c < 6; c++)
         {
-            devices["data"][std::to_string(c)] = neoRADIO2returnCalibrationJSON(deviceInfo, &device, &deviceType, &deviceChannel,(uint8_t *) &c);
+            devices["data"][c] = neoRADIO2returnCalibrationJSON(deviceInfo, &device, &deviceType, &deviceChannel,(uint8_t *) &c);
         }
     }
     else if(deviceType == NEORADIO2_DEVTYPE_AOUT)
     {
         for(int c = 0; c < 3; c++)
         {
-            devices["data"][std::to_string(c)] = neoRADIO2returnCalibrationJSON(deviceInfo, &device, &deviceType, (uint8_t *) &c, &deviceRange);
+            devices["data"][c] = neoRADIO2returnCalibrationJSON(deviceInfo, &device, &deviceType, (uint8_t *) &c, &deviceRange);
         }
     }
     else
     {
-        devices["data"]["0"] = neoRADIO2returnCalibrationJSON(deviceInfo, &device, &deviceType, &deviceChannel, &deviceRange);
+        devices["data"][0] = neoRADIO2returnCalibrationJSON(deviceInfo, &device, &deviceType, &deviceChannel, &deviceRange);
     }
 
     return devices;
