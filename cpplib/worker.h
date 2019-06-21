@@ -12,7 +12,7 @@
 using namespace std;
 
 template<typename Data>
-class dataQ
+class dataQueue
 {
     public:
         void write(Data data)
@@ -56,8 +56,8 @@ class dataQ
             locker.unlock();
         }
 
-        dataQ(){}
-        ~dataQ(){}
+        dataQueue(){}
+        ~dataQueue(){}
 
     private:
         std::mutex mu;
@@ -81,7 +81,6 @@ class DataWorker : public Nan::AsyncProgressWorker
         DataWorker(Nan::Callback *progress, Nan::Callback *callback, Nan::Callback *error_callback) : Nan::AsyncProgressWorker(callback), progress(progress), error_callback(error_callback)
         {
             input_closed = false;
-            input_paused = 1;
         }
 
         ~DataWorker()
@@ -113,17 +112,7 @@ class DataWorker : public Nan::AsyncProgressWorker
             input_closed = true;
         }
 
-        void pause()
-        {
-            input_paused = 0;
-        }
-
-        void restart()
-        {
-            input_paused = 1;
-        }
-
-        dataQ<CustomMessage> fromNode;
+        dataQueue<CustomMessage> fromNode;
 
     protected:
         void writeToNode(const Nan::AsyncProgressWorker::ExecutionProgress &progress, CustomMessage &msg)
@@ -137,16 +126,10 @@ class DataWorker : public Nan::AsyncProgressWorker
             return input_closed;
         }
 
-        int paused()
-        {
-            return input_paused;
-        }
-
         Nan::Callback *progress;
         Nan::Callback *error_callback;
-        dataQ<CustomMessage> toNode;
+        dataQueue<CustomMessage> toNode;
         bool input_closed;
-        int input_paused;
 
     private:
         void drainQueue()

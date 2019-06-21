@@ -176,5 +176,9 @@
 1. Read calibration data for AOUT
 
 ###v1.5.3
+#####changed
+1. Remove unnecessary code from C++ file.
+
+
 #####added
 1. Added error messages.

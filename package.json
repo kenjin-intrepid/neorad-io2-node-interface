@@ -1,7 +1,7 @@
 {
   "name": "RAD-IO2",
   "productName": "RAD-IO2",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "description": "RAD-IO2 GUI app",
   "main": "main.js",
   "scripts": {
