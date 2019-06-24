@@ -182,7 +182,7 @@
 
 #####added
 1. Added error messages.
-2. Added retry for initial find device (2000ms).
+2. Added retry for initial find device.
 
 #####fixed
 1. Fixed folders won't create properly during initial run.
