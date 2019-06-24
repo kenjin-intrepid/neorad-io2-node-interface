@@ -32,8 +32,7 @@
     "nan": "^2.14.0",
     "papaparse": "^4.6.3",
     "popper.js": "^1.15.0",
-    "through": "^2.3.8",
-    "vue": "^2.6.10"
+    "through": "^2.3.8"
   },
   "cmake-js": {
     "runtime": "electron",

@@ -166,7 +166,10 @@ class Sensor : public DataWorker
                     json sample;
                     if (result == 0 && !closed())
                     {
-                        neoRADIO2SetOnline(&deviceInfo, 1);
+                        if(deviceInfo.isOnline == 0)
+                        {
+                            neoRADIO2SetOnline(&deviceInfo, 1);
+                        }
                         std::this_thread::sleep_for(std::chrono::milliseconds(1));
                         result = neoRADIO2ProcessIncomingData(&deviceInfo, 1000);
                         if (deviceInfo.rxDataCount > 0 && deviceInfo.State == neoRADIO2state_Connected)

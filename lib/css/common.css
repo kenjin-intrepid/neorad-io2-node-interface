@@ -234,6 +234,10 @@ input[type=number]::-webkit-outer-spin-button {
 {
     padding: 0 15px 7px 15px;
 }
+.ma_graph_sidebar_nav_channel span
+{
+    text-align: right;
+}
 .ma_graph_sidebar_head
 {
     width: 100%;
