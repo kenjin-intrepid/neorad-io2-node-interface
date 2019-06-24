@@ -37,6 +37,7 @@ class Sensor : public DataWorker
         bool deviceConnected = true;
         int neoRADIO2_state = DeviceIdle;
         int result, Devices;
+        int retry = 0;
         neoRADIO2_USBDevice deviceLinked[8];
         neoRADIO2_DeviceInfo deviceInfo;
         auto last = std::chrono::steady_clock::now();
@@ -81,8 +82,8 @@ class Sensor : public DataWorker
 
                 case DeviceInit:
                 {
-                    Devices = neoRADIO2FindDevices(deviceLinked, 8);
                     json devices;
+                    Devices = neoRADIO2FindDevices(deviceLinked, 8);
                     if(Devices > 0)
                     {
                         for (int i = 0; i < Devices; i++)
@@ -125,12 +126,22 @@ class Sensor : public DataWorker
                             writeToNode(progress, SendFound);
                         }
                         neoRADIO2_state = DeviceIdle;
+                        retry = 0;
                     }
                     else
                     {
-                        CustomMessage sendError("error_msg", "101");
-                        writeToNode(progress, sendError);
-                        neoRADIO2_state = DeviceIdle;
+                        if(retry > 2000)
+                        {
+                            CustomMessage sendError("error_msg", "101");
+                            writeToNode(progress, sendError);
+                            neoRADIO2_state = DeviceIdle;
+                        }
+                        else
+                        {
+                            std::this_thread::sleep_for(std::chrono::milliseconds(1));
+                            neoRADIO2_state = DeviceInit;
+                            retry++;
+                        }
                     }
                 }
                     break;

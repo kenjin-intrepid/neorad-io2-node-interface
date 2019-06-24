@@ -22,23 +22,33 @@ window.isFahrenheit = 0;
 window.refreshRate = 100;
 
 const mypath = ipcRenderer.sendSync('get-path', 'get-path');
-if(!fs.existsSync(`${mypath}\/IntrepidCS`))
-{
-    fs.mkdir(`${mypath}\/IntrepidCS`,function (err) {
-        console.log(err);
-    });
-}
 
-if(!fs.existsSync(`${mypath}\/IntrepidCS\/RAD-IO2`))
+if(!fs.existsSync(`${mypath}\/IntrepidCS\/neoRAD-IO2\/PlotHistory`))
 {
-    fs.mkdir(`${mypath}\/IntrepidCS\/RAD-IO2`,function (err) {
-        console.log(err);
-    });
-}
+    if(!fs.existsSync(`${mypath}\/IntrepidCS\/neoRAD-IO2`))
+    {
+        if(!fs.existsSync(`${mypath}\/IntrepidCS`))
+        {
+            fs.mkdir(`${mypath}\/IntrepidCS`,function (err) {
+                console.log(err);
+                fs.mkdir(`${mypath}\/IntrepidCS\/neoRAD-IO2`,function (err) {
+                    console.log(err);
+                    fs.mkdir(`${mypath}\/IntrepidCS\/neoRAD-IO2\/PlotHistory`,function (err) {
+                        console.log(err);
+                    });
+                });
+            });
+        }
 
-if(!fs.existsSync(`${mypath}\/IntrepidCS\/RAD-IO2\/PlotHistory`))
-{
-    fs.mkdir(`${mypath}\/IntrepidCS\/RAD-IO2\/PlotHistory`,function (err) {
+        fs.mkdir(`${mypath}\/IntrepidCS\/neoRAD-IO2`,function (err) {
+            console.log(err);
+            fs.mkdir(`${mypath}\/IntrepidCS\/neoRAD-IO2\/PlotHistory`,function (err) {
+                console.log(err);
+            });
+        });
+    }
+
+    fs.mkdir(`${mypath}\/IntrepidCS\/neoRAD-IO2\/PlotHistory`,function (err) {
         console.log(err);
     });
 }
