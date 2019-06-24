@@ -17,7 +17,7 @@
     <a class="navbar-brand" href="https://www.intrepidcs.com/">
         <img src="../img/logo.png" width="45" height="45">
     </a>
-    <ul class="navbar-nav mr-auto">
+    <ul class="navbar-nav mr-auto navbar_items">
         <li class="nav-item nav_device active" data-page="ma_device">
             <a class="nav-link" href="#">
                 <i class="fas fa-list-ol"></i>
@@ -44,6 +44,12 @@
         </li>
     </ul>
     <ul class="navbar-nav">
+        <li>
+            <div class="progress-bar em2 status_text statustext">
+            </div>
+        </li>
+    </ul>
+    <ul class="navbar-nav navbar_items">
         <li class="nav-item nav_setting" data-page="ma_setting">
             <a class="nav-link" href="#">
                 <i class="fas fa-cog"></i>
@@ -62,9 +68,6 @@
                 <button type="button" class="btn btn-danger hidden" id="device_reload">Disconnect</button>
                 <button type="button" class="btn btn-info disabled hidden" id="device_startlog" disabled>Go Online</button>
                 <button type="button" class="btn btn-warning disabled hidden" id="device_stop" disabled>Stop</button>
-            </div>
-            <div class="progress-bar em2 status_text">
-                <span class="statustext"></span>
             </div>
         </div>
     </div>
@@ -116,9 +119,6 @@
 
     <div class="ma ma_calibration hidden">
         <div class="cal_wrapper">
-            <div class="progress-bar em2 status_text">
-                <span class="statustext"></span>
-            </div>
             <div class="sidepanel">
                 <div class="input-group sidepanel_input_group">
                     <div class="input-group-prepend">

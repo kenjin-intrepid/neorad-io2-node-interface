@@ -163,6 +163,10 @@ input[type=number]::-webkit-outer-spin-button {
     margin: 0;
 }
 
+.navbar
+{
+    max-height: 71px;
+}
 /*main body*/
 .main_area
 {
@@ -499,7 +503,7 @@ i:hover .tooltip_text
     flex-direction: column;
     justify-content: center;
     text-align: center;
-    white-space: nowrap;
+    white-space: pre-wrap;
     font-size: 1.3rem;
     border-radius: 0;
     z-index: 9999;
@@ -507,6 +511,9 @@ i:hover .tooltip_text
     right: 0;
     background-color: transparent;
     color: #009900;
+
+    overflow-wrap: break-word;
+    word-break: break-word;
 }
 
 @keyframes pseudoelement

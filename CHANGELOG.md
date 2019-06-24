@@ -179,6 +179,7 @@
 #####changed
 1. Remove unnecessary code from C++ file.
 2. Changed project name back to neoRAD-IO2(revert from 1.4.17)
+3. Changed how tooltip text is shown.
 
 #####added
 1. Added error messages.

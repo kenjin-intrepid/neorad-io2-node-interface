@@ -88,7 +88,6 @@ class Sensor : public DataWorker
                     {
                         for (int i = 0; i < Devices; i++)
                         {
-                            std::cout << retry << std::endl;
                             memset(&deviceInfo, 0, sizeof(deviceInfo));
                             memcpy(&deviceInfo.usbDevice, &deviceLinked[i], sizeof(neoRADIO2_USBDevice));
                             result = neoRADIO2ConnectDevice(&deviceInfo);
@@ -218,17 +217,15 @@ class Sensor : public DataWorker
                 case DeviceReload:
                 {
                     json reload;
-                    while (result == 0 && !closed())
+                    if (result == 0 && !closed())
                     {
-                        std::this_thread::sleep_for(std::chrono::milliseconds(1));
                         result = neoRADIO2ProcessIncomingData(&deviceInfo, 1000);
+                        std::this_thread::sleep_for(std::chrono::milliseconds(100));
                         if (deviceInfo.State == neoRADIO2state_Connected)
                         {
                             reload = neoRADIO2returnChainlistJSON(&deviceInfo);
                             CustomMessage toSend("settings_reply", reload.dump());
                             writeToNode(progress, toSend);
-                            neoRADIO2SetOnline(&deviceInfo, 0);
-                            break;
                         }
                     }
                     neoRADIO2_state = DeviceIdle;

@@ -177,8 +177,8 @@ nlohmann::json neoRADIO2returnChainlistJSON(neoRADIO2_DeviceInfo * deviceInfo)
         if(deviceInfo->ChainList[i][0].deviceType == NEORADIO2_DEVTYPE_PWRRLY)
         {
             neoRADIO2SendPacket(deviceInfo, NEORADIO2_COMMAND_READ_DATA, i, 0x01, NULL, 0);
-            bool timeout = true;
-            while(timeout)
+            int timeout = 1000;
+            while(timeout--)
             {
                 std::this_thread::sleep_for(std::chrono::milliseconds(1));
                 neoRADIO2ProcessIncomingData(deviceInfo, 1000);
@@ -189,7 +189,7 @@ nlohmann::json neoRADIO2returnChainlistJSON(neoRADIO2_DeviceInfo * deviceInfo)
                         if(deviceInfo->rxDataBuffer[c].header.start_of_frame == 0x55 && deviceInfo->rxDataBuffer[c].header.command_status == NEORADIO2_STATUS_SENSOR)
                         {
                             devices["PWRRLY_STATUS"][i] = deviceInfo->rxDataBuffer[c].data[0];
-                            timeout = false;
+                            timeout = 0;
                         }
                     }
                 }
