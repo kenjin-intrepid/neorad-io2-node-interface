@@ -101,6 +101,11 @@ nlohmann::json neoRADIO2returnChainlistJSON(neoRADIO2_DeviceInfo * deviceInfo)
             devices["chainlist"][concatenateI][concatenateJ]["settingsCanLocation"] = deviceInfo->ChainList[i][j].settings.can.Location;
             devices["chainlist"][concatenateI][concatenateJ]["settingsCanMsgType"] = deviceInfo->ChainList[i][j].settings.can.msgType;
 
+            if(deviceInfo->ChainList[i][j].settings.config.poll_rate_ms == 0xFFFFFFFF)
+            {
+                devices["chainlist"][concatenateI][concatenateJ]["notInit"] = 1;
+            }
+
             std::u32string Name;
             int stringlen = deviceInfo->ChainList[i][j].settings.name1.length;
             switch (deviceInfo->ChainList[i][j].settings.name1.charSize)

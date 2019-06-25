@@ -38,6 +38,7 @@ class Sensor : public DataWorker
         int neoRADIO2_state = DeviceIdle;
         int result, Devices;
         int retry = 0;
+        json return_measured_data;
         neoRADIO2_USBDevice deviceLinked[8];
         neoRADIO2_DeviceInfo deviceInfo;
         auto last = std::chrono::steady_clock::now();
@@ -148,6 +149,7 @@ class Sensor : public DataWorker
                     {
                         if(retry > 1000)
                         {
+                            deviceConnected = false;
                             CustomMessage sendError("error_msg", "101");
                             writeToNode(progress, sendError);
                             neoRADIO2_state = DeviceIdle;
@@ -163,19 +165,18 @@ class Sensor : public DataWorker
 
                 case DeviceOnline:
                 {
-                    json sample;
                     if (result == 0 && !closed())
                     {
                         if(deviceInfo.isOnline == 0)
                         {
                             neoRADIO2SetOnline(&deviceInfo, 1);
                         }
-                        std::this_thread::sleep_for(std::chrono::milliseconds(1));
                         result = neoRADIO2ProcessIncomingData(&deviceInfo, 1000);
+                        std::this_thread::sleep_for(std::chrono::milliseconds(1));
                         if (deviceInfo.rxDataCount > 0 && deviceInfo.State == neoRADIO2state_Connected)
                         {
-                            neoRADIO2returnDataJSON(&deviceInfo, &sample);
-                            CustomMessage toSend("data_stream", sample.dump());
+                            neoRADIO2returnDataJSON(&deviceInfo, &return_measured_data);
+                            CustomMessage toSend("data_stream", return_measured_data.dump());
                             writeToNode(progress, toSend);
                         }
                     }
