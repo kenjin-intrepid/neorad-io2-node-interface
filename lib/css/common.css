@@ -112,6 +112,10 @@ input
 {
     -webkit-box-shadow: 0 0 0 0;
 }
+.theme-black-bg hr
+{
+    border-top: 1px solid rgb(255,255,255);
+}
 .theme-black-bg, .theme-black-bg .ma_graph_sidebar_bg
 {
     background: black;

@@ -32,12 +32,9 @@ class Sensor : public DataWorker
             SetPwrRly = 9,
             SetAout = 10
         };
-        std::string device = "device", channel = "channel", messageData;
-        int messageName;
+        std::string messageData;
+        int messageName, result, Devices, retry = 0, neoRADIO2_state = DeviceIdle;
         bool deviceConnected = true;
-        int neoRADIO2_state = DeviceIdle;
-        int result, Devices;
-        int retry = 0;
         json return_measured_data;
         neoRADIO2_USBDevice deviceLinked[8];
         neoRADIO2_DeviceInfo deviceInfo;

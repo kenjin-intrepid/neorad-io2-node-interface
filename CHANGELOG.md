@@ -177,7 +177,7 @@
 
 ###v1.5.3
 #####changed
-1. Electron@v5.0.5
+1. Electron@v5.0.6
 2. Remove unnecessary code from C++ file.
 3. Changed project name back to neoRAD-IO2(revert from 1.4.17)
 4. Changed how tooltip text is shown.
@@ -185,6 +185,7 @@
 #####added
 1. Added error messages.
 2. Added retry for initial find device.
+3. DIO support.
 
 #####fixed
 1. Fixed folders won't create properly during initial run.
