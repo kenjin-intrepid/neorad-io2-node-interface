@@ -11,7 +11,7 @@ int neoRADIO2SetPwrRly(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageD
 nlohmann::json neoRADIO2returnCalibrationJSON(neoRADIO2_DeviceInfo * deviceInfo, uint8_t * device, int * deviceType, uint8_t * deviceChannel, uint8_t * deviceRange);
 int neoRADIO2SetCalibrationFromJSON(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData);
 int neoRADIO2SetCalibrationFromJSONAOut(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData);
-void neoRADIO2returnCalibrationDataJSON(neoRADIO2_DeviceInfo * deviceInfo, nlohmann::json * sample, std::string * messageData);
+int neoRADIO2returnCalibrationDataJSON(neoRADIO2_DeviceInfo * deviceInfo, nlohmann::json * sample, std::string * messageData);
 void neoRADIO2ClearCalibration(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData);
 nlohmann::json neoRADIO2returnAllCalibrationJSON(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData);
 void neoRADIO2SetAoutValue(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData);
@@ -69,10 +69,6 @@ std::vector<uint32_t> neoRADIO2returnAoutData(uint8_t * rxdata[60], uint8_t * po
 nlohmann::json neoRADIO2returnChainlistJSON(neoRADIO2_DeviceInfo * deviceInfo)
 {
     json devices;
-    std::string device = "device";
-    std::string channel = "channel";
-    std::string concatenateI,concatenateJ;
-
     devices["State"] = deviceInfo->State;
     devices["maxID_Device"] = deviceInfo->LastDevice + 1;
     devices["maxID_Chip"] = deviceInfo->LastBank;
@@ -81,25 +77,28 @@ nlohmann::json neoRADIO2returnChainlistJSON(neoRADIO2_DeviceInfo * deviceInfo)
     {
         for(int j = 0; j < 8; j++)
         {
-            concatenateI = device + std::to_string(i);
-            concatenateJ = channel + std::to_string(j);
             char serial[7] = {0};
             neoRADIO2SerialToString(serial, deviceInfo->ChainList[i][j].serialNumber);
 
-            devices["chainlist"][concatenateI][concatenateJ]["serialNumber"] = std::string(serial);
-            devices["chainlist"][concatenateI][concatenateJ]["manufacture_year"] = deviceInfo->ChainList[i][j].manufacture_year;
-            devices["chainlist"][concatenateI][concatenateJ]["manufacture_day"] = deviceInfo->ChainList[i][j].manufacture_day;
-            devices["chainlist"][concatenateI][concatenateJ]["manufacture_month"] = deviceInfo->ChainList[i][j].manufacture_month;
-            devices["chainlist"][concatenateI][concatenateJ]["deviceType"] = deviceInfo->ChainList[i][j].deviceType;
-            devices["chainlist"][concatenateI][concatenateJ]["firmwareVersion_major"] = deviceInfo->ChainList[i][j].firmwareVersion_major;
-            devices["chainlist"][concatenateI][concatenateJ]["firmwareVersion_minor"] = deviceInfo->ChainList[i][j].firmwareVersion_minor;
-            devices["chainlist"][concatenateI][concatenateJ]["hardwareRev_major"] = deviceInfo->ChainList[i][j].hardwareRev_major;
-            devices["chainlist"][concatenateI][concatenateJ]["status"] = deviceInfo->ChainList[i][j].status;
-            devices["chainlist"][concatenateI][concatenateJ]["settingsValid"] = deviceInfo->ChainList[i][j].settingsState;
-            devices["chainlist"][concatenateI][concatenateJ]["settingsReportRate"] = deviceInfo->ChainList[i][j].settings.config.poll_rate_ms;
-            devices["chainlist"][concatenateI][concatenateJ]["settingsCanArbid"] = deviceInfo->ChainList[i][j].settings.can.Arbid;
-            devices["chainlist"][concatenateI][concatenateJ]["settingsCanLocation"] = deviceInfo->ChainList[i][j].settings.can.Location;
-            devices["chainlist"][concatenateI][concatenateJ]["settingsCanMsgType"] = deviceInfo->ChainList[i][j].settings.can.msgType;
+            devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["serialNumber"] = std::string(serial);
+            devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["manufacture_year"] = deviceInfo->ChainList[i][j].manufacture_year;
+            devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["manufacture_day"] = deviceInfo->ChainList[i][j].manufacture_day;
+            devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["manufacture_month"] = deviceInfo->ChainList[i][j].manufacture_month;
+            devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["deviceType"] = deviceInfo->ChainList[i][j].deviceType;
+            devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["firmwareVersion_major"] = deviceInfo->ChainList[i][j].firmwareVersion_major;
+            devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["firmwareVersion_minor"] = deviceInfo->ChainList[i][j].firmwareVersion_minor;
+            devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["hardwareRev_major"] = deviceInfo->ChainList[i][j].hardwareRev_major;
+            devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["status"] = deviceInfo->ChainList[i][j].status;
+            devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["settingsValid"] = deviceInfo->ChainList[i][j].settingsState;
+            devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["settingsReportRate"] = deviceInfo->ChainList[i][j].settings.config.poll_rate_ms;
+            devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["settingsCanArbid"] = deviceInfo->ChainList[i][j].settings.can.Arbid;
+            devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["settingsCanLocation"] = deviceInfo->ChainList[i][j].settings.can.Location;
+            devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["settingsCanMsgType"] = deviceInfo->ChainList[i][j].settings.can.msgType;
+
+            if(deviceInfo->ChainList[i][j].settings.config.poll_rate_ms == 0xFFFFFFFF)
+            {
+                devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["notInit"] = 1;
+            }
 
             std::u32string Name;
             int stringlen = deviceInfo->ChainList[i][j].settings.name1.length;
@@ -139,10 +138,10 @@ nlohmann::json neoRADIO2returnChainlistJSON(neoRADIO2_DeviceInfo * deviceInfo)
                     break;
             }
 
-            devices["chainlist"][concatenateI][concatenateJ]["settingsNameArray"] = Name;
-            devices["chainlist"][concatenateI][concatenateJ]["settingsNameArraySize"] = deviceInfo->ChainList[i][j].settings.name1.charSize;
-            devices["chainlist"][concatenateI][concatenateJ]["settingsNameLength"] = deviceInfo->ChainList[i][j].settings.name1.length;
-            devices["chainlist"][concatenateI][concatenateJ]["settingsEnables"] = deviceInfo->ChainList[i][j].settings.config.channel_1_config;
+            devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["settingsNameArray"] = Name;
+            devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["settingsNameArraySize"] = deviceInfo->ChainList[i][j].settings.name1.charSize;
+            devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["settingsNameLength"] = deviceInfo->ChainList[i][j].settings.name1.length;
+            devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["settingsEnables"] = deviceInfo->ChainList[i][j].settings.config.channel_1_config;
 
             if(deviceInfo->ChainList[i][0].deviceType == NEORADIO2_DEVTYPE_AOUT)
             {
@@ -151,17 +150,17 @@ nlohmann::json neoRADIO2returnChainlistJSON(neoRADIO2_DeviceInfo * deviceInfo)
                 Channel2.u32 = deviceInfo->ChainList[i][j].settings.config.channel_2_config;
                 Channel3.u32 = deviceInfo->ChainList[i][j].settings.config.channel_3_config;
 
-                devices["chainlist"][concatenateI][concatenateJ]["settings1"]["enabled"] = Channel1.data.enabled;
-                devices["chainlist"][concatenateI][concatenateJ]["settings1"]["initEnabled"] = Channel1.data.initEnabled;
-                devices["chainlist"][concatenateI][concatenateJ]["settings1"]["initOutputValue"] = Channel1.data.initOutputValue;
+                devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["settings1"]["enabled"] = Channel1.data.enabled;
+                devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["settings1"]["initEnabled"] = Channel1.data.initEnabled;
+                devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["settings1"]["initOutputValue"] = Channel1.data.initOutputValue;
 
-                devices["chainlist"][concatenateI][concatenateJ]["settings2"]["enabled"] = Channel2.data.enabled;
-                devices["chainlist"][concatenateI][concatenateJ]["settings2"]["initEnabled"] = Channel2.data.initEnabled;
-                devices["chainlist"][concatenateI][concatenateJ]["settings2"]["initOutputValue"] = Channel2.data.initOutputValue;
+                devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["settings2"]["enabled"] = Channel2.data.enabled;
+                devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["settings2"]["initEnabled"] = Channel2.data.initEnabled;
+                devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["settings2"]["initOutputValue"] = Channel2.data.initOutputValue;
 
-                devices["chainlist"][concatenateI][concatenateJ]["settings3"]["enabled"] = Channel3.data.enabled;
-                devices["chainlist"][concatenateI][concatenateJ]["settings3"]["initEnabled"] = Channel3.data.initEnabled;
-                devices["chainlist"][concatenateI][concatenateJ]["settings3"]["initOutputValue"] = Channel3.data.initOutputValue;
+                devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["settings3"]["enabled"] = Channel3.data.enabled;
+                devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["settings3"]["initEnabled"] = Channel3.data.initEnabled;
+                devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["settings3"]["initOutputValue"] = Channel3.data.initOutputValue;
             }
         }
 
@@ -177,8 +176,8 @@ nlohmann::json neoRADIO2returnChainlistJSON(neoRADIO2_DeviceInfo * deviceInfo)
         if(deviceInfo->ChainList[i][0].deviceType == NEORADIO2_DEVTYPE_PWRRLY)
         {
             neoRADIO2SendPacket(deviceInfo, NEORADIO2_COMMAND_READ_DATA, i, 0x01, NULL, 0);
-            bool timeout = true;
-            while(timeout)
+            int timeout = 1000;
+            while(timeout--)
             {
                 std::this_thread::sleep_for(std::chrono::milliseconds(1));
                 neoRADIO2ProcessIncomingData(deviceInfo, 1000);
@@ -189,7 +188,7 @@ nlohmann::json neoRADIO2returnChainlistJSON(neoRADIO2_DeviceInfo * deviceInfo)
                         if(deviceInfo->rxDataBuffer[c].header.start_of_frame == 0x55 && deviceInfo->rxDataBuffer[c].header.command_status == NEORADIO2_STATUS_SENSOR)
                         {
                             devices["PWRRLY_STATUS"][i] = deviceInfo->rxDataBuffer[c].data[0];
-                            timeout = false;
+                            timeout = 0;
                         }
                     }
                 }
@@ -235,7 +234,6 @@ int neoRADIO2SetSettingsFromJSON(neoRADIO2_DeviceInfo * deviceInfo, std::string 
     try
     {
         uint8_t enables;
-
         json settingsData = json::parse(* messageData);
         auto settingsBank = settingsData["bank"].get<unsigned int>();
         auto settingsDeviceNumber = settingsData["deviceLink"].get<unsigned int>();
@@ -260,6 +258,12 @@ int neoRADIO2SetSettingsFromJSON(neoRADIO2_DeviceInfo * deviceInfo, std::string 
                     enables = NEORADIO2TC_CONFIG_TC;
                 }
                 deviceInfo->ChainList[settingsDeviceNumber][settingsBank].settings.config.channel_1_config = enables;
+            }
+                break;
+
+            case NEORADIO2_DEVTYPE_DIO:
+            {
+
             }
                 break;
 
@@ -331,19 +335,6 @@ int neoRADIO2SetSettingsFromJSON(neoRADIO2_DeviceInfo * deviceInfo, std::string 
             }
                 break;
 
-            case NEORADIO2_DEVTYPE_CANHUB:
-            {
-                auto settingsExtraArray = settingsData["extraSettings"].get<std::vector<std::vector<unsigned int>>>();
-                deviceInfo->ChainList[settingsDeviceNumber][settingsBank].settings.config.channel_1_config = enables;
-            }
-                break;
-
-            case NEORADIO2_DEVTYPE_BADGE:
-            {
-
-            }
-                break;
-
             default:
                 break;
         }
@@ -408,7 +399,7 @@ int neoRADIO2SetPwrRly(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageD
         buf[0] = 0xFF;
         buf[1] = settingsExtraArray[1]; //current state
         neoRADIO2SendPacket(deviceInfo, NEORADIO2_COMMAND_WRITE_DATA, settingsDeviceNumber, 1, (uint8_t *) &buf, sizeof(buf));
-        std::this_thread::sleep_for(std::chrono::milliseconds(150));
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
         return 0;
     }
     catch(const std::exception& e)
@@ -494,11 +485,11 @@ nlohmann::json neoRADIO2returnCalibrationJSON(neoRADIO2_DeviceInfo * deviceInfo,
                                 uint8_t * rxdata = &deviceInfo->rxDataBuffer[c].data[sizeof(neoRADIO2frame_calHeader)];
                                 if(*deviceType == NEORADIO2_DEVTYPE_AOUT)
                                 {
-                                    devices["datapoints"][std::to_string(deviceInfo->rxDataBuffer[c].header.bank)] = neoRADIO2returnAoutData(&rxdata, &(deviceInfo->rxDataBuffer[c].data[0]));
+                                    devices["datapoints"][deviceInfo->rxDataBuffer[c].header.bank] = neoRADIO2returnAoutData(&rxdata, &(deviceInfo->rxDataBuffer[c].data[0]));
                                 }
                                 else
                                 {
-                                    devices["datapoints"][std::to_string(deviceInfo->rxDataBuffer[c].header.bank)] = neoRADIO2returnFloatData(&rxdata, &(deviceInfo->rxDataBuffer[c].data[0]));
+                                    devices["datapoints"][deviceInfo->rxDataBuffer[c].header.bank] = neoRADIO2returnFloatData(&rxdata, &(deviceInfo->rxDataBuffer[c].data[0]));
                                 }
                                 timeout = 0;
                             }
@@ -687,7 +678,7 @@ int neoRADIO2SetCalibrationFromJSONAOut(neoRADIO2_DeviceInfo * deviceInfo, std::
     }
 }
 
-void neoRADIO2returnCalibrationDataJSON(neoRADIO2_DeviceInfo * deviceInfo, nlohmann::json * sample, std::string * messageData)
+int neoRADIO2returnCalibrationDataJSON(neoRADIO2_DeviceInfo * deviceInfo, nlohmann::json * sample, std::string * messageData)
 {
     try
     {
@@ -717,6 +708,7 @@ void neoRADIO2returnCalibrationDataJSON(neoRADIO2_DeviceInfo * deviceInfo, nlohm
                     value.b[3] = deviceInfo->rxDataBuffer[i].data[3];
                     (*sample)["tempData"] = value.fp;
                     (*sample)["bank"] = deviceInfo->rxDataBuffer[i].header.bank;
+                    return 0;
                 }
             }
         }
@@ -763,19 +755,19 @@ nlohmann::json neoRADIO2returnAllCalibrationJSON(neoRADIO2_DeviceInfo * deviceIn
     {
         for(int c = 0; c < 6; c++)
         {
-            devices["data"][std::to_string(c)] = neoRADIO2returnCalibrationJSON(deviceInfo, &device, &deviceType, &deviceChannel,(uint8_t *) &c);
+            devices["data"][c] = neoRADIO2returnCalibrationJSON(deviceInfo, &device, &deviceType, &deviceChannel,(uint8_t *) &c);
         }
     }
     else if(deviceType == NEORADIO2_DEVTYPE_AOUT)
     {
         for(int c = 0; c < 3; c++)
         {
-            devices["data"][std::to_string(c)] = neoRADIO2returnCalibrationJSON(deviceInfo, &device, &deviceType, (uint8_t *) &c, &deviceRange);
+            devices["data"][c] = neoRADIO2returnCalibrationJSON(deviceInfo, &device, &deviceType, (uint8_t *) &c, &deviceRange);
         }
     }
     else
     {
-        devices["data"]["0"] = neoRADIO2returnCalibrationJSON(deviceInfo, &device, &deviceType, &deviceChannel, &deviceRange);
+        devices["data"][0] = neoRADIO2returnCalibrationJSON(deviceInfo, &device, &deviceType, &deviceChannel, &deviceRange);
     }
 
     return devices;

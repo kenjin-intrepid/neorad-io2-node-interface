@@ -12,7 +12,7 @@
 using namespace std;
 
 template<typename Data>
-class dataQ
+class dataQueue
 {
     public:
         void write(Data data)
@@ -56,8 +56,8 @@ class dataQ
             locker.unlock();
         }
 
-        dataQ(){}
-        ~dataQ(){}
+        dataQueue(){}
+        ~dataQueue(){}
 
     private:
         std::mutex mu;
@@ -65,14 +65,14 @@ class dataQ
         std::deque <Data> buffer_;
 };
 
-class CusMessage
+class CustomMessage
 {
     public:
         string name;
         string data;
 
-        CusMessage(string name, string data) : name(name), data(data) {}
-        ~CusMessage(){}
+        CustomMessage(string name, string data) : name(name), data(data) {}
+        ~CustomMessage(){}
 };
 
 class DataWorker : public Nan::AsyncProgressWorker
@@ -81,7 +81,6 @@ class DataWorker : public Nan::AsyncProgressWorker
         DataWorker(Nan::Callback *progress, Nan::Callback *callback, Nan::Callback *error_callback) : Nan::AsyncProgressWorker(callback), progress(progress), error_callback(error_callback)
         {
             input_closed = false;
-            input_paused = 1;
         }
 
         ~DataWorker()
@@ -113,20 +112,10 @@ class DataWorker : public Nan::AsyncProgressWorker
             input_closed = true;
         }
 
-        void pause()
-        {
-            input_paused = 0;
-        }
-
-        void restart()
-        {
-            input_paused = 1;
-        }
-
-        dataQ<CusMessage> fromNode;
+        dataQueue<CustomMessage> fromNode;
 
     protected:
-        void writeToNode(const Nan::AsyncProgressWorker::ExecutionProgress &progress, CusMessage &msg)
+        void writeToNode(const Nan::AsyncProgressWorker::ExecutionProgress &progress, CustomMessage &msg)
         {
             toNode.write(msg);
             progress.Send(reinterpret_cast<const char *>(&toNode), sizeof(toNode));
@@ -137,26 +126,20 @@ class DataWorker : public Nan::AsyncProgressWorker
             return input_closed;
         }
 
-        int paused()
-        {
-            return input_paused;
-        }
-
         Nan::Callback *progress;
         Nan::Callback *error_callback;
-        dataQ<CusMessage> toNode;
+        dataQueue<CustomMessage> toNode;
         bool input_closed;
-        int input_paused;
 
     private:
         void drainQueue()
         {
             Nan::HandleScope scope;
 
-            std::deque <CusMessage> contents;
+            std::deque <CustomMessage> contents;
             toNode.readAll(contents);
 
-            for (CusMessage &msg : contents)
+            for (CustomMessage &msg : contents)
             {
                 v8::Local <v8::Value> argv[] = { Nan::New<v8::String>(msg.name.c_str()).ToLocalChecked(), Nan::New<v8::String>(msg.data.c_str()).ToLocalChecked() };
                 progress->Call(2, argv);

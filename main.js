@@ -39,7 +39,7 @@ app.on('ready', function() {
         backgroundColor: "#a09ea1",
         webPreferences: {
             nodeIntegration: true,
-            devTools:false
+            // devTools:false
         }
     });
 
@@ -47,7 +47,7 @@ app.on('ready', function() {
     loadMain("canvas");
 
     // Open the DevTools.
-    // mainWindow.webContents.openDevTools();
+    mainWindow.webContents.openDevTools();
 
     mainWindow.on('closed', () => {
         mainWindow = null;
@@ -158,7 +158,7 @@ function setMenu() {
                 {
                     label: template[locale]['menu_folder'],
                     click() {
-                        let Path = path.join(app.getPath('home'), `IntrepidCS\/RAD-IO2`);
+                        let Path = path.join(app.getPath('home'), `IntrepidCS\/neoRAD-IO2`);
                         shell.showItemInFolder(Path);
                     }
                 }

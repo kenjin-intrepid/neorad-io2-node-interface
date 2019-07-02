@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
-    <title>RAD-IO2</title>
+    <title>neoRAD-IO2</title>
     <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../css/fontawesome-all.min.css">
+    <link rel="stylesheet" href="../../node_modules/@fortawesome/fontawesome-free/css/all.min.css">
     <link rel="stylesheet" href="../css/common.css">
     <link rel="stylesheet" href="../css/cal.css">
     <script src="../js/plotly-basic.min.js"></script>
@@ -14,38 +14,44 @@
 
 <nav class="navbar navbar-expand-sm navbar-dark bg-black">
     <!--company logo goes here along with URL link-->
-    <a class="navbar-brand" href="https://www.intrepidcs.com/">
+    <a class="navbar-brand" href="https://www.intrepidcs.com/" tabindex="-1">
         <img src="../img/logo.png" width="45" height="45">
     </a>
-    <ul class="navbar-nav mr-auto">
+    <ul class="navbar-nav mr-auto navbar_items">
         <li class="nav-item nav_device active" data-page="ma_device">
-            <a class="nav-link" href="#">
+            <a class="nav-link" href="#" tabindex="-1">
                 <i class="fas fa-list-ol"></i>
                 <span id="nav-link-device">Devices</span>
             </a>
         </li>
         <li class="nav-item nav_graph" data-page="ma_graph">
-            <a class="nav-link" href="#">
+            <a class="nav-link" href="#" tabindex="-1">
                 <i class="fas fa-chart-line"></i>
                 <span id="nav-link-graph">Graph</span>
             </a>
         </li>
         <li class="nav-item nav_info"  data-page="ma_info">
-            <a class="nav-link" href="#">
+            <a class="nav-link" href="#" tabindex="-1">
                 <i class="fas fa-question-circle"></i>
                 <span id="nav-link-help">Help</span>
             </a>
         </li>
         <li class="nav-item nav_calibration hidden" data-page="ma_calibration">
-            <a class="nav-link" href="#">
+            <a class="nav-link" href="#" tabindex="-1">
                 <i class="fas fa-clipboard-list"></i>
                 <span id="nav-link-calibration">Calibration</span>
             </a>
         </li>
     </ul>
     <ul class="navbar-nav">
+        <li>
+            <div class="progress-bar em2 status_text statustext">
+            </div>
+        </li>
+    </ul>
+    <ul class="navbar-nav navbar_items">
         <li class="nav-item nav_setting" data-page="ma_setting">
-            <a class="nav-link" href="#">
+            <a class="nav-link" href="#" tabindex="-1">
                 <i class="fas fa-cog"></i>
             </a>
         </li>
@@ -58,13 +64,10 @@
     <div class="ma ma_device">
         <div class="table-responsive-sm">
             <div class="form-group">
-                <button type="button" class="btn btn-info" id="device_connect">Find Device</button>
-                <button type="button" class="btn btn-danger hidden" id="device_reload">Disconnect</button>
-                <button type="button" class="btn btn-info disabled hidden" id="device_startlog" disabled>Go Online</button>
-                <button type="button" class="btn btn-warning disabled hidden" id="device_stop" disabled>Stop</button>
-            </div>
-            <div class="progress-bar em2 status_text">
-                <span class="statustext"></span>
+                <button type="button" class="btn btn-info" id="device_connect" tabindex="-1">Find Device</button>
+                <button type="button" class="btn btn-danger hidden" id="device_reload" tabindex="-1">Disconnect</button>
+                <button type="button" class="btn btn-info disabled hidden" id="device_startlog" tabindex="-1" disabled>Go Online</button>
+                <button type="button" class="btn btn-warning disabled hidden" id="device_stop" tabindex="-1" disabled>Stop</button>
             </div>
         </div>
     </div>
@@ -116,9 +119,6 @@
 
     <div class="ma ma_calibration hidden">
         <div class="cal_wrapper">
-            <div class="progress-bar em2 status_text">
-                <span class="statustext"></span>
-            </div>
             <div class="sidepanel">
                 <div class="input-group sidepanel_input_group">
                     <div class="input-group-prepend">
@@ -307,7 +307,7 @@
                 <a href="https://www.intrepidcs.com/">
                     <img src="../img/logo.png" width="75" height="75">
                 </a>
-                <h4 class="modal-title">RAD-IO2</h4>
+                <h4 class="modal-title">neoRAD-IO2</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>

@@ -3,7 +3,7 @@
     position: relative;
     height: 100%;
     width: 100%;
-    padding: 50px;
+    padding: 30px 50px;
     overflow: auto;
     box-sizing: border-box;
 }
