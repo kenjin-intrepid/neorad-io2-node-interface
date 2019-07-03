@@ -4,11 +4,13 @@ const settings = require('electron-settings');
 
 const path = require('path');
 const url = require('url');
+const isDev = require('electron-is-dev');
 
 const windowStateKeeper = require('electron-window-state');
 
 let mainWindow;
 let menu;
+let DevENV = false;
 
 app.on('ready', function() {
     let {width, height} = electron.screen.getPrimaryDisplay().workAreaSize;
@@ -28,6 +30,11 @@ app.on('ready', function() {
         defaultHeight: height
     });
 
+    if (isDev)
+    {
+        DevENV = true;
+    }
+
     mainWindow = new BrowserWindow({
         x: mainWindowState.x,
         y: mainWindowState.y,
@@ -39,15 +46,18 @@ app.on('ready', function() {
         backgroundColor: "#a09ea1",
         webPreferences: {
             nodeIntegration: true,
-            // devTools:false
+            devTools:DevENV
         }
     });
 
+    if (isDev)
+    {
+        // Open the DevTools.
+        mainWindow.webContents.openDevTools();
+    }
+
     mainWindowState.manage(mainWindow);
     loadMain("canvas");
-
-    // Open the DevTools.
-    mainWindow.webContents.openDevTools();
 
     mainWindow.on('closed', () => {
         mainWindow = null;
