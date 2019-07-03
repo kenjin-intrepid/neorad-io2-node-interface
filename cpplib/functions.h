@@ -15,6 +15,8 @@ int neoRADIO2returnCalibrationDataJSON(neoRADIO2_DeviceInfo * deviceInfo, nlohma
 void neoRADIO2ClearCalibration(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData);
 nlohmann::json neoRADIO2returnAllCalibrationJSON(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData);
 void neoRADIO2SetAoutValue(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData);
+nlohmann::json neoRADIO2SetDIN(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData);
+nlohmann::json neoRADIO2SetDOUT(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData);
 
 using json = nlohmann::json;
 
@@ -69,7 +71,8 @@ std::vector<uint32_t> neoRADIO2returnAoutData(uint8_t * rxdata[60], uint8_t * po
 nlohmann::json neoRADIO2returnChainlistJSON(neoRADIO2_DeviceInfo * deviceInfo)
 {
     json devices;
-    devices["State"] = deviceInfo->State;
+    int State = deviceInfo->State;
+    devices["State"] = State;
     devices["maxID_Device"] = deviceInfo->LastDevice + 1;
     devices["maxID_Chip"] = deviceInfo->LastBank;
 
@@ -80,8 +83,11 @@ nlohmann::json neoRADIO2returnChainlistJSON(neoRADIO2_DeviceInfo * deviceInfo)
             char serial[7] = {0};
             neoRADIO2SerialToString(serial, deviceInfo->ChainList[i][j].serialNumber);
 
+            uint16_t manufacture_year = deviceInfo->ChainList[i][j].manufacture_year;
+            uint32_t poll_rate_ms = deviceInfo->ChainList[i][j].settings.config.poll_rate_ms;
+            uint32_t Arbid = deviceInfo->ChainList[i][j].settings.can.Arbid;
             devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["serialNumber"] = std::string(serial);
-            devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["manufacture_year"] = deviceInfo->ChainList[i][j].manufacture_year;
+            devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["manufacture_year"] = manufacture_year;
             devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["manufacture_day"] = deviceInfo->ChainList[i][j].manufacture_day;
             devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["manufacture_month"] = deviceInfo->ChainList[i][j].manufacture_month;
             devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["deviceType"] = deviceInfo->ChainList[i][j].deviceType;
@@ -90,8 +96,8 @@ nlohmann::json neoRADIO2returnChainlistJSON(neoRADIO2_DeviceInfo * deviceInfo)
             devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["hardwareRev_major"] = deviceInfo->ChainList[i][j].hardwareRev_major;
             devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["status"] = deviceInfo->ChainList[i][j].status;
             devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["settingsValid"] = deviceInfo->ChainList[i][j].settingsState;
-            devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["settingsReportRate"] = deviceInfo->ChainList[i][j].settings.config.poll_rate_ms;
-            devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["settingsCanArbid"] = deviceInfo->ChainList[i][j].settings.can.Arbid;
+            devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["settingsReportRate"] = poll_rate_ms;
+            devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["settingsCanArbid"] = Arbid;
             devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["settingsCanLocation"] = deviceInfo->ChainList[i][j].settings.can.Location;
             devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["settingsCanMsgType"] = deviceInfo->ChainList[i][j].settings.can.msgType;
 
@@ -138,10 +144,11 @@ nlohmann::json neoRADIO2returnChainlistJSON(neoRADIO2_DeviceInfo * deviceInfo)
                     break;
             }
 
+            uint32_t channel_1_config = deviceInfo->ChainList[i][j].settings.config.channel_1_config;
             devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["settingsNameArray"] = Name;
             devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["settingsNameArraySize"] = deviceInfo->ChainList[i][j].settings.name1.charSize;
             devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["settingsNameLength"] = deviceInfo->ChainList[i][j].settings.name1.length;
-            devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["settingsEnables"] = deviceInfo->ChainList[i][j].settings.config.channel_1_config;
+            devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["settingsEnables"] = channel_1_config;
 
             if(deviceInfo->ChainList[i][0].deviceType == NEORADIO2_DEVTYPE_AOUT)
             {
@@ -166,8 +173,9 @@ nlohmann::json neoRADIO2returnChainlistJSON(neoRADIO2_DeviceInfo * deviceInfo)
 
         char deviceserial[7] = {0};
         neoRADIO2SerialToString(deviceserial, deviceInfo->ChainList[i][0].serialNumber);
+        uint16_t manufacture_year_0 = deviceInfo->ChainList[i][0].manufacture_year;
         devices["serialNumber"][i] = std::string(deviceserial);
-        devices["manufacture_year"][i] = deviceInfo->ChainList[i][0].manufacture_year;
+        devices["manufacture_year"][i] = manufacture_year_0;
         devices["manufacture_month"][i] = deviceInfo->ChainList[i][0].manufacture_month;
         devices["manufacture_day"][i] = deviceInfo->ChainList[i][0].manufacture_day;
         devices["firmwareVersion_major"][i] = deviceInfo->ChainList[i][0].firmwareVersion_major;
@@ -206,7 +214,8 @@ void neoRADIO2returnDataJSON(neoRADIO2_DeviceInfo * deviceInfo, nlohmann::json *
         (*returnData)[std::to_string(i)]["deviceType"] = deviceInfo->ChainList[i][0].deviceType;
     }
 
-    (*returnData)["State"] = deviceInfo->State;
+    int State = deviceInfo->State;
+    (*returnData)["State"] = State;
     (*returnData)["maxID_Device"] = deviceInfo->LastDevice + 1;
     (*returnData)["Timeus"] = deviceInfo->Timeus / 1000;
 
@@ -811,6 +820,32 @@ void neoRADIO2SetAoutValue(neoRADIO2_DeviceInfo * deviceInfo, std::string * mess
             std::this_thread::sleep_for(std::chrono::milliseconds(1));
             neoRADIO2ProcessIncomingData(deviceInfo, 1000);
         }
+    }
+    catch(const std::exception& e)
+    {
+        std::cout << "Caught exception " << e.what() << std::endl;
+    }
+}
+
+nlohmann::json neoRADIO2SetDIN(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData)
+{
+    try
+    {
+        json settingsData = json::parse(* messageData);
+
+    }
+    catch(const std::exception& e)
+    {
+        std::cout << "Caught exception " << e.what() << std::endl;
+    }
+}
+
+nlohmann::json neoRADIO2SetDOUT(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData)
+{
+    try
+    {
+        json settingsData = json::parse(* messageData);
+
     }
     catch(const std::exception& e)
     {

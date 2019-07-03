@@ -30,7 +30,9 @@ class Sensor : public DataWorker
             CalSendSettings = 7,
             ClearCal = 8,
             SetPwrRly = 9,
-            SetAout = 10
+            SetAout = 10,
+            SetDIN = 11,
+            SetDOUT = 12
         };
         std::string messageData;
         int messageName, result, Devices, retry = 0, neoRADIO2_state = DeviceIdle;
@@ -340,6 +342,18 @@ class Sensor : public DataWorker
                         neoRADIO2SetAoutValue(&deviceInfo, &messageData);
                     }
                     neoRADIO2_state = DeviceIdle;
+                }
+                    break;
+
+                case SetDIN:
+                {
+
+                }
+                    break;
+
+                case SetDOUT:
+                {
+
                 }
                     break;
 
