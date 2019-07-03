@@ -4,12 +4,6 @@ project(neoRAD_IO2)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_C_STANDARD 11)
 
-if(UNIX AND NOT APPLE)
-    set(HIDAPI_DIR ${PROJECT_SOURCE_DIR}/neoRAD-IO2-C-Library/libs/hidapi/linux)
-    set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-    link_libraries("-ludev")
-endif()
-
 file(GLOB SOURCE_FILES "${PROJECT_SOURCE_DIR}/cpplib/main.cpp")
 add_library(${PROJECT_NAME} SHARED ${SOURCE_FILES} ${CMAKE_JS_SRC})
 add_subdirectory(neoRAD-IO2-C-Library)

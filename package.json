@@ -21,6 +21,10 @@
     "electron": "^5.0.6",
     "electron-builder": "^20.44.4"
   },
+  "versions": {
+    "electron": "^5.0.6",
+    "electron-builder": "^20.44.4"
+  },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.9.0",
     "JSONStream": "^1.3.5",
@@ -51,6 +55,15 @@
       "allowElevation": true,
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true
+    },
+    "win": {
+      "icon": "lib/img/icon.ico"
+    },
+    "mac": {
+      "icon": "lib/img/icon.icns"
+    },
+    "linux": {
+      "icon": "lib/img/icon.icns"
     },
     "copyright": "Copyright © 2019 ${author}"
   }

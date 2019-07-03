@@ -341,8 +341,8 @@
     require('../../renderer.js');
     const pkgObj = require('../../package.json');
     document.querySelector("#version_number").textContent = pkgObj.version;
-    document.querySelector("#dep_elc").textContent = pkgObj.devDependencies.electron;
-    document.querySelector("#dep_elb").textContent = pkgObj.devDependencies["electron-builder"];
+    document.querySelector("#dep_elc").textContent = pkgObj.versions.electron;
+    document.querySelector("#dep_elb").textContent = pkgObj.versions["electron-builder"];
     document.querySelector("#dep_bts").textContent = pkgObj.dependencies.bootstrap;
     document.querySelector("#dep_els").textContent = pkgObj.dependencies["electron-settings"];
     document.querySelector("#dep_ews").textContent = pkgObj.dependencies["electron-window-state"];
