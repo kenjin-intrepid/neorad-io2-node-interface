@@ -14,15 +14,16 @@ let DevENV = false;
 
 if(process.platform === 'linux')
 {
-    const exec = require('child_process').exec;
-    exec('sh ./hidraw.sh',
-        (error, stdout, stderr) => {
-            console.log(stdout);
-            console.log(stderr);
-            if (error !== null) {
-                console.log(`exec error: ${error}`);
-            }
-        });
+    const sudo = require('sudo-prompt');
+    let options = {
+      name: 'Electron'
+    };
+    sudo.exec(`cd /etc/udev/rules.d && touch 99-hidraw-permissions.rules && echo 'KERNEL=="hidraw*", SUBSYSTEM=="hidraw", MODE="0666" ' >> 99-hidraw-permissions.rules`, options,
+      function(error, stdout, stderr) {
+        if (error) throw error;
+        console.log('stdout: ' + stdout);
+      }
+    );
 }
 
 app.on('ready', function() {
