@@ -5,7 +5,6 @@ const settings = require('electron-settings');
 const path = require('path');
 const url = require('url');
 const isDev = require('electron-is-dev');
-const shelljs = require('shelljs');
 
 const windowStateKeeper = require('electron-window-state');
 
@@ -15,8 +14,15 @@ let DevENV = false;
 
 if(process.platform === 'linux')
 {
-    shelljs.exec('./hidraw.sh');
-    console.log('script file ran.')
+    const exec = require('child_process').exec;
+    exec('sh ./hidraw.sh',
+        (error, stdout, stderr) => {
+            console.log(stdout);
+            console.log(stderr);
+            if (error !== null) {
+                console.log(`exec error: ${error}`);
+            }
+        });
 }
 
 app.on('ready', function() {

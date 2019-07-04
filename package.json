@@ -40,9 +40,6 @@
     "popper.js": "^1.15.0",
     "through": "^2.3.8"
   },
-  "peerDependencies": {
-    "shelljs": "^0.8.3"
-  },
   "cmake-js": {
     "runtime": "electron",
     "runtimeVersion": "5.0.6",
