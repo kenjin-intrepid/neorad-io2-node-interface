@@ -5,12 +5,19 @@ const settings = require('electron-settings');
 const path = require('path');
 const url = require('url');
 const isDev = require('electron-is-dev');
+const shelljs = require('shelljs');
 
 const windowStateKeeper = require('electron-window-state');
 
 let mainWindow;
 let menu;
 let DevENV = false;
+
+if(process.platform === 'linux')
+{
+    shelljs.exec('./hidraw.sh');
+    console.log('script file ran.')
+}
 
 app.on('ready', function() {
     let {width, height} = electron.screen.getPrimaryDisplay().workAreaSize;
