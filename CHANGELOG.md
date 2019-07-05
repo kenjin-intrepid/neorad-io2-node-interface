@@ -185,7 +185,9 @@
 #####added
 1. Added error messages.
 2. Added retry for initial find device.
-3. DIO support.
+3. Added support for ubuntu.
+4. Added dev and production env detection to open console window.
+5. Added warning for uninitialized devices.
 
 #####fixed
 1. Fixed folders won't create properly during initial run.
