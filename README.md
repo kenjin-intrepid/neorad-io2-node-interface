@@ -63,3 +63,8 @@
 7. use yarn to build installer
         
         yarn dist
+        
+## Linux build
+*tested on ubuntu 18.04
+
+1. Install udev library
