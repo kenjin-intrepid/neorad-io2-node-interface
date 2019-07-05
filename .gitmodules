@@ -1,0 +1,3 @@
+[submodule "neoRAD-IO2-C-Library"]
+	path = neoRAD-IO2-C-Library
+	url = https://github.com/emende-intrepid/neoRAD-IO2-C-Library.git
