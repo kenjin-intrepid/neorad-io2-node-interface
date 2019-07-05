@@ -15,8 +15,8 @@ int neoRADIO2returnCalibrationDataJSON(neoRADIO2_DeviceInfo * deviceInfo, nlohma
 void neoRADIO2ClearCalibration(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData);
 nlohmann::json neoRADIO2returnAllCalibrationJSON(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData);
 void neoRADIO2SetAoutValue(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData);
-nlohmann::json neoRADIO2SetDIN(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData);
-nlohmann::json neoRADIO2SetDOUT(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData);
+void neoRADIO2SetDIN(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData);
+void neoRADIO2SetDOUT(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData);
 
 using json = nlohmann::json;
 
@@ -827,7 +827,7 @@ void neoRADIO2SetAoutValue(neoRADIO2_DeviceInfo * deviceInfo, std::string * mess
     }
 }
 
-nlohmann::json neoRADIO2SetDIN(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData)
+void neoRADIO2SetDIN(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData)
 {
     try
     {
@@ -840,7 +840,7 @@ nlohmann::json neoRADIO2SetDIN(neoRADIO2_DeviceInfo * deviceInfo, std::string * 
     }
 }
 
-nlohmann::json neoRADIO2SetDOUT(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData)
+void neoRADIO2SetDOUT(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData)
 {
     try
     {

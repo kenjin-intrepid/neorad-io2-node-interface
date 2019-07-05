@@ -12,6 +12,20 @@ let mainWindow;
 let menu;
 let DevENV = false;
 
+if(process.platform === 'linux')
+{
+    const sudo = require('sudo-prompt');
+    let options = {
+      name: 'Electron'
+    };
+    sudo.exec(`cd /etc/udev/rules.d && touch 99-hidraw-permissions.rules && echo 'KERNEL=="hidraw*", SUBSYSTEM=="hidraw", MODE="0666" ' >> 99-hidraw-permissions.rules`, options,
+      function(error, stdout, stderr) {
+        if (error) throw error;
+        console.log('stdout: ' + stdout);
+      }
+    );
+}
+
 app.on('ready', function() {
     let {width, height} = electron.screen.getPrimaryDisplay().workAreaSize;
 
