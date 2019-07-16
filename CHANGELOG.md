@@ -192,3 +192,10 @@
 #####fixed
 1. Fixed folders won't create properly during initial run.
 2. Fixed a display glitch with TC.
+
+###v1.5.4
+#####changed
+1. Removed crash report uploading for Release.
+
+#####added
+1. CAN settings can now be exported to dbc file for TC and AIN.
