@@ -1,10 +1,10 @@
 const electron = require('electron');
 const {BrowserWindow, app, ipcMain, Menu, dialog, shell} = electron;
 const settings = require('electron-settings');
-
 const path = require('path');
 const url = require('url');
 const isDev = require('electron-is-dev');
+const fs = require('fs');
 
 const windowStateKeeper = require('electron-window-state');
 
@@ -18,12 +18,17 @@ if(process.platform === 'linux')
     let options = {
       name: 'Electron'
     };
-    sudo.exec(`cd /etc/udev/rules.d && touch 99-hidraw-permissions.rules && echo 'KERNEL=="hidraw*", SUBSYSTEM=="hidraw", MODE="0666" ' >> 99-hidraw-permissions.rules`, options,
-      function(error, stdout, stderr) {
-        if (error) throw error;
-        console.log('stdout: ' + stdout);
-      }
-    );
+    fs.readFile('/etc/udev/rules.d', (err, data) => {
+        if(err)
+        {
+            sudo.exec(`cd /etc/udev/rules.d && touch 99-hidraw-permissions.rules && echo 'KERNEL=="hidraw*", SUBSYSTEM=="hidraw", MODE="0666" ' >> 99-hidraw-permissions.rules`, options,
+                function(error, stdout, stderr) {
+                    if (error) throw error;
+                    console.log('stdout: ' + stdout);
+                }
+            );
+        }
+    });
 }
 
 app.on('ready', function() {

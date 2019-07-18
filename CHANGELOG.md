@@ -198,4 +198,7 @@
 1. Removed crash report uploading for Release.
 
 #####added
-1. CAN settings can now be exported to dbc file for TC and AIN.
+1. CAN settings can now be exported to dbc file for TC, AIN, AOUT, PWRRLY.
+
+#####fixed
+1. Fixed can settings overlapping address not properly detected
