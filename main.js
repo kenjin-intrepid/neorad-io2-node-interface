@@ -18,15 +18,18 @@ if(process.platform === 'linux')
     let options = {
       name: 'Electron'
     };
-    fs.readFile('/etc/udev/rules.d', (err, data) => {
+    fs.readFile('/etc/udev/rules.d/99-hidraw-permissions.rules', (err, data) => {
         if(err)
         {
-            sudo.exec(`cd /etc/udev/rules.d && touch 99-hidraw-permissions.rules && echo 'KERNEL=="hidraw*", SUBSYSTEM=="hidraw", MODE="0666" ' >> 99-hidraw-permissions.rules`, options,
-                function(error, stdout, stderr) {
-                    if (error) throw error;
-                    console.log('stdout: ' + stdout);
-                }
-            );
+            if(err['errno'] == -2)
+            {
+                sudo.exec(`cd /etc/udev/rules.d && touch 99-hidraw-permissions.rules && echo 'KERNEL=="hidraw*", SUBSYSTEM=="hidraw", MODE="0666" ' >> 99-hidraw-permissions.rules`, options,
+                    function(error, stdout, stderr) {
+                        if (error) throw error;
+                        console.log('stdout: ' + stdout);
+                    }
+                );
+            }
         }
     });
 }
