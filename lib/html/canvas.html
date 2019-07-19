@@ -145,7 +145,7 @@
                     <select class="form-control form-control-sm hidden ain_select ain_high_select" id="ain_high_select_cal">
                         <option value="3" data-range="10">&#177 10 V</option>
                         <option value="4" data-range="20">&#177 20 V</option>
-                        <option value="5" data-range="50">&#177 50 V</option>
+                        <option value="5" data-range="48">&#177 48 V</option>
                     </select>
                 </div>
 
@@ -224,16 +224,6 @@
                     <select class="custom-select" id="plot_load">
                         <option value="1">On</option>
                         <option value="0">Off</option>
-                    </select>
-                </div>
-
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <label class="input-group-text" for="crash_select">Upload Crash Report</label>
-                    </div>
-                    <select class="custom-select" id="crash_select">
-                        <option value="false">Off</option>
-                        <option value="true">On</option>
                     </select>
                 </div>
 
@@ -323,7 +313,8 @@
                 <a href="https://www.npmjs.com/package/jquery">jQuery<span id="dep_jqy"></span></a><br>
                 <a href="https://www.npmjs.com/package/nan">NAN<span id="dep_nan"></span></a><br>
                 <a href="https://www.npmjs.com/package/papaparse">papaparse<span id="dep_par"></span></a><br>
-                <a href="https://github.com/plotly/plotly.js">Plotly.js^1.45.3</a><br>
+                <a href="https://github.com/plotly/plotly.js">Plotly.js^1.48.3</a><br>
+                <a href="https://github.com/nlohmann/json">JSON for Modern C++</a><br>
                 <br>
                 <h5>Fonts used:</h5>
                 <div>Prime Regular</div>
@@ -357,5 +348,7 @@
 <script src="../js/datastream.js"></script>
 <script src="../js/plotly.js"></script>
 <script src="../js/common.js"></script>
+<script src="../js/calibration.js"></script>
+<script src="../js/json2dbc.js"></script>
 </body>
 </html>
