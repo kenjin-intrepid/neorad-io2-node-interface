@@ -267,14 +267,10 @@ class Sensor : public DataWorker
                         {
                             returnValue = neoRADIO2SetCalibrationFromJSON(&deviceInfo, &messageData);
                         }
+
                         if(returnValue >= 0)
                         {
-                            if(deviceType != NEORADIO2_DEVTYPE_AIN)
-                            {
-                                CustomMessage toSend("cal_settings", "OK");
-                                writeToNode(progress, toSend);
-                            }
-                            else
+                            if(deviceType == NEORADIO2_DEVTYPE_AIN)
                             {
                                 if(returnValue < 5)
                                 {
@@ -286,6 +282,24 @@ class Sensor : public DataWorker
                                     CustomMessage toSend("cal_settings", "OK");
                                     writeToNode(progress, toSend);
                                 }
+                            }
+                            else if(deviceType == NEORADIO2_DEVTYPE_AOUT)
+                            {
+                                if(returnValue < 7)
+                                {
+                                    CustomMessage toSend("cal_settings", std::to_string(returnValue + 10));
+                                    writeToNode(progress, toSend);
+                                }
+                                else
+                                {
+                                    CustomMessage toSend("cal_settings", "OK");
+                                    writeToNode(progress, toSend);
+                                }
+                            }
+                            else
+                            {
+                                CustomMessage toSend("cal_settings", "OK");
+                                writeToNode(progress, toSend);
                             }
                         }
                         else
