@@ -202,3 +202,7 @@
 
 #####fixed
 1. Fixed can settings overlapping address not properly detected
+
+###v1.5.5
+#####fixed
+1. AOUT calibration read and write.

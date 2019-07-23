@@ -270,36 +270,36 @@ class Sensor : public DataWorker
 
                         if(returnValue >= 0)
                         {
-                            if(deviceType == NEORADIO2_DEVTYPE_AIN)
+                            switch (deviceType)
                             {
-                                if(returnValue < 5)
-                                {
-                                    CustomMessage toSend("cal_settings", std::to_string(returnValue));
-                                    writeToNode(progress, toSend);
-                                }
-                                else
-                                {
+                                case NEORADIO2_DEVTYPE_AIN:
+                                    if(returnValue < 5)
+                                    {
+                                        CustomMessage toSend("cal_settings", std::to_string(returnValue));
+                                        writeToNode(progress, toSend);
+                                    }
+                                    else
+                                    {
+                                        CustomMessage toSend("cal_settings", "OK");
+                                        writeToNode(progress, toSend);
+                                    }
+                                    break;
+                                case NEORADIO2_DEVTYPE_AOUT:
+                                    if(returnValue < 7)
+                                    {
+                                        CustomMessage toSend("cal_settings", std::to_string(returnValue + 10));
+                                        writeToNode(progress, toSend);
+                                    }
+                                    else
+                                    {
+                                        CustomMessage toSend("cal_settings", "OK");
+                                        writeToNode(progress, toSend);
+                                    }
+                                    break;
+                                default:
                                     CustomMessage toSend("cal_settings", "OK");
                                     writeToNode(progress, toSend);
-                                }
-                            }
-                            else if(deviceType == NEORADIO2_DEVTYPE_AOUT)
-                            {
-                                if(returnValue < 7)
-                                {
-                                    CustomMessage toSend("cal_settings", std::to_string(returnValue + 10));
-                                    writeToNode(progress, toSend);
-                                }
-                                else
-                                {
-                                    CustomMessage toSend("cal_settings", "OK");
-                                    writeToNode(progress, toSend);
-                                }
-                            }
-                            else
-                            {
-                                CustomMessage toSend("cal_settings", "OK");
-                                writeToNode(progress, toSend);
+                                    break;
                             }
                         }
                         else

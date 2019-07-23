@@ -643,27 +643,23 @@ int neoRADIO2SetCalibrationFromJSONAOut(neoRADIO2_DeviceInfo * deviceInfo, std::
         {
             calhead->channel = channel;
             neoRADIO2SendPacket(deviceInfo, NEORADIO2_COMMAND_WRITE_CALPOINTS, device, deviceBank, (uint8_t *) &txdata, txlen);
-
             int timeout = 50;
             while(timeout--)
             {
                 std::this_thread::sleep_for(std::chrono::milliseconds(1));
                 neoRADIO2ProcessIncomingData(deviceInfo, 1000);
             }
-
             txlen = sizeof(neoRADIO2frame_calHeader) + allbanks[channel].size() * cal_type_size;
             memcpy(&txdata[sizeof(neoRADIO2frame_calHeader)], &allbanks[channel][0], allbanks[channel].size() * cal_type_size);
             neoRADIO2SendPacket(deviceInfo, NEORADIO2_COMMAND_WRITE_CAL, device, deviceBank, (uint8_t *) &txdata, txlen);
-            timeout = 100;
+            timeout = 50;
             while(timeout--)
             {
                 std::this_thread::sleep_for(std::chrono::milliseconds(1));
                 neoRADIO2ProcessIncomingData(deviceInfo, 1000);
             }
-
             neoRADIO2SendPacket(deviceInfo, NEORADIO2_COMMAND_STORE_CAL, device, deviceBank, (uint8_t *) &txdata, txlen);
-
-            timeout = 300;
+            timeout = 50;
             while(timeout--)
             {
                 std::this_thread::sleep_for(std::chrono::milliseconds(1));
