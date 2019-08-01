@@ -103,6 +103,10 @@ input
     background-color: black!important;
     color: white;
 }
+.theme-black-bg, .theme-black-bg .ma_graph_sidebar_bg
+{
+    background: black;
+}
 .theme-black-bg .ma_device_wrap
 {
     -webkit-box-shadow: 0 0 5px 5px #7a7a7a;
@@ -115,10 +119,6 @@ input
 .theme-black-bg hr
 {
     border-top: 1px solid rgb(255,255,255);
-}
-.theme-black-bg, .theme-black-bg .ma_graph_sidebar_bg
-{
-    background: black;
 }
 .theme-black-bg label, .theme-black-bg td, .theme-black-bg #ma_info, .theme-black-bg .ma_graph_sidebar_bg .ma_graph_sidebar_nav_title, .theme-black-bg input::placeholder
 {

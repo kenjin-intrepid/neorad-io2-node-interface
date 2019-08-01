@@ -1,4 +1,3 @@
-//Link with SetupAPI.Lib for windows
 #include "neoRAD-IO2_PacketHandler.h"
 #include <iostream>
 #include <chrono>
@@ -455,4 +454,4 @@ DataWorker *create_worker(Nan::Callback *data, Nan::Callback *complete, Nan::Cal
     return new Sensor(data, complete, error_callback);
 }
 
-NODE_MODULE(RAD_IO2, StreamWorkerWrapper::Init)
+NODE_MODULE(neoRAD_IO2, StreamWorkerWrapper::Init)

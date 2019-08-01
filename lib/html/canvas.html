@@ -13,7 +13,6 @@
 <body>
 
 <nav class="navbar navbar-expand-sm navbar-dark bg-black">
-    <!--company logo goes here along with URL link-->
     <a class="navbar-brand" href="https://www.intrepidcs.com/" tabindex="-1">
         <img src="../img/logo.png" width="45" height="45">
     </a>
@@ -30,12 +29,6 @@
                 <span id="nav-link-graph">Graph</span>
             </a>
         </li>
-        <li class="nav-item nav_info"  data-page="ma_info">
-            <a class="nav-link" href="#" tabindex="-1">
-                <i class="fas fa-question-circle"></i>
-                <span id="nav-link-help">Help</span>
-            </a>
-        </li>
         <li class="nav-item nav_calibration hidden" data-page="ma_calibration">
             <a class="nav-link" href="#" tabindex="-1">
                 <i class="fas fa-clipboard-list"></i>
@@ -50,6 +43,12 @@
         </li>
     </ul>
     <ul class="navbar-nav navbar_items">
+        <li class="nav-item nav_info"  data-page="ma_info">
+            <a class="nav-link" href="#" tabindex="-1">
+                <i class="fas fa-question-circle"></i>
+                <span id="nav-link-help">Help</span>
+            </a>
+        </li>
         <li class="nav-item nav_setting" data-page="ma_setting">
             <a class="nav-link" href="#" tabindex="-1">
                 <i class="fas fa-cog"></i>
@@ -328,7 +327,6 @@
 </div>
 
 <script>
-    // You can also require other files to run in this process
     require('../../renderer.js');
     const pkgObj = require('../../package.json');
     document.querySelector("#version_number").textContent = pkgObj.version;
