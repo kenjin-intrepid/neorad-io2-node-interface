@@ -94,6 +94,7 @@ nlohmann::json neoRADIO2returnChainlistJSON(neoRADIO2_DeviceInfo * deviceInfo)
             devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["firmwareVersion_major"] = deviceInfo->ChainList[i][j].firmwareVersion_major;
             devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["firmwareVersion_minor"] = deviceInfo->ChainList[i][j].firmwareVersion_minor;
             devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["hardwareRev_major"] = deviceInfo->ChainList[i][j].hardwareRev_major;
+            devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["hardwareRev_minor"] = deviceInfo->ChainList[i][j].hardwareRev_minor;
             devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["status"] = deviceInfo->ChainList[i][j].status;
             devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["settingsValid"] = deviceInfo->ChainList[i][j].settingsState;
             devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["settingsReportRate"] = poll_rate_ms;
@@ -146,8 +147,6 @@ nlohmann::json neoRADIO2returnChainlistJSON(neoRADIO2_DeviceInfo * deviceInfo)
 
             uint32_t channel_1_config = deviceInfo->ChainList[i][j].settings.config.channel_1_config;
             devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["settingsNameArray"] = Name;
-            devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["settingsNameArraySize"] = deviceInfo->ChainList[i][j].settings.name1.charSize;
-            devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["settingsNameLength"] = deviceInfo->ChainList[i][j].settings.name1.length;
             devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["settingsEnables"] = channel_1_config;
 
             if(deviceInfo->ChainList[i][0].deviceType == NEORADIO2_DEVTYPE_AOUT)
@@ -180,6 +179,8 @@ nlohmann::json neoRADIO2returnChainlistJSON(neoRADIO2_DeviceInfo * deviceInfo)
         devices["manufacture_day"][i] = deviceInfo->ChainList[i][0].manufacture_day;
         devices["firmwareVersion_major"][i] = deviceInfo->ChainList[i][0].firmwareVersion_major;
         devices["firmwareVersion_minor"][i] = deviceInfo->ChainList[i][0].firmwareVersion_minor;
+        devices["hardwareRev_major"][i] = deviceInfo->ChainList[i][0].hardwareRev_major;
+        devices["hardwareRev_minor"][i] = deviceInfo->ChainList[i][0].hardwareRev_minor;
 
         if(deviceInfo->ChainList[i][0].deviceType == NEORADIO2_DEVTYPE_PWRRLY)
         {
