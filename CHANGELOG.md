@@ -204,5 +204,8 @@
 1. Fixed can settings overlapping address not properly detected
 
 ###v1.5.5
+#####added
+1.Hardware version under info.
+
 #####fixed
 1. AOUT calibration read and write.
