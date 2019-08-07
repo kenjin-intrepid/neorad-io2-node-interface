@@ -38,7 +38,7 @@ class Sensor : public DataWorker
         bool deviceConnected = true;
         json return_measured_data;
         neoRADIO2_USBDevice deviceLinked[8];
-        neoRADIO2_DeviceInfo deviceInfo;
+        neoRADIO2_DeviceInfo deviceInfo[8];
         auto last = std::chrono::steady_clock::now();
         auto current = std::chrono::steady_clock::now();
         memset(&deviceInfo, 0 ,sizeof(deviceInfo));
@@ -67,8 +67,8 @@ class Sensor : public DataWorker
                             current = std::chrono::steady_clock::now();
                             auto diff = std::chrono::duration_cast<std::chrono::microseconds>(current - last).count();
                             memcpy(&last, &current, sizeof(last));
-                            neoRADIO2SetOnline(&deviceInfo, 0);
-                            resultStat = neoRADIO2ProcessIncomingData(&deviceInfo, 1000);
+                            neoRADIO2SetOnline(&deviceInfo[0], 0);
+                            resultStat = neoRADIO2ProcessIncomingData(&deviceInfo[0], 1000);
                             if(resultStat != 0)
                             {
                                 deviceConnected = false;
@@ -88,58 +88,58 @@ class Sensor : public DataWorker
                         for (int i = 0; i < Devices; i++)
                         {
                             memset(&deviceInfo, 0, sizeof(deviceInfo));
-                            memcpy(&deviceInfo.usbDevice, &deviceLinked[i], sizeof(neoRADIO2_USBDevice));
-                            result = neoRADIO2ConnectDevice(&deviceInfo);
+                            memcpy(&deviceInfo[i].usbDevice, &deviceLinked[i], sizeof(neoRADIO2_USBDevice));
+                            result = neoRADIO2ConnectDevice(&deviceInfo[i]);
                             unsigned int timeout = 1000;
-                            while(deviceInfo.State != neoRADIO2state_Connected && timeout > 0)
+                            while(deviceInfo[i].State != neoRADIO2state_Connected && timeout > 0)
                             {
                                 std::this_thread::sleep_for(std::chrono::milliseconds(1));
-                                result = neoRADIO2ProcessIncomingData(&deviceInfo, 1000);
+                                result = neoRADIO2ProcessIncomingData(&deviceInfo[i], 1000);
                                 timeout--;
                             }
-                            if(deviceInfo.State != neoRADIO2state_Connected && timeout == 0)
+                            if(deviceInfo[i].State != neoRADIO2state_Connected && timeout == 0)
                             {
                                 deviceConnected = false;
-                                if(deviceInfo.State == neoRADIO2state_ConnectedWaitIdentResponse)
+                                if(deviceInfo[i].State == neoRADIO2state_ConnectedWaitIdentResponse)
                                 {
-                                    CustomMessage sendError("error_msg", "102");
-                                    writeToNode(progress, sendError);
+//                                    CustomMessage sendError("error_msg", "102");
+//                                    writeToNode(progress, sendError);
                                 }
                                 else
                                 {
-                                    CustomMessage sendError("error_msg", "103");
-                                    writeToNode(progress, sendError);
+//                                    CustomMessage sendError("error_msg", "103");
+//                                    writeToNode(progress, sendError);
                                 }
                                 break;
                             }
                             unsigned int timeout2 = 1000;
-                            neoRADIO2RequestSettings(&deviceInfo);
-                            while(deviceInfo.State != neoRADIO2state_Connected && timeout2 > 0)
+                            neoRADIO2RequestSettings(&deviceInfo[i]);
+                            while(deviceInfo[i].State != neoRADIO2state_Connected && timeout2 > 0)
                             {
                                 std::this_thread::sleep_for(std::chrono::milliseconds(1));
-                                result = neoRADIO2ProcessIncomingData(&deviceInfo, 1000);
+                                result = neoRADIO2ProcessIncomingData(&deviceInfo[i], 1000);
                                 timeout2--;
                             }
 
-                            if(deviceInfo.State != neoRADIO2state_Connected && timeout2 == 0)
+                            if(deviceInfo[i].State != neoRADIO2state_Connected && timeout2 == 0)
                             {
                                 deviceConnected = false;
-                                if(deviceInfo.State == neoRADIO2state_ConnectedWaitIdentResponse)
+                                if(deviceInfo[i].State == neoRADIO2state_ConnectedWaitIdentResponse)
                                 {
-                                    CustomMessage sendError("error_msg", "102");
-                                    writeToNode(progress, sendError);
+//                                    CustomMessage sendError("error_msg", "102");
+//                                    writeToNode(progress, sendError);
                                 }
                                 else
                                 {
-                                    CustomMessage sendError("error_msg", "103");
-                                    writeToNode(progress, sendError);
+//                                    CustomMessage sendError("error_msg", "103");
+//                                    writeToNode(progress, sendError);
                                 }
                                 break;
                             }
-                            devices = neoRADIO2returnChainlistJSON(&deviceInfo);
-                            CustomMessage SendFound("device_found", devices.dump());
-                            writeToNode(progress, SendFound);
+                            devices["usb" + std::to_string(i)] = neoRADIO2returnChainlistJSON(&deviceInfo[i]);
                         }
+                        CustomMessage SendFound("device_found", devices.dump());
+                        writeToNode(progress, SendFound);
                         neoRADIO2_state = DeviceIdle;
                         retry = 0;
                     }
@@ -165,15 +165,15 @@ class Sensor : public DataWorker
                 {
                     if (result == 0 && !closed())
                     {
-                        if(deviceInfo.isOnline == 0)
+                        if(deviceInfo[0].isOnline == 0)
                         {
-                            neoRADIO2SetOnline(&deviceInfo, 1);
+                            neoRADIO2SetOnline(&deviceInfo[0], 1);
                         }
-                        result = neoRADIO2ProcessIncomingData(&deviceInfo, 1000);
+                        result = neoRADIO2ProcessIncomingData(&deviceInfo[0], 1000);
                         std::this_thread::sleep_for(std::chrono::milliseconds(1));
-                        if (deviceInfo.rxDataCount > 0 && deviceInfo.State == neoRADIO2state_Connected)
+                        if (deviceInfo[0].rxDataCount > 0 && deviceInfo[0].State == neoRADIO2state_Connected)
                         {
-                            neoRADIO2returnDataJSON(&deviceInfo, &return_measured_data);
+                            neoRADIO2returnDataJSON(&deviceInfo[0], &return_measured_data);
                             CustomMessage toSend("data_stream", return_measured_data.dump());
                             writeToNode(progress, toSend);
                         }
@@ -189,13 +189,13 @@ class Sensor : public DataWorker
                 {
                     if(result == 0)
                     {
-                        int returnValue = neoRADIO2SetSettingsFromJSON(&deviceInfo, &messageData);
-                        neoRADIO2SetSettings(&deviceInfo);
+                        int returnValue = neoRADIO2SetSettingsFromJSON(&deviceInfo[0], &messageData);
+                        neoRADIO2SetSettings(&deviceInfo[0]);
                         unsigned int timeout = 300;
-                        while (deviceInfo.State != neoRADIO2state_Connected && timeout-- != 0)
+                        while (deviceInfo[0].State != neoRADIO2state_Connected && timeout-- != 0)
                         {
                             std::this_thread::sleep_for(std::chrono::milliseconds(1));
-                            neoRADIO2ProcessIncomingData(&deviceInfo, 1000);
+                            neoRADIO2ProcessIncomingData(&deviceInfo[0], 1000);
                         }
                         std::this_thread::sleep_for(std::chrono::milliseconds(200));
 
@@ -221,11 +221,11 @@ class Sensor : public DataWorker
                     json reload;
                     if (result == 0 && !closed())
                     {
-                        result = neoRADIO2ProcessIncomingData(&deviceInfo, 1000);
+                        result = neoRADIO2ProcessIncomingData(&deviceInfo[0], 1000);
                         std::this_thread::sleep_for(std::chrono::milliseconds(100));
-                        if (deviceInfo.State == neoRADIO2state_Connected)
+                        if (deviceInfo[0].State == neoRADIO2state_Connected)
                         {
-                            reload = neoRADIO2returnChainlistJSON(&deviceInfo);
+                            reload = neoRADIO2returnChainlistJSON(&deviceInfo[0]);
                             CustomMessage toSend("settings_reply", reload.dump());
                             writeToNode(progress, toSend);
                         }
@@ -242,7 +242,7 @@ class Sensor : public DataWorker
                         json devices;
                         if(Devices > 0)
                         {
-                            devices = neoRADIO2returnAllCalibrationJSON(&deviceInfo, &messageData);
+                            devices = neoRADIO2returnAllCalibrationJSON(&deviceInfo[0], &messageData);
                         }
                         CustomMessage toSend("cal_read", devices.dump());
                         writeToNode(progress, toSend);
@@ -260,11 +260,11 @@ class Sensor : public DataWorker
                         uint8_t deviceType = settingsData["type"].get<unsigned int>();
                         if(deviceType == NEORADIO2_DEVTYPE_AOUT)
                         {
-                            returnValue = neoRADIO2SetCalibrationFromJSONAOut(&deviceInfo, &messageData);
+                            returnValue = neoRADIO2SetCalibrationFromJSONAOut(&deviceInfo[0], &messageData);
                         }
                         else
                         {
-                            returnValue = neoRADIO2SetCalibrationFromJSON(&deviceInfo, &messageData);
+                            returnValue = neoRADIO2SetCalibrationFromJSON(&deviceInfo[0], &messageData);
                         }
 
                         if(returnValue >= 0)
@@ -316,7 +316,7 @@ class Sensor : public DataWorker
                     json sample;
                     if (result == 0 && !closed())
                     {
-                        if(neoRADIO2returnCalibrationDataJSON(&deviceInfo, &sample, &messageData) == 0)
+                        if(neoRADIO2returnCalibrationDataJSON(&deviceInfo[0], &sample, &messageData) == 0)
                         {
                             std::this_thread::sleep_for(std::chrono::milliseconds(1));
                             CustomMessage toSend("cal_inter", sample.dump());
@@ -330,7 +330,7 @@ class Sensor : public DataWorker
                 {
                     if(result == 0)
                     {
-                        neoRADIO2ClearCalibration(&deviceInfo, &messageData);
+                        neoRADIO2ClearCalibration(&deviceInfo[0], &messageData);
                         CustomMessage toSend("cal_clear", "done");
                         writeToNode(progress, toSend);
                     }
@@ -342,7 +342,7 @@ class Sensor : public DataWorker
                 {
                     if(result == 0)
                     {
-                        int returnValue = neoRADIO2SetPwrRly(&deviceInfo, &messageData);
+                        int returnValue = neoRADIO2SetPwrRly(&deviceInfo[0], &messageData);
                     }
                     neoRADIO2_state = DeviceIdle;
                 }
@@ -352,7 +352,7 @@ class Sensor : public DataWorker
                 {
                     if(result == 0)
                     {
-                        neoRADIO2SetAoutValue(&deviceInfo, &messageData);
+                        neoRADIO2SetAoutValue(&deviceInfo[0], &messageData);
                     }
                     neoRADIO2_state = DeviceIdle;
                 }
@@ -380,7 +380,7 @@ class Sensor : public DataWorker
             }
         }
 
-        neoRADIO2CloseDevice(&deviceInfo);
+        neoRADIO2CloseDevice(&deviceInfo[0]);
         CustomMessage toSend("killall", "");
         writeToNode(progress, toSend);
     }
