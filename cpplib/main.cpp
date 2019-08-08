@@ -41,6 +41,7 @@ class Sensor : public DataWorker
         neoRADIO2_DeviceInfo deviceInfo[8];
         auto last = std::chrono::steady_clock::now();
         auto current = std::chrono::steady_clock::now();
+        memset(&deviceLinked, 0, sizeof(deviceLinked));
         memset(&deviceInfo, 0 ,sizeof(deviceInfo));
 
         while (deviceConnected)
@@ -85,6 +86,7 @@ class Sensor : public DataWorker
                     Devices = neoRADIO2FindDevices(deviceLinked, 8);
                     if(Devices > 0)
                     {
+                        std::string error_code = "false";
                         for (int i = 0; i < Devices; i++)
                         {
                             memset(&deviceInfo, 0, sizeof(deviceInfo));
@@ -102,13 +104,11 @@ class Sensor : public DataWorker
                                 deviceConnected = false;
                                 if(deviceInfo[i].State == neoRADIO2state_ConnectedWaitIdentResponse)
                                 {
-//                                    CustomMessage sendError("error_msg", "102");
-//                                    writeToNode(progress, sendError);
+                                    error_code = "102";
                                 }
                                 else
                                 {
-//                                    CustomMessage sendError("error_msg", "103");
-//                                    writeToNode(progress, sendError);
+                                    error_code = "103";
                                 }
                                 break;
                             }
@@ -126,17 +126,20 @@ class Sensor : public DataWorker
                                 deviceConnected = false;
                                 if(deviceInfo[i].State == neoRADIO2state_ConnectedWaitIdentResponse)
                                 {
-//                                    CustomMessage sendError("error_msg", "102");
-//                                    writeToNode(progress, sendError);
+                                    error_code = "102";
                                 }
                                 else
                                 {
-//                                    CustomMessage sendError("error_msg", "103");
-//                                    writeToNode(progress, sendError);
+                                    error_code = "103";
                                 }
                                 break;
                             }
                             devices["usb" + std::to_string(i)] = neoRADIO2returnChainlistJSON(&deviceInfo[i]);
+                        }
+                        if(error_code != "false")
+                        {
+                            CustomMessage sendError("error_msg", error_code);
+                            writeToNode(progress, sendError);
                         }
                         CustomMessage SendFound("device_found", devices.dump());
                         writeToNode(progress, SendFound);
