@@ -5,7 +5,7 @@ uint8_t neoRADIO2GetBankDestination(uint8_t * x);
 std::vector<float> neoRADIO2returnFloatData(uint8_t * rxdata[60], uint8_t * pointSize);
 std::vector<uint32_t> neoRADIO2returnAoutData(uint8_t * rxdata[60], uint8_t * pointSize);
 nlohmann::json neoRADIO2returnChainlistJSON(neoRADIO2_DeviceInfo * deviceInfo);
-void neoRADIO2returnDataJSON(neoRADIO2_DeviceInfo * deviceInfo, nlohmann::json * returnData);
+void neoRADIO2returnDataJSON(neoRADIO2_DeviceInfo * deviceInfo, nlohmann::json * returnData, int index);
 int neoRADIO2SetSettingsFromJSON(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData);
 int neoRADIO2SetPwrRly(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData);
 nlohmann::json neoRADIO2returnCalibrationJSON(neoRADIO2_DeviceInfo * deviceInfo, uint8_t * device, int * deviceType, uint8_t * deviceChannel, uint8_t * deviceRange);
@@ -208,17 +208,17 @@ nlohmann::json neoRADIO2returnChainlistJSON(neoRADIO2_DeviceInfo * deviceInfo)
     return devices;
 }
 
-void neoRADIO2returnDataJSON(neoRADIO2_DeviceInfo * deviceInfo, nlohmann::json * returnData)
+void neoRADIO2returnDataJSON(neoRADIO2_DeviceInfo * deviceInfo, nlohmann::json * returnData, int index)
 {
     for(int i = 0; i <= deviceInfo->LastDevice; i++)
     {
-        (*returnData)[std::to_string(i)]["deviceType"] = deviceInfo->ChainList[i][0].deviceType;
+        (*returnData)["usb" + std::to_string(index)][std::to_string(i)]["deviceType"] = deviceInfo->ChainList[i][0].deviceType;
     }
 
     int State = deviceInfo->State;
-    (*returnData)["State"] = State;
-    (*returnData)["maxID_Device"] = deviceInfo->LastDevice + 1;
-    (*returnData)["Timeus"] = deviceInfo->Timeus / 1000;
+    (*returnData)["usb" + std::to_string(index)]["State"] = State;
+    (*returnData)["usb" + std::to_string(index)]["maxID_Device"] = deviceInfo->LastDevice + 1;
+    (*returnData)["usb" + std::to_string(index)]["Timeus"] = deviceInfo->Timeus / 1000;
 
     for (int i = 0; i < deviceInfo->rxDataCount; i++)
     {
@@ -230,10 +230,10 @@ void neoRADIO2returnDataJSON(neoRADIO2_DeviceInfo * deviceInfo, nlohmann::json *
             temp.b[2] = deviceInfo->rxDataBuffer[i].data[2];
             temp.b[3] = deviceInfo->rxDataBuffer[i].data[3];
 
-            (*returnData)[std::to_string(deviceInfo->rxDataBuffer[i].header.device)][std::to_string(deviceInfo->rxDataBuffer[i].header.bank)] = temp.fp;
+            (*returnData)["usb" + std::to_string(index)][std::to_string(deviceInfo->rxDataBuffer[i].header.device)][std::to_string(deviceInfo->rxDataBuffer[i].header.bank)] = temp.fp;
             if(std::isinf(temp.fp))
             {
-                (*returnData)[std::to_string(deviceInfo->rxDataBuffer[i].header.device)][std::to_string(deviceInfo->rxDataBuffer[i].header.bank)] = "inf";
+                (*returnData)["usb" + std::to_string(index)][std::to_string(deviceInfo->rxDataBuffer[i].header.device)][std::to_string(deviceInfo->rxDataBuffer[i].header.bank)] = "inf";
             }
         }
     }

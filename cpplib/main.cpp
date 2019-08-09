@@ -65,14 +65,18 @@ class Sensor : public DataWorker
                     {
                         if(result == 0)
                         {
-                            current = std::chrono::steady_clock::now();
-                            auto diff = std::chrono::duration_cast<std::chrono::microseconds>(current - last).count();
-                            memcpy(&last, &current, sizeof(last));
-                            neoRADIO2SetOnline(&deviceInfo[0], 0);
-                            resultStat = neoRADIO2ProcessIncomingData(&deviceInfo[0], 1000);
-                            if(resultStat != 0)
+                            for (int i = 0; i < Devices; i++)
                             {
-                                deviceConnected = false;
+                                current = std::chrono::steady_clock::now();
+                                auto diff = std::chrono::duration_cast<std::chrono::microseconds>(
+                                        current - last).count();
+                                memcpy(&last, &current, sizeof(last));
+                                neoRADIO2SetOnline(&deviceInfo[i], 0);
+                                resultStat = neoRADIO2ProcessIncomingData(&deviceInfo[i], 1000);
+                                if (resultStat != 0)
+                                {
+                                    deviceConnected = false;
+                                }
                             }
                         }
                     }
@@ -89,7 +93,6 @@ class Sensor : public DataWorker
                         std::string error_code = "false";
                         for (int i = 0; i < Devices; i++)
                         {
-                            memset(&deviceInfo, 0, sizeof(deviceInfo));
                             memcpy(&deviceInfo[i].usbDevice, &deviceLinked[i], sizeof(neoRADIO2_USBDevice));
                             result = neoRADIO2ConnectDevice(&deviceInfo[i]);
                             unsigned int timeout = 1000;
@@ -168,18 +171,22 @@ class Sensor : public DataWorker
                 {
                     if (result == 0 && !closed())
                     {
-                        if(deviceInfo[0].isOnline == 0)
+                        for (int i = 0; i < Devices; i++)
                         {
-                            neoRADIO2SetOnline(&deviceInfo[0], 1);
+                            if (deviceInfo[i].isOnline == 0)
+                            {
+                                neoRADIO2SetOnline(&deviceInfo[i], 1);
+                            }
+                            result = neoRADIO2ProcessIncomingData(&deviceInfo[i], 1000);
+                            std::this_thread::sleep_for(std::chrono::milliseconds(1));
+                            if (deviceInfo[i].rxDataCount > 0 && deviceInfo[i].State == neoRADIO2state_Connected)
+                            {
+                                neoRADIO2returnDataJSON(&deviceInfo[i], &return_measured_data, i);
+                            }
                         }
-                        result = neoRADIO2ProcessIncomingData(&deviceInfo[0], 1000);
-                        std::this_thread::sleep_for(std::chrono::milliseconds(1));
-                        if (deviceInfo[0].rxDataCount > 0 && deviceInfo[0].State == neoRADIO2state_Connected)
-                        {
-                            neoRADIO2returnDataJSON(&deviceInfo[0], &return_measured_data);
-                            CustomMessage toSend("data_stream", return_measured_data.dump());
-                            writeToNode(progress, toSend);
-                        }
+
+                        CustomMessage toSend("data_stream", return_measured_data.dump());
+                        writeToNode(progress, toSend);
                     }
                     else
                     {
@@ -383,7 +390,12 @@ class Sensor : public DataWorker
             }
         }
 
-        neoRADIO2CloseDevice(&deviceInfo[0]);
+        for (int i = 0; i < Devices; i++)
+        {
+            neoRADIO2CloseDevice(&deviceInfo[i]);
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        }
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
         CustomMessage toSend("killall", "");
         writeToNode(progress, toSend);
     }
