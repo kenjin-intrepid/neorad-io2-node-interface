@@ -203,9 +203,13 @@
 #####fixed
 1. Fixed can settings overlapping address not properly detected
 
-###v1.5.5
+###v1.6.0
+#####changed
+1. Electron@6.0.1
+
 #####added
 1.Hardware version under info.
+2.Support for multi USB connections.
 
 #####fixed
 1. AOUT calibration read and write.
