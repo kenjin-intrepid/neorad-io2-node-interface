@@ -197,7 +197,7 @@ class Sensor : public DataWorker
                             std::this_thread::sleep_for(std::chrono::milliseconds(1));
                             neoRADIO2ProcessIncomingData(&deviceInfo, 1000);
                         }
-                        std::this_thread::sleep_for(std::chrono::milliseconds(200));
+                        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
                         CustomMessage toSend("settings_reply_count", std::to_string(returnValue));
                         writeToNode(progress, toSend);
@@ -225,6 +225,14 @@ class Sensor : public DataWorker
                         std::this_thread::sleep_for(std::chrono::milliseconds(100));
                         if (deviceInfo.State == neoRADIO2state_Connected)
                         {
+                            neoRADIO2RequestSettings(&deviceInfo);
+                            int timeout2 = 1000;
+                            while(deviceInfo.State != neoRADIO2state_Connected && timeout2 > 0)
+                            {
+                                std::this_thread::sleep_for(std::chrono::milliseconds(1));
+                                result = neoRADIO2ProcessIncomingData(&deviceInfo, 1000);
+                                timeout2--;
+                            }
                             reload = neoRADIO2returnChainlistJSON(&deviceInfo);
                             CustomMessage toSend("settings_reply", reload.dump());
                             writeToNode(progress, toSend);
