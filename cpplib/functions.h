@@ -75,6 +75,10 @@ nlohmann::json neoRADIO2returnChainlistJSON(neoRADIO2_DeviceInfo * deviceInfo)
     devices["State"] = State;
     devices["maxID_Device"] = deviceInfo->LastDevice + 1;
     devices["maxID_Chip"] = deviceInfo->LastBank;
+    if(deviceInfo->State == 2)
+    {
+        devices["error_code"] = "102";
+    }
 
     for(int i = 0; i <= deviceInfo->LastDevice; i++)
     {
