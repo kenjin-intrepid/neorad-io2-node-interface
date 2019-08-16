@@ -198,7 +198,7 @@ class Sensor : public DataWorker
                                 std::this_thread::sleep_for(std::chrono::milliseconds(1));
                                 neoRADIO2ProcessIncomingData(&deviceInfo[usbIndex], 1000);
                             }
-                            std::this_thread::sleep_for(std::chrono::milliseconds(200));
+                            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
                             CustomMessage toSend("settings_reply_count", std::to_string(returnValue));
                             writeToNode(progress, toSend);
@@ -230,8 +230,15 @@ class Sensor : public DataWorker
                     {
                         for (int i = 0; i < Devices; i++)
                         {
-                            result = neoRADIO2ProcessIncomingData(&deviceInfo[i], 1000);
-                            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+                            neoRADIO2RequestSettings(&deviceInfo[i]);
+                            int timeout = 1000;
+                            while(deviceInfo[i].State != neoRADIO2state_Connected && timeout > 0)
+                            {
+                                std::this_thread::sleep_for(std::chrono::milliseconds(1));
+                                neoRADIO2ProcessIncomingData(&deviceInfo[i], 1000);
+                                timeout--;
+                            }
+
                             if (deviceInfo[i].State == neoRADIO2state_Connected)
                             {
                                 reload["usb" + std::to_string(i)] = neoRADIO2returnChainlistJSON(&deviceInfo[i]);
