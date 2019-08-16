@@ -1,4 +1,3 @@
-//Link with SetupAPI.Lib for windows
 #include "neoRAD-IO2_PacketHandler.h"
 #include <iostream>
 #include <chrono>
@@ -267,25 +266,39 @@ class Sensor : public DataWorker
                         {
                             returnValue = neoRADIO2SetCalibrationFromJSON(&deviceInfo, &messageData);
                         }
+
                         if(returnValue >= 0)
                         {
-                            if(deviceType != NEORADIO2_DEVTYPE_AIN)
+                            switch (deviceType)
                             {
-                                CustomMessage toSend("cal_settings", "OK");
-                                writeToNode(progress, toSend);
-                            }
-                            else
-                            {
-                                if(returnValue < 5)
-                                {
-                                    CustomMessage toSend("cal_settings", std::to_string(returnValue));
-                                    writeToNode(progress, toSend);
-                                }
-                                else
-                                {
+                                case NEORADIO2_DEVTYPE_AIN:
+                                    if(returnValue < 5)
+                                    {
+                                        CustomMessage toSend("cal_settings", std::to_string(returnValue));
+                                        writeToNode(progress, toSend);
+                                    }
+                                    else
+                                    {
+                                        CustomMessage toSend("cal_settings", "OK");
+                                        writeToNode(progress, toSend);
+                                    }
+                                    break;
+                                case NEORADIO2_DEVTYPE_AOUT:
+                                    if(returnValue < 7)
+                                    {
+                                        CustomMessage toSend("cal_settings", std::to_string(returnValue + 10));
+                                        writeToNode(progress, toSend);
+                                    }
+                                    else
+                                    {
+                                        CustomMessage toSend("cal_settings", "OK");
+                                        writeToNode(progress, toSend);
+                                    }
+                                    break;
+                                default:
                                     CustomMessage toSend("cal_settings", "OK");
                                     writeToNode(progress, toSend);
-                                }
+                                    break;
                             }
                         }
                         else
@@ -441,4 +454,4 @@ DataWorker *create_worker(Nan::Callback *data, Nan::Callback *complete, Nan::Cal
     return new Sensor(data, complete, error_callback);
 }
 
-NODE_MODULE(RAD_IO2, StreamWorkerWrapper::Init)
+NODE_MODULE(neoRAD_IO2, StreamWorkerWrapper::Init)
