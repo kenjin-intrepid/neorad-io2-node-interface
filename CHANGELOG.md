@@ -209,3 +209,4 @@
 
 #####fixed
 1. AOUT calibration read and write.
+2. tool tip:Sensor not connected for TC.
