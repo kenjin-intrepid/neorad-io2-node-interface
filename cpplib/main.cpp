@@ -31,7 +31,8 @@ class Sensor : public DataWorker
             SetPwrRly = 9,
             SetAout = 10,
             SetDIN = 11,
-            SetDOUT = 12
+            SetDOUT = 12,
+            LoadDefault = 13
         };
         std::string messageData;
         int messageName, result, Devices, InitRetry = 0, neoRADIO2_state = DeviceIdle;
@@ -284,19 +285,24 @@ class Sensor : public DataWorker
 
                 case CalSendSettings:
                 {
-                    //TODO:: test
                     if(result == 0)
                     {
                         json settingsData = json::parse(messageData);
+                        int usbIndex = settingsData["usbIndex"].get<unsigned int>();
+                        if(usbIndex < 1 || usbIndex > 8)
+                        {
+                            usbIndex = 0;
+                        }
+
                         int returnValue = 0;
                         uint8_t deviceType = settingsData["type"].get<unsigned int>();
                         if(deviceType == NEORADIO2_DEVTYPE_AOUT)
                         {
-                            returnValue = neoRADIO2SetCalibrationFromJSONAOut(&deviceInfo[0], &messageData);
+                            returnValue = neoRADIO2SetCalibrationFromJSONAOut(&deviceInfo[usbIndex], &messageData);
                         }
                         else
                         {
-                            returnValue = neoRADIO2SetCalibrationFromJSON(&deviceInfo[0], &messageData);
+                            returnValue = neoRADIO2SetCalibrationFromJSON(&deviceInfo[usbIndex], &messageData);
                         }
 
                         if(returnValue >= 0)
@@ -349,7 +355,14 @@ class Sensor : public DataWorker
                     json sample;
                     if (result == 0 && !closed())
                     {
-                        if(neoRADIO2returnCalibrationDataJSON(&deviceInfo[0], &sample, &messageData) == 0)
+                        json settingsData = json::parse(messageData);
+                        int usbIndex = settingsData["usbIndex"].get<unsigned int>();
+                        if(usbIndex < 1 || usbIndex > 8)
+                        {
+                            usbIndex = 0;
+                        }
+
+                        if(neoRADIO2returnCalibrationDataJSON(&deviceInfo[usbIndex], &sample, &messageData) == 0)
                         {
                             std::this_thread::sleep_for(std::chrono::milliseconds(1));
                             CustomMessage toSend("cal_inter", sample.dump());
@@ -364,7 +377,14 @@ class Sensor : public DataWorker
                     //TODO:: test
                     if(result == 0)
                     {
-                        neoRADIO2ClearCalibration(&deviceInfo[0], &messageData);
+                        json settingsData = json::parse(messageData);
+                        int usbIndex = settingsData["usbIndex"].get<unsigned int>();
+                        if(usbIndex < 1 || usbIndex > 8)
+                        {
+                            usbIndex = 0;
+                        }
+
+                        neoRADIO2ClearCalibration(&deviceInfo[usbIndex], &messageData);
                         CustomMessage toSend("cal_clear", "done");
                         writeToNode(progress, toSend);
                     }
@@ -377,7 +397,14 @@ class Sensor : public DataWorker
                     //TODO:: test
                     if(result == 0)
                     {
-                        int returnValue = neoRADIO2SetPwrRly(&deviceInfo[0], &messageData);
+                        json settingsData = json::parse(messageData);
+                        int usbIndex = settingsData["usbIndex"].get<unsigned int>();
+                        if(usbIndex < 1 || usbIndex > 8)
+                        {
+                            usbIndex = 0;
+                        }
+
+                        int returnValue = neoRADIO2SetPwrRly(&deviceInfo[usbIndex], &messageData);
                     }
                     neoRADIO2_state = DeviceIdle;
                 }
@@ -388,7 +415,14 @@ class Sensor : public DataWorker
                     //TODO:: test
                     if(result == 0)
                     {
-                        neoRADIO2SetAoutValue(&deviceInfo[0], &messageData);
+                        json settingsData = json::parse(messageData);
+                        int usbIndex = settingsData["usbIndex"].get<unsigned int>();
+                        if(usbIndex < 1 || usbIndex > 8)
+                        {
+                            usbIndex = 0;
+                        }
+
+                        neoRADIO2SetAoutValue(&deviceInfo[usbIndex], &messageData);
                     }
                     neoRADIO2_state = DeviceIdle;
                 }
@@ -403,6 +437,25 @@ class Sensor : public DataWorker
                 case SetDOUT:
                 {
 
+                }
+                    break;
+
+                case LoadDefault:
+                {
+                    if(result == 0)
+                    {
+                        json settingsData = json::parse(messageData);
+                        int usbIndex = settingsData["usbIndex"].get<unsigned int>();
+                        if(usbIndex < 1 || usbIndex > 8)
+                        {
+                            usbIndex = 0;
+                        }
+
+                        neoRADIO2DefaultSettings(&deviceInfo[usbIndex], &messageData);
+                        CustomMessage toSend("default_loaded", "done");
+                        writeToNode(progress, toSend);
+                    }
+                    neoRADIO2_state = DeviceIdle;
                 }
                     break;
 
