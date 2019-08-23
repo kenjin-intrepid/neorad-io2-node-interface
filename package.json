@@ -19,11 +19,11 @@
   "license": "MIT",
   "devDependencies": {
     "electron": "^6.0.3",
-    "electron-builder": "^20.44.4"
+    "electron-builder": "^21.2.0"
   },
   "versions": {
     "electron": "^6.0.3",
-    "electron-builder": "^20.44.4"
+    "electron-builder": "^21.2.0"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.10.2",
