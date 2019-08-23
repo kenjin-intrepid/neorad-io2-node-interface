@@ -204,8 +204,6 @@ class Sensor : public DataWorker
                                         if(deviceInfo[usbIndex].rxDataBuffer[c].header.start_of_frame == 0x55 &&
                                         deviceInfo[usbIndex].rxDataBuffer[c].header.command_status == NEORADIO2_STATUS_WRITE_SETTINGS)
                                         {
-                                            std::cout << "write" << std::endl;
-                                            std::cout << returnValue << std::endl;
                                             timeout = 0;
                                         }
                                     }
@@ -362,7 +360,6 @@ class Sensor : public DataWorker
 
                 case CalInteractive:
                 {
-                    //TODO:: test
                     json sample;
                     if (result == 0 && !closed())
                     {
@@ -385,7 +382,6 @@ class Sensor : public DataWorker
 
                 case ClearCal:
                 {
-                    //TODO:: test
                     if(result == 0)
                     {
                         json settingsData = json::parse(messageData);
@@ -405,7 +401,6 @@ class Sensor : public DataWorker
 
                 case SetPwrRly:
                 {
-                    //TODO:: test
                     if(result == 0)
                     {
                         json settingsData = json::parse(messageData);

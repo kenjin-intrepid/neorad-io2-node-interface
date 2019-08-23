@@ -205,7 +205,7 @@
 
 ###v1.5.5
 #####added
-1.Hardware version under info.
+1. Hardware version under info.
 
 #####fixed
 1. AOUT calibration read and write.
@@ -213,10 +213,10 @@
 
 ###v1.6.0
 #####changed
-1. Electron@6.0.1
+1. Electron@6.0.3
 
 #####added
-2.Support for multi USB connections.
+2. Support for multiple USB connections.
 
 #####fixed
 1. Calibration Import from json not working.
