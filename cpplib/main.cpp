@@ -35,7 +35,7 @@ class Sensor : public DataWorker
             LoadDefault = 13
         };
         std::string messageData;
-        int messageName, result, Devices, InitRetry = 0, neoRADIO2_state = DeviceIdle;
+        int messageName, result, Devices = 0, InitRetry = 0, neoRADIO2_state = DeviceIdle;
         bool deviceConnected = true;
         json return_measured_data;
         neoRADIO2_USBDevice deviceLinked[8];
@@ -74,9 +74,12 @@ class Sensor : public DataWorker
                                 memcpy(&last, &current, sizeof(last));
                                 neoRADIO2SetOnline(&deviceInfo[i], 0);
                                 currentStat = neoRADIO2ProcessIncomingData(&deviceInfo[i], 1000);
-                                if (currentStat != 0)
+                                if(deviceInfo[i].State == neoRADIO2state_Connected)
                                 {
-                                    deviceConnected = false;
+                                    if (currentStat == -1)
+                                    {
+                                        deviceConnected = false;
+                                    }
                                 }
                             }
                         }
