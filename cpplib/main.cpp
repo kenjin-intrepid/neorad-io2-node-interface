@@ -87,6 +87,7 @@ class Sensor : public DataWorker
                 {
                     json devices;
                     Devices = neoRADIO2FindDevices(deviceLinked, 8);
+                    int offlineDevices = 0;
                     if(Devices > 0)
                     {
                         for (int i = 0; i < Devices; i++)
@@ -100,13 +101,6 @@ class Sensor : public DataWorker
                                 result = neoRADIO2ProcessIncomingData(&deviceInfo[i], 1000);
                                 timeout--;
                             }
-                            if(deviceInfo[i].State != neoRADIO2state_Connected && Devices == 1)
-                            {
-                                deviceConnected = false;
-                                CustomMessage sendError("error_msg", "102");
-                                writeToNode(progress, sendError);
-                                break;
-                            }
                             unsigned int timeout2 = 1000;
                             neoRADIO2RequestSettings(&deviceInfo[i]);
                             while(deviceInfo[i].State != neoRADIO2state_Connected && timeout2 > 0)
@@ -115,15 +109,21 @@ class Sensor : public DataWorker
                                 result = neoRADIO2ProcessIncomingData(&deviceInfo[i], 1000);
                                 timeout2--;
                             }
-                            if(deviceInfo[i].State != neoRADIO2state_Connected && Devices == 1)
+                            if(deviceInfo[i].State != neoRADIO2state_Connected)
                             {
-                                deviceConnected = false;
-                                CustomMessage sendError("error_msg", "102");
-                                writeToNode(progress, sendError);
+                                offlineDevices++;
                                 break;
                             }
                             //TODO: all devices returns error code
                             devices["usb" + std::to_string(i)] = neoRADIO2returnChainlistJSON(&deviceInfo[i]);
+                        }
+
+                        if(offlineDevices == Devices)
+                        {
+                            deviceConnected = false;
+                            CustomMessage sendError("error_msg", "102");
+                            writeToNode(progress, sendError);
+                            break;
                         }
 
                         CustomMessage sendFound("device_found", devices.dump());

@@ -18,11 +18,11 @@
   "author": "IntrepidCS",
   "license": "MIT",
   "devDependencies": {
-    "electron": "^6.0.3",
+    "electron": "^6.0.4",
     "electron-builder": "^21.2.0"
   },
   "versions": {
-    "electron": "^6.0.3",
+    "electron": "^6.0.4",
     "electron-builder": "^21.2.0"
   },
   "dependencies": {
@@ -42,7 +42,7 @@
   },
   "cmake-js": {
     "runtime": "electron",
-    "runtimeVersion": "6.0.3",
+    "runtimeVersion": "6.0.4",
     "arch": "x64"
   },
   "build": {
