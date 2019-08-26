@@ -87,9 +87,9 @@ class Sensor : public DataWorker
                 {
                     json devices;
                     Devices = neoRADIO2FindDevices(deviceLinked, 8);
-                    int offlineDevices = 0;
                     if(Devices > 0)
                     {
+                        int offlineDevices = 0;
                         for (int i = 0; i < Devices; i++)
                         {
                             memcpy(&deviceInfo[i].usbDevice, &deviceLinked[i], sizeof(neoRADIO2_USBDevice));
@@ -116,17 +116,17 @@ class Sensor : public DataWorker
                             //TODO: all devices returns error code
                             devices["usb" + std::to_string(i)] = neoRADIO2returnChainlistJSON(&deviceInfo[i]);
                         }
-
                         if(offlineDevices == Devices)
                         {
                             deviceConnected = false;
                             CustomMessage sendError("error_msg", "102");
                             writeToNode(progress, sendError);
-                            break;
                         }
-
-                        CustomMessage sendFound("device_found", devices.dump());
-                        writeToNode(progress, sendFound);
+                        else
+                        {
+                            CustomMessage sendFound("device_found", devices.dump());
+                            writeToNode(progress, sendFound);
+                        }
                         neoRADIO2_state = DeviceIdle;
                     }
                     else
