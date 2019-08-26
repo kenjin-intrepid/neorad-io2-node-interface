@@ -112,7 +112,6 @@ class Sensor : public DataWorker
                             if(deviceInfo[i].State != neoRADIO2state_Connected)
                             {
                                 offlineDevices++;
-                                break;
                             }
                             //TODO: all devices returns error code
                             devices["usb" + std::to_string(i)] = neoRADIO2returnChainlistJSON(&deviceInfo[i]);
@@ -153,26 +152,29 @@ class Sensor : public DataWorker
                     bool returnValueOfData = false;
                     for (int i = 0; i < Devices; i++)
                     {
-                        auto current = std::chrono::steady_clock::now();
-                        auto diff = std::chrono::duration_cast<std::chrono::microseconds>(
-                                current - last).count();
-                        memcpy(&last, &current, sizeof(last));
-                        result = neoRADIO2ProcessIncomingData(&deviceInfo[i], diff);
-                        if (result == 0 && !closed())
+                        if(deviceInfo[i].State == neoRADIO2state_Connected)
                         {
-                            if (deviceInfo[i].isOnline == 0)
+                            auto current = std::chrono::steady_clock::now();
+                            auto diff = std::chrono::duration_cast<std::chrono::microseconds>(
+                                    current - last).count();
+                            memcpy(&last, &current, sizeof(last));
+                            result = neoRADIO2ProcessIncomingData(&deviceInfo[i], diff);
+                            if (result == 0 && !closed())
                             {
-                                neoRADIO2SetOnline(&deviceInfo[i], 1);
+                                if (deviceInfo[i].isOnline == 0)
+                                {
+                                    neoRADIO2SetOnline(&deviceInfo[i], 1);
+                                }
+                                std::this_thread::sleep_for(std::chrono::microseconds(500));
+                                if (deviceInfo[i].rxDataCount > 0 && deviceInfo[i].State == neoRADIO2state_Connected)
+                                {
+                                    returnValueOfData = neoRADIO2returnDataJSON(&deviceInfo[i], &return_measured_data, i);
+                                }
                             }
-                            std::this_thread::sleep_for(std::chrono::microseconds(500));
-                            if (deviceInfo[i].rxDataCount > 0 && deviceInfo[i].State == neoRADIO2state_Connected)
+                            else
                             {
-                                returnValueOfData = neoRADIO2returnDataJSON(&deviceInfo[i], &return_measured_data, i);
+                                deviceConnected = false;
                             }
-                        }
-                        else
-                        {
-                            deviceConnected = false;
                         }
                     }
 
