@@ -220,3 +220,7 @@
 
 #####fixed
 1. Calibration Import from json not working.
+
+###v1.6.1
+#####changed
+1. how data is polled
