@@ -219,6 +219,7 @@ nlohmann::json neoRADIO2returnChainlistJSON(neoRADIO2_DeviceInfo * deviceInfo)
 
 bool neoRADIO2returnDataJSON(neoRADIO2_DeviceInfo * deviceInfo, nlohmann::json * returnData, int index)
 {
+    bool returnValue = false;
     for(int i = 0; i <= deviceInfo->LastDevice; i++)
     {
         (*returnData)["usb" + std::to_string(index)][std::to_string(i)]["deviceType"] = deviceInfo->ChainList[i][0].deviceType;
@@ -244,12 +245,11 @@ bool neoRADIO2returnDataJSON(neoRADIO2_DeviceInfo * deviceInfo, nlohmann::json *
             {
                 (*returnData)["usb" + std::to_string(index)][std::to_string(deviceInfo->rxDataBuffer[i].header.device)][std::to_string(deviceInfo->rxDataBuffer[i].header.bank)] = "inf";
             }
-
-            return true;
+            returnValue = true;
         }
     }
 
-    return false;
+    return returnValue;
 }
 
 int neoRADIO2SetSettingsFromJSON(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData)
@@ -705,6 +705,7 @@ bool neoRADIO2returnCalibrationDataJSON(neoRADIO2_DeviceInfo * deviceInfo, nlohm
         uint8_t bank = settingsData["bank"].get<unsigned int>();
         uint8_t deviceType = settingsData["type"].get<unsigned int>();
         uint8_t buf[1] = { NEORADIO2CALTYPE_NOCAL_ENHANCED };
+        bool returnValue = false;
 
         neoRADIO2SetOnline(deviceInfo, 0);
         uint8_t destination = neoRADIO2GetBankDestination(&bank);
@@ -725,10 +726,12 @@ bool neoRADIO2returnCalibrationDataJSON(neoRADIO2_DeviceInfo * deviceInfo, nlohm
                     value.b[3] = deviceInfo->rxDataBuffer[i].data[3];
                     (*sample)["tempData"] = value.fp;
                     (*sample)["bank"] = deviceInfo->rxDataBuffer[i].header.bank;
-                    return true;
+                    returnValue = true;
                 }
             }
         }
+
+        return returnValue;
     }
     catch(const std::exception& e)
     {

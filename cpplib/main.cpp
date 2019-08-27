@@ -150,13 +150,13 @@ class Sensor : public DataWorker
                 case DeviceOnline:
                 {
                     bool returnValueOfData = false;
+                    auto current = std::chrono::steady_clock::now();
+                    auto diff = std::chrono::duration_cast<std::chrono::microseconds>(
+                            current - last).count();
                     for (int i = 0; i < Devices; i++)
                     {
                         if(deviceInfo[i].State == neoRADIO2state_Connected)
                         {
-                            auto current = std::chrono::steady_clock::now();
-                            auto diff = std::chrono::duration_cast<std::chrono::microseconds>(
-                                    current - last).count();
                             memcpy(&last, &current, sizeof(last));
                             result = neoRADIO2ProcessIncomingData(&deviceInfo[i], diff);
                             if (result == 0 && !closed())
@@ -165,7 +165,7 @@ class Sensor : public DataWorker
                                 {
                                     neoRADIO2SetOnline(&deviceInfo[i], 1);
                                 }
-                                std::this_thread::sleep_for(std::chrono::microseconds(500));
+                                std::this_thread::sleep_for(std::chrono::microseconds(1000));
                                 if (deviceInfo[i].rxDataCount > 0 && deviceInfo[i].State == neoRADIO2state_Connected)
                                 {
                                     returnValueOfData = neoRADIO2returnDataJSON(&deviceInfo[i], &return_measured_data, i);
