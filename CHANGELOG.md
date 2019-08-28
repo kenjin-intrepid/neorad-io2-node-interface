@@ -224,3 +224,4 @@
 ###v1.6.1
 #####changed
 1. how data is polled
+2. Tooltip text position

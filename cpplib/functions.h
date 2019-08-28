@@ -410,6 +410,24 @@ int neoRADIO2SetSettingsFromJSON(neoRADIO2_DeviceInfo * deviceInfo, std::string 
         }
         neoRADIO2SetSettings(deviceInfo);
 
+        timeout = 2000;
+        while (timeout--)
+        {
+            std::this_thread::sleep_for(std::chrono::milliseconds(1));
+            neoRADIO2ProcessIncomingData(deviceInfo, 1000);
+            if (deviceInfo->rxDataCount > 0 && deviceInfo->State == neoRADIO2state_Connected)
+            {
+                for (unsigned int c = 0; c < deviceInfo->rxDataCount; c++)
+                {
+                    if(deviceInfo->rxDataBuffer[c].header.start_of_frame == 0x55 &&
+                    deviceInfo->rxDataBuffer[c].header.command_status == NEORADIO2_STATUS_WRITE_SETTINGS)
+                    {
+                        timeout = 0;
+                    }
+                }
+            }
+        }
+
         return settingsBank;
     }
     catch(const std::exception& e)
@@ -846,11 +864,22 @@ void neoRADIO2DefaultSettings(neoRADIO2_DeviceInfo * deviceInfo, std::string * m
     {
         uint8_t destination = neoRADIO2GetBankDestination(&bank);
         neoRADIO2SendPacket(deviceInfo, NEORADIO2_COMMAND_DEFAULT_SETTINGS, device, destination, nullptr, 0);
-        int timeout = 200;
-        while(timeout--)
+        int timeout = 1000;
+        while (timeout--)
         {
             std::this_thread::sleep_for(std::chrono::milliseconds(1));
             neoRADIO2ProcessIncomingData(deviceInfo, 1000);
+            if (deviceInfo->rxDataCount > 0 && deviceInfo->State == neoRADIO2state_Connected)
+            {
+                for (unsigned int c = 0; c < deviceInfo->rxDataCount; c++)
+                {
+                    if(deviceInfo->rxDataBuffer[c].header.start_of_frame == 0x55 &&
+                       deviceInfo->rxDataBuffer[c].header.command_status == NEORADIO2_STATUS_WRITE_SETTINGS)
+                    {
+                        timeout = 0;
+                    }
+                }
+            }
         }
     }
 }

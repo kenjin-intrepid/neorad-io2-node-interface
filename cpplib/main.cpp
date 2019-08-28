@@ -200,23 +200,6 @@ class Sensor : public DataWorker
                             }
 
                             int returnValue = neoRADIO2SetSettingsFromJSON(&deviceInfo[usbIndex], &messageData);
-                            unsigned int timeout = 2000;
-                            while (timeout-- != 0)
-                            {
-                                std::this_thread::sleep_for(std::chrono::milliseconds(1));
-                                neoRADIO2ProcessIncomingData(&deviceInfo[usbIndex], 1000);
-                                if (deviceInfo[usbIndex].rxDataCount > 0 && deviceInfo[usbIndex].State == neoRADIO2state_Connected)
-                                {
-                                    for (unsigned int c = 0; c < deviceInfo[usbIndex].rxDataCount; c++)
-                                    {
-                                        if(deviceInfo[usbIndex].rxDataBuffer[c].header.start_of_frame == 0x55 &&
-                                        deviceInfo[usbIndex].rxDataBuffer[c].header.command_status == NEORADIO2_STATUS_WRITE_SETTINGS)
-                                        {
-                                            timeout = 0;
-                                        }
-                                    }
-                                }
-                            }
 
                             CustomMessage toSend("settings_reply_count", std::to_string(returnValue));
                             writeToNode(progress, toSend);
@@ -473,8 +456,12 @@ class Sensor : public DataWorker
                         neoRADIO2DefaultSettings(&deviceInfo[usbIndex], &messageData);
                         CustomMessage toSend("default_loaded", "done");
                         writeToNode(progress, toSend);
+                        neoRADIO2_state = DeviceReload;
                     }
-                    neoRADIO2_state = DeviceIdle;
+                    else
+                    {
+                        neoRADIO2_state = DeviceIdle;
+                    }
                 }
                     break;
 
