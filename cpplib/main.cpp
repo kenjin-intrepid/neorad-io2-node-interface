@@ -14,7 +14,7 @@ using json = nlohmann::json;
 class Sensor : public DataWorker
 {
     public:
-        Sensor(Nan::Callback *data, Nan::Callback *complete, Nan::Callback *error_callback) : DataWorker(data, complete, error_callback){}
+        Sensor(Nan::Callback *data, Nan::Callback *complete) : DataWorker(data, complete){}
 
     void Execute (const Nan::AsyncProgressWorker::ExecutionProgress &progress)
     {
@@ -512,9 +512,8 @@ class StreamWorkerWrapper : public Nan::ObjectWrap
             {
                 Nan::Callback *data_callback = new Nan::Callback(info[0].As<v8::Function>());
                 Nan::Callback *complete_callback = new Nan::Callback(info[1].As<v8::Function>());
-                Nan::Callback *error_callback = new Nan::Callback(info[2].As<v8::Function>());
 
-                StreamWorkerWrapper *obj = new StreamWorkerWrapper(create_worker(data_callback,complete_callback,error_callback));
+                StreamWorkerWrapper *obj = new StreamWorkerWrapper(create_worker(data_callback,complete_callback));
 
                 obj->Wrap(info.This());
                 info.GetReturnValue().Set(info.This());
@@ -547,9 +546,9 @@ class StreamWorkerWrapper : public Nan::ObjectWrap
     DataWorker *_worker;
 };
 
-DataWorker *create_worker(Nan::Callback *data, Nan::Callback *complete, Nan::Callback *error_callback)
+DataWorker *create_worker(Nan::Callback *data, Nan::Callback *complete)
 {
-    return new Sensor(data, complete, error_callback);
+    return new Sensor(data, complete);
 }
 
 NODE_MODULE(neoRAD_IO2, StreamWorkerWrapper::Init)

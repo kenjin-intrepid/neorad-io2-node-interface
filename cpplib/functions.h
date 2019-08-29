@@ -754,6 +754,7 @@ bool neoRADIO2returnCalibrationDataJSON(neoRADIO2_DeviceInfo * deviceInfo, nlohm
     catch(const std::exception& e)
     {
         std::cout << "Caught exception " << e.what() << std::endl;
+        return false;
     }
 }
 

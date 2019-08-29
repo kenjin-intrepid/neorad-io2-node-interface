@@ -78,7 +78,7 @@ class CustomMessage
 class DataWorker : public Nan::AsyncProgressWorker
 {
     public:
-        DataWorker(Nan::Callback *progress, Nan::Callback *callback, Nan::Callback *error_callback) : Nan::AsyncProgressWorker(callback), progress(progress), error_callback(error_callback)
+        DataWorker(Nan::Callback *progress, Nan::Callback *callback) : Nan::AsyncProgressWorker(callback), progress(progress)
         {
             input_closed = false;
         }
@@ -86,20 +86,11 @@ class DataWorker : public Nan::AsyncProgressWorker
         ~DataWorker()
         {
             delete progress;
-            delete error_callback;
-        }
-
-        void HandleErrorCallback()
-        {
-            Nan::HandleScope scope;
-            v8::Local <v8::Value> argv[] = { v8::Exception::Error(Nan::New<v8::String>(ErrorMessage()).ToLocalChecked()) };
-            error_callback->Call(1, argv);
         }
 
         void HandleOKCallback()
         {
             drainQueue();
-//            callback->Call(0, NULL);
         }
 
         void HandleProgressCallback(const char *data, size_t size)
@@ -127,7 +118,6 @@ class DataWorker : public Nan::AsyncProgressWorker
         }
 
         Nan::Callback *progress;
-        Nan::Callback *error_callback;
         dataQueue<CustomMessage> toNode;
         bool input_closed;
 
@@ -147,4 +137,4 @@ class DataWorker : public Nan::AsyncProgressWorker
         }
 };
 
-DataWorker *create_worker(Nan::Callback *, Nan::Callback *, Nan::Callback *);
+DataWorker *create_worker(Nan::Callback *, Nan::Callback *);
