@@ -1,7 +1,7 @@
 {
   "name": "neoRAD-IO2",
   "productName": "neoRAD-IO2",
-  "version": "1.5.5",
+  "version": "1.6.1",
   "description": "neoRAD-IO2 GUI app",
   "main": "main.js",
   "scripts": {
@@ -18,15 +18,15 @@
   "author": "IntrepidCS",
   "license": "MIT",
   "devDependencies": {
-    "electron": "^5.0.9",
-    "electron-builder": "^20.44.4"
+    "electron": "^6.0.5",
+    "electron-builder": "^21.2.0"
   },
   "versions": {
-    "electron": "^5.0.9",
-    "electron-builder": "^20.44.4"
+    "electron": "^6.0.5",
+    "electron-builder": "^21.2.0"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-free": "^5.10.1",
+    "@fortawesome/fontawesome-free": "^5.10.2",
     "bindings": "^1.5.0",
     "bootstrap": "^4.3.1",
     "electron-is-dev": "^1.1.0",
@@ -42,7 +42,7 @@
   },
   "cmake-js": {
     "runtime": "electron",
-    "runtimeVersion": "5.0.9",
+    "runtimeVersion": "6.0.5",
     "arch": "x64"
   },
   "build": {

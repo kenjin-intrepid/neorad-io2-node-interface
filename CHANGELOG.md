@@ -205,8 +205,23 @@
 
 ###v1.5.5
 #####added
-1.Hardware version under info.
+1. Hardware version under info.
 
 #####fixed
 1. AOUT calibration read and write.
 2. tool tip:Sensor not connected for TC.
+
+###v1.6.0
+#####changed
+1. Electron@6.0.3
+
+#####added
+2. Support for multiple USB connections.
+
+#####fixed
+1. Calibration Import from json not working.
+
+###v1.6.1
+#####changed
+1. how data is polled
+2. Tooltip text position

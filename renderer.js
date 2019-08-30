@@ -13,8 +13,6 @@ window.$ = window.jQuery = require('jquery');
 window.fs = require('fs');
 window.Papa = require('papaparse');
 window.path = require('path');
-window.isFahrenheit = 0;
-window.refreshRate = 100;
 
 const mypath = ipcRenderer.sendSync('get-path', 'get-path');
 
