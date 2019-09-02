@@ -284,18 +284,6 @@ int neoRADIO2SetSettingsFromJSON(neoRADIO2_DeviceInfo * deviceInfo, std::string 
             }
                 break;
 
-            case NEORADIO2_DEVTYPE_DIO:
-            {
-
-            }
-                break;
-
-            case NEORADIO2_DEVTYPE_PWRRLY:
-            {
-
-            }
-                break;
-
             case NEORADIO2_DEVTYPE_AIN:
             {
                 if(settingsEnables == 0)
@@ -882,7 +870,6 @@ int neoRADIO2DefaultSettings(neoRADIO2_DeviceInfo * deviceInfo, std::string * me
                     {
                         timeout = 0;
                         returnValue = 1;
-                        std::cout << bank << std::endl;
                     }
                 }
             }
@@ -897,7 +884,6 @@ void neoRADIO2SetDIN(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageDat
     try
     {
         json settingsData = json::parse(* messageData);
-
     }
     catch(const std::exception& e)
     {
@@ -910,7 +896,6 @@ void neoRADIO2SetDOUT(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageDa
     try
     {
         json settingsData = json::parse(* messageData);
-
     }
     catch(const std::exception& e)
     {
