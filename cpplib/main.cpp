@@ -446,17 +446,41 @@ class Sensor : public DataWorker
                 {
                     if(result == 0)
                     {
+                        json reload;
                         json settingsData = json::parse(messageData);
                         int usbIndex = settingsData["usbIndex"].get<unsigned int>();
+                        std::string rtData;
                         if(usbIndex < 1 || usbIndex > 8)
                         {
                             usbIndex = 0;
                         }
 
-                        neoRADIO2DefaultSettings(&deviceInfo[usbIndex], &messageData);
-                        CustomMessage toSend("default_loaded", "done");
+                        if(neoRADIO2DefaultSettings(&deviceInfo[usbIndex], &messageData) == 1)
+                        {
+                            neoRADIO2RequestSettings(&deviceInfo[usbIndex]);
+                            int timeout = 1000;
+                            while(deviceInfo[usbIndex].State != neoRADIO2state_Connected && timeout > 0)
+                            {
+                                std::this_thread::sleep_for(std::chrono::milliseconds(1));
+                                neoRADIO2ProcessIncomingData(&deviceInfo[usbIndex], 1000);
+                                timeout--;
+                            }
+
+                            if (deviceInfo[usbIndex].State == neoRADIO2state_Connected)
+                            {
+                                reload["usb" + std::to_string(usbIndex)] = neoRADIO2returnChainlistJSON(&deviceInfo[usbIndex]);
+                            }
+
+                            CustomMessage toSend("settings_reply", reload.dump());
+                            writeToNode(progress, toSend);
+                        }
+                        else
+                        {
+                            rtData = "FAIL";
+                        }
+                        CustomMessage toSend("default_loaded", rtData);
                         writeToNode(progress, toSend);
-                        neoRADIO2_state = DeviceReload;
+                        neoRADIO2_state = DeviceIdle;
                     }
                     else
                     {

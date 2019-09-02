@@ -8,6 +8,7 @@ std::vector<uint32_t> neoRADIO2returnAoutData(uint8_t * rxdata[60], uint8_t * po
 int neoRADIO2SetSettingsFromJSON(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData);
 int neoRADIO2SetCalibrationFromJSON(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData);
 int neoRADIO2SetCalibrationFromJSONAOut(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData);
+int neoRADIO2DefaultSettings(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData);
 
 bool neoRADIO2returnDataJSON(neoRADIO2_DeviceInfo * deviceInfo, nlohmann::json * returnData, int index);
 bool neoRADIO2returnCalibrationDataJSON(neoRADIO2_DeviceInfo * deviceInfo, nlohmann::json * sample, std::string * messageData);
@@ -17,7 +18,6 @@ nlohmann::json neoRADIO2returnCalibrationJSON(neoRADIO2_DeviceInfo * deviceInfo,
 nlohmann::json neoRADIO2returnAllCalibrationJSON(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData);
 
 void neoRADIO2SetPwrRly(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData);
-void neoRADIO2DefaultSettings(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData);
 void neoRADIO2ClearCalibration(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData);
 void neoRADIO2SetAoutValue(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData);
 void neoRADIO2SetDIN(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData);
@@ -479,7 +479,7 @@ nlohmann::json neoRADIO2returnCalibrationJSON(neoRADIO2_DeviceInfo * deviceInfo,
                 break;
         }
         neoRADIO2SendPacket(deviceInfo, NEORADIO2_COMMAND_READ_CALPOINTS, *device, 0xFF, (uint8_t *) &txdata, sizeof(neoRADIO2frame_calHeader));
-        int timeout = 200;
+        int timeout = 1000;
         while(timeout--)
         {
             std::this_thread::sleep_for(std::chrono::milliseconds(1));
@@ -790,23 +790,25 @@ nlohmann::json neoRADIO2returnAllCalibrationJSON(neoRADIO2_DeviceInfo * deviceIn
     uint8_t deviceRange = settingsData["deviceRange"].get<unsigned int>();
     devices["type"] = settingsData["type"].get<unsigned int>();
 
-    if(deviceType == NEORADIO2_DEVTYPE_AIN)
+    switch (deviceType)
     {
-        for(int c = 0; c < 6; c++)
-        {
-            devices["data"][c] = neoRADIO2returnCalibrationJSON(deviceInfo, &device, &deviceType, &deviceChannel,(uint8_t *) &c);
-        }
-    }
-    else if(deviceType == NEORADIO2_DEVTYPE_AOUT)
-    {
-        for(int c = 0; c < 3; c++)
-        {
-            devices["data"][c] = neoRADIO2returnCalibrationJSON(deviceInfo, &device, &deviceType, (uint8_t *) &c, &deviceRange);
-        }
-    }
-    else
-    {
-        devices["data"][0] = neoRADIO2returnCalibrationJSON(deviceInfo, &device, &deviceType, &deviceChannel, &deviceRange);
+        case NEORADIO2_DEVTYPE_AIN:
+            for(int c = 0; c < 6; c++)
+            {
+                devices["data"][c] = neoRADIO2returnCalibrationJSON(deviceInfo, &device, &deviceType, &deviceChannel,(uint8_t *) &c);
+            }
+            break;
+
+        case NEORADIO2_DEVTYPE_AOUT:
+            for(int c = 0; c < 3; c++)
+            {
+                devices["data"][c] = neoRADIO2returnCalibrationJSON(deviceInfo, &device, &deviceType, (uint8_t *) &c, &deviceRange);
+            }
+            break;
+
+        default:
+            devices["data"][0] = neoRADIO2returnCalibrationJSON(deviceInfo, &device, &deviceType, &deviceChannel, &deviceRange);
+            break;
     }
 
     return devices;
@@ -857,8 +859,9 @@ void neoRADIO2SetAoutValue(neoRADIO2_DeviceInfo * deviceInfo, std::string * mess
     }
 }
 
-void neoRADIO2DefaultSettings(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData)
+int neoRADIO2DefaultSettings(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData)
 {
+    int returnValue = 0;
     json settingsData = json::parse(* messageData);
     uint8_t device = settingsData["device"].get<unsigned int>();
     for(uint8_t bank = 1; bank < 9; bank++)
@@ -878,11 +881,15 @@ void neoRADIO2DefaultSettings(neoRADIO2_DeviceInfo * deviceInfo, std::string * m
                        deviceInfo->rxDataBuffer[c].header.command_status == NEORADIO2_STATUS_WRITE_SETTINGS)
                     {
                         timeout = 0;
+                        returnValue = 1;
+                        std::cout << bank << std::endl;
                     }
                 }
             }
         }
     }
+
+    return returnValue;
 }
 
 void neoRADIO2SetDIN(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData)
