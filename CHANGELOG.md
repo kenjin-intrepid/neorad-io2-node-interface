@@ -233,3 +233,7 @@
 #####fixed
 1. Default settings fixed
 2. Fixed not reloading settings correctly
+
+###v1.6.3
+#####fixed
+1. Fixed reload function for AIN
