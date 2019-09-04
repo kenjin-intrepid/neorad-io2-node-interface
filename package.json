@@ -33,13 +33,11 @@
     "electron-is-dev": "^1.1.0",
     "electron-settings": "^3.2.0",
     "electron-window-state": "^5.0.3",
-    "emit-stream": "^0.1.2",
     "jquery": "^3.4.1",
     "nan": "^2.14.0",
     "papaparse": "^4.6.3",
     "popper.js": "^1.15.0",
-    "sudo-prompt": "^9.0.0",
-    "through": "^2.3.8"
+    "sudo-prompt": "^9.0.0"
   },
   "cmake-js": {
     "runtime": "electron",

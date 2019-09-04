@@ -235,5 +235,8 @@
 2. Fixed not reloading settings correctly
 
 ###v1.6.3
+#####changed
+1. Removed unnecessary modules
+
 #####fixed
 1. Fixed reload function for AIN
