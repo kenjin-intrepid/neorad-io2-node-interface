@@ -16,7 +16,7 @@ if(process.platform === 'linux')
 {
     const sudo = require('sudo-prompt');
     let options = {
-      name: 'Electron'
+      name: 'neoRAD-IO2'
     };
     fs.readFile('/etc/udev/rules.d/99-hidraw-permissions.rules', (err, data) => {
         if(err)

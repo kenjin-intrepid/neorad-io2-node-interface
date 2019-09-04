@@ -153,6 +153,7 @@
                     <button type="button" class="btn btn-success" id="storeButton" onclick="saveCal()" disabled>Store</button>
                     <button type="button" class="btn btn-info" id="exportButton" onclick="saveJSON()" disabled>Export</button>
                     <button type="button" class="btn btn-info" id="importButton" onclick="readJSON()" disabled>Import</button>
+                    <button type="button" class="btn btn-danger" id="resetCalButton" onclick="resetCal()" disabled>Clear</button>
                 </div>
             </div>
             <div class="cal_table_tc hidden">
@@ -161,7 +162,6 @@
                         <button style="justify-content: flex-start" type="button" class="btn btn-danger" id="removeButton" data-toggle="edit" onclick="editRow()" disabled>Edit</button>
                     </div>
                     <div class="form-group button-group">
-                        <button type="button" class="btn btn-danger" id="resetCalButton" onclick="resetCal()" disabled>Clear</button>
                         <div class="interactive_wrapper hidden">
                             <div class="input_selector_text offline" id="manualButton">Manual</div>
                             <div class="input_selector_bg">

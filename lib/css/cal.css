@@ -19,7 +19,7 @@
 {
     position: relative;
     left: 0;
-    width: 25%;
+    width: 30%;
 }
 .sidepanel_input_group
 {
@@ -153,10 +153,18 @@
     }
 }
 
-@media only screen and (max-width: 1400px)
+@media only screen and (max-width: 1600px)
 {
     .sidepanel
     {
         width: 35%;
+    }
+}
+
+@media only screen and (max-width: 1200px)
+{
+    .sidepanel
+    {
+        width: 40%;
     }
 }
