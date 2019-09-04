@@ -225,3 +225,11 @@
 #####changed
 1. how data is polled
 2. Tooltip text position
+
+###v1.6.2
+#####changed
+1. Changed delays in cpp
+
+#####fixed
+1. Default settings fixed
+2. Fixed not reloading settings correctly

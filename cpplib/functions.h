@@ -1,7 +1,7 @@
 #include <cmath>
 #include "json.hpp"
 
-uint8_t neoRADIO2GetBankDestination(uint8_t * x);
+uint8_t neoRADIO2GetBankDestination(uint8_t x);
 std::vector<float> neoRADIO2returnFloatData(uint8_t * rxdata[60], uint8_t * pointSize);
 std::vector<uint32_t> neoRADIO2returnAoutData(uint8_t * rxdata[60], uint8_t * pointSize);
 
@@ -30,9 +30,9 @@ typedef union _bytesToUint32 {
     uint8_t b[sizeof(uint32_t)];
 } bytesToUint32;
 
-uint8_t neoRADIO2GetBankDestination(uint8_t * x)
+uint8_t neoRADIO2GetBankDestination(uint8_t x)
 {
-    return (uint8_t) 1 << ((* x) - 1);
+    return (uint8_t) 1 << (x - 1);
 }
 
 std::vector<float> neoRADIO2returnFloatData(uint8_t * rxdata[60], uint8_t * pointSize)
@@ -504,7 +504,7 @@ nlohmann::json neoRADIO2returnCalibrationJSON(neoRADIO2_DeviceInfo * deviceInfo,
         {
             for(uint8_t bank = 1; bank < 9; bank++)
             {
-                uint8_t destination = neoRADIO2GetBankDestination(&bank);
+                uint8_t destination = neoRADIO2GetBankDestination(bank);
                 neoRADIO2SendPacket(deviceInfo, NEORADIO2_COMMAND_READ_CAL, *device, destination, (uint8_t *) &txdata, sizeof(neoRADIO2frame_calHeader));
                 timeout = 100;
                 while(timeout--)
@@ -604,7 +604,7 @@ int neoRADIO2SetCalibrationFromJSON(neoRADIO2_DeviceInfo * deviceInfo, std::stri
 
         for(uint8_t bank = 1; bank < 9; bank++)
         {
-            uint8_t destination = neoRADIO2GetBankDestination(&bank);
+            uint8_t destination = neoRADIO2GetBankDestination(bank);
             txlen = sizeof(neoRADIO2frame_calHeader) + allbanks[bank - 1].size() * cal_type_size;
             memcpy(&txdata[sizeof(neoRADIO2frame_calHeader)], &allbanks[bank - 1][0], allbanks[bank - 1].size() * cal_type_size);
             neoRADIO2SendPacket(deviceInfo, NEORADIO2_COMMAND_WRITE_CAL, device, destination, (uint8_t *) &txdata, txlen);
@@ -714,7 +714,7 @@ bool neoRADIO2returnCalibrationDataJSON(neoRADIO2_DeviceInfo * deviceInfo, nlohm
         bool returnValue = false;
 
         neoRADIO2SetOnline(deviceInfo, 0);
-        uint8_t destination = neoRADIO2GetBankDestination(&bank);
+        uint8_t destination = neoRADIO2GetBankDestination(bank);
         neoRADIO2SendPacket(deviceInfo, NEORADIO2_COMMAND_READ_DATA, device, destination, buf, sizeof(buf));
         std::this_thread::sleep_for(std::chrono::microseconds(500));
         (*sample)["type"] = deviceType;
@@ -831,7 +831,7 @@ void neoRADIO2SetAoutValue(neoRADIO2_DeviceInfo * deviceInfo, std::string * mess
         txbuf[5] = static_cast<uint8_t>(channel3 >> 8);
         txbuf[6] = static_cast<uint8_t>(channel3);
 
-        uint8_t destination = neoRADIO2GetBankDestination(&settingsBank);
+        uint8_t destination = neoRADIO2GetBankDestination(settingsBank);
         neoRADIO2SendPacket(deviceInfo, NEORADIO2_COMMAND_WRITE_DATA, settingsDeviceNumber, destination, (uint8_t *) &txbuf, sizeof(txbuf));
 
         int timeout = 300;
@@ -852,10 +852,9 @@ int neoRADIO2DefaultSettings(neoRADIO2_DeviceInfo * deviceInfo, std::string * me
     int returnValue = 0;
     json settingsData = json::parse(* messageData);
     uint8_t device = settingsData["device"].get<unsigned int>();
-    for(uint8_t bank = 1; bank < 9; bank++)
+    for(uint8_t bank = 0; bank < 8; bank++)
     {
-        uint8_t destination = neoRADIO2GetBankDestination(&bank);
-        neoRADIO2SendPacket(deviceInfo, NEORADIO2_COMMAND_DEFAULT_SETTINGS, device, destination, nullptr, 0);
+        neoRADIO2SendPacket(deviceInfo, NEORADIO2_COMMAND_DEFAULT_SETTINGS, device, (1 << bank), nullptr, 0);
         int timeout = 1000;
         while (timeout--)
         {

@@ -471,6 +471,7 @@ class Sensor : public DataWorker
                                 reload["usb" + std::to_string(usbIndex)] = neoRADIO2returnChainlistJSON(&deviceInfo[usbIndex]);
                             }
 
+                            rtData = "OK";
                             CustomMessage toSend("settings_reply", reload.dump());
                             writeToNode(progress, toSend);
                         }
