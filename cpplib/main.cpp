@@ -1,4 +1,9 @@
 #include "neoRAD-IO2_PacketHandler.h"
+#include "neoRAD-IO2-TC.h"
+#include "neoRAD-IO2-AIN.h"
+#include "neoRAD-IO2-AOUT.h"
+#include "neoRAD-IO2-PWRRLY.h"
+#include "neoRAD-IO2-DIO.h"
 #include <iostream>
 #include <chrono>
 #include <thread>

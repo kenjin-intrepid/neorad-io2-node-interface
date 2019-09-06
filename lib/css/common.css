@@ -348,7 +348,14 @@ input[type=number]::-webkit-outer-spin-button {
     height: 41px;
     -webkit-appearance: none;
 }
-
+.canid_overide
+{
+    padding-top: .55rem!important;
+}
+.ma_device_can_id, .can_fill_id
+{
+    text-transform: uppercase;
+}
 /*settings tab main page*/
 .ma_settings
 {
@@ -633,5 +640,9 @@ i:hover .tooltip_text
     .btn
     {
         font-size: 0.8rem;
+    }
+    .canid_overide
+    {
+        padding-top: .5rem!important;
     }
 }
