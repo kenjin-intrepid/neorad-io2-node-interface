@@ -235,5 +235,10 @@
 2. Fixed not reloading settings correctly
 
 ###v1.6.3
+#####changed
+1. Removed unnecessary modules
+2. Changed CAN settings layout
+3. UI updates
+
 #####fixed
 1. Fixed reload function for AIN

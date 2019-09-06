@@ -122,11 +122,6 @@
     left: 0;
     color: #009900;
 }
-.button-group
-{
-    display: flex;
-    justify-content: flex-end;
-}
 .button-group button
 {
     width: 7rem;
