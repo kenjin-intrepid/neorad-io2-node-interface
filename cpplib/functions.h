@@ -710,12 +710,18 @@ bool neoRADIO2returnCalibrationDataJSON(neoRADIO2_DeviceInfo * deviceInfo, nlohm
         uint8_t device = settingsData["device"].get<unsigned int>();
         uint8_t bank = settingsData["bank"].get<unsigned int>();
         uint8_t deviceType = settingsData["type"].get<unsigned int>();
-        uint8_t buf[1] = { NEORADIO2CALTYPE_NOCAL_ENHANCED };
+        uint8_t buf[2];
+        int txlen = 0;
+        buf[txlen++] = NEORADIO2CALTYPE_NOCAL_ENHANCED;
+        if(deviceType == NEORADIO2_DEVTYPE_AIN)
+        {
+            buf[txlen++] = settingsData["range"].get<unsigned int>();
+        }
         bool returnValue = false;
 
         neoRADIO2SetOnline(deviceInfo, 0);
         uint8_t destination = neoRADIO2GetBankDestination(bank);
-        neoRADIO2SendPacket(deviceInfo, NEORADIO2_COMMAND_READ_DATA, device, destination, buf, sizeof(buf));
+        neoRADIO2SendPacket(deviceInfo, NEORADIO2_COMMAND_READ_DATA, device, destination, buf, txlen);
         std::this_thread::sleep_for(std::chrono::microseconds(500));
         (*sample)["type"] = deviceType;
 

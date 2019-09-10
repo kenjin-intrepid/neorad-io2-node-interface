@@ -242,3 +242,11 @@
 
 #####fixed
 1. Fixed reload function for AIN
+
+###v1.6.4
+#####changed
+1. Calibration unclickable during data reading
+
+#####Fixed
+1. Fixed CAN settings invalid check
+2. Export DBC
