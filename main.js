@@ -102,7 +102,14 @@ ipcMain.on('get-locale', (event, arg) => {
 });
 
 ipcMain.on('get-path', (event, arg) => {
-    event.returnValue = app.getPath('home');
+    if(process.platform === 'win32')
+    {
+        event.returnValue = "C:\/";
+    }
+    else
+    {
+        event.returnValue = app.getPath('home');
+    }
 });
 
 function loadMain(page){
