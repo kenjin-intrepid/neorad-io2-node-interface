@@ -197,7 +197,14 @@ function setMenu() {
                 {
                     label: template[locale]['menu_folder'],
                     click() {
-                        let Path = path.join(app.getPath('home'), `IntrepidCS\/neoRAD-IO2`);
+                        if(process.platform === 'win32')
+                        {
+                            let Path = path.join("C:\/", `IntrepidCS\/neoRAD-IO2`);
+                        }
+                        else
+                        {
+                            let Path = path.join(app.getPath('home'), `IntrepidCS\/neoRAD-IO2`);
+                        }
                         shell.showItemInFolder(Path);
                     }
                 }
