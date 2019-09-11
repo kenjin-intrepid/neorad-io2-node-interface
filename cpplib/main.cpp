@@ -377,6 +377,12 @@ class Sensor : public DataWorker
                             CustomMessage toSend("cal_inter", sample.dump());
                             writeToNode(progress, toSend);
                         }
+                        else
+                        {
+                            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+                            CustomMessage toSend("cal_inter", "no_value");
+                            writeToNode(progress, toSend);
+                        }
                     }
                 }
                     break;
