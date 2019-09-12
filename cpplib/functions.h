@@ -725,20 +725,31 @@ bool neoRADIO2returnCalibrationDataJSON(neoRADIO2_DeviceInfo * deviceInfo, nlohm
         std::this_thread::sleep_for(std::chrono::microseconds(500));
         (*sample)["type"] = deviceType;
 
-        if (deviceInfo->rxDataCount > 0 && deviceInfo->State == neoRADIO2state_Connected)
+        int timeout = 1000;
+        while (timeout--)
         {
-            for (int i = 0; i < deviceInfo->rxDataCount; i++)
+            std::this_thread::sleep_for(std::chrono::milliseconds(1));
+            neoRADIO2ProcessIncomingData(deviceInfo, 1000);
+            if (deviceInfo->rxDataCount > 0 && deviceInfo->State == neoRADIO2state_Connected)
             {
-                if(deviceInfo->rxDataBuffer[i].header.start_of_frame == 0x55 && deviceInfo->rxDataBuffer[i].header.command_status == NEORADIO2CALTYPE_ENABLED)
+                for (int i = 0; i < deviceInfo->rxDataCount; i++)
                 {
-                    bytesToFloat value;
-                    value.b[0] = deviceInfo->rxDataBuffer[i].data[0];
-                    value.b[1] = deviceInfo->rxDataBuffer[i].data[1];
-                    value.b[2] = deviceInfo->rxDataBuffer[i].data[2];
-                    value.b[3] = deviceInfo->rxDataBuffer[i].data[3];
-                    (*sample)["tempData"] = value.fp;
-                    (*sample)["bank"] = deviceInfo->rxDataBuffer[i].header.bank;
-                    returnValue = true;
+                    if(deviceInfo->rxDataBuffer[i].header.start_of_frame == 0x55 && deviceInfo->rxDataBuffer[i].header.command_status == NEORADIO2CALTYPE_ENABLED)
+                    {
+                        bytesToFloat value;
+                        value.b[0] = deviceInfo->rxDataBuffer[i].data[0];
+                        value.b[1] = deviceInfo->rxDataBuffer[i].data[1];
+                        value.b[2] = deviceInfo->rxDataBuffer[i].data[2];
+                        value.b[3] = deviceInfo->rxDataBuffer[i].data[3];
+                        (*sample)["tempData"] = value.fp;
+                        (*sample)["bank"] = deviceInfo->rxDataBuffer[i].header.bank;
+                        if(deviceType == NEORADIO2_DEVTYPE_AIN)
+                        {
+                            (*sample)["range"] = settingsData["range"].get<unsigned int>();
+                        }
+                        timeout = 0;
+                        returnValue = true;
+                    }
                 }
             }
         }

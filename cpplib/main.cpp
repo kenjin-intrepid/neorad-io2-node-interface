@@ -379,9 +379,9 @@ class Sensor : public DataWorker
                         }
                         else
                         {
-                            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-                            CustomMessage toSend("cal_inter", "no_value");
+                            CustomMessage toSend("cal_inter", "error");
                             writeToNode(progress, toSend);
+                            neoRADIO2_state = DeviceIdle;
                         }
                     }
                 }
