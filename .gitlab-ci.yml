@@ -1,5 +1,6 @@
-fw:
-        artifacts:
-                paths:
-                - updater/neoRAD-IO2-Updater.exe
-                expire_in: 1 month
+createArtifact:
+    script: echo 1
+    artifacts:
+            paths:
+            - updater/neoRAD-IO2-Updater.exe
+            expire_in: 1 month
