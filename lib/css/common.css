@@ -509,7 +509,7 @@ i:hover .tooltip_text
     animation: pseudoelement 1.5s linear infinite;
 }
 
-.status_text, .errortext
+.status_text
 {
     position: relative;
     width: 100%;
@@ -531,7 +531,7 @@ i:hover .tooltip_text
     word-break: break-word;
 }
 
-.errortext
+.errortext, .autofill_errortext
 {
     color: red;
 }
