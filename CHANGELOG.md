@@ -245,8 +245,14 @@
 
 ###v1.6.4
 #####changed
-1. Calibration unclickable during data reading
+1. Calibration can't be accessed during data reading.
 
-#####Fixed
-1. Fixed CAN settings invalid check
-2. Export DBC
+#####fixed
+1. Fixed CAN settings validation.
+2. Fixed Cal table export and import.
+3. Exported DBC files can now be properly loaded in Vspy.
+
+#####added
+1. Added warning to warn user of data override when using auto fill for can settings.
+2. Added warning for default button.
+3. Added warning for clear calibration button.

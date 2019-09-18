@@ -200,12 +200,13 @@ function setMenu() {
                         if(process.platform === 'win32')
                         {
                             let Path = path.join("C:\/", `IntrepidCS\/neoRAD-IO2`);
+                            shell.showItemInFolder(Path);
                         }
                         else
                         {
                             let Path = path.join(app.getPath('home'), `IntrepidCS\/neoRAD-IO2`);
+                            shell.showItemInFolder(Path);
                         }
-                        shell.showItemInFolder(Path);
                     }
                 }
             ]

@@ -63,8 +63,6 @@ class Sensor : public DataWorker
             {
                 case DeviceIdle:
                 {
-                    CustomMessage toSend("idle","idle");
-                    writeToNode(progress, toSend);
                     int currentStat;
                     if(Devices > 0)
                     {
@@ -138,10 +136,10 @@ class Sensor : public DataWorker
                     {
                         if(InitRetry > 1000)
                         {
-                            deviceConnected = false;
                             CustomMessage sendError("error_msg", "101");
                             writeToNode(progress, sendError);
                             neoRADIO2_state = DeviceIdle;
+                            deviceConnected = false;
                         }
                         else
                         {
