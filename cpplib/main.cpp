@@ -63,8 +63,6 @@ class Sensor : public DataWorker
             {
                 case DeviceIdle:
                 {
-                    CustomMessage toSend("idle","idle");
-                    writeToNode(progress, toSend);
                     int currentStat;
                     if(Devices > 0)
                     {
@@ -138,10 +136,10 @@ class Sensor : public DataWorker
                     {
                         if(InitRetry > 1000)
                         {
-                            deviceConnected = false;
                             CustomMessage sendError("error_msg", "101");
                             writeToNode(progress, sendError);
                             neoRADIO2_state = DeviceIdle;
+                            deviceConnected = false;
                         }
                         else
                         {
@@ -376,6 +374,12 @@ class Sensor : public DataWorker
                             std::this_thread::sleep_for(std::chrono::milliseconds(1));
                             CustomMessage toSend("cal_inter", sample.dump());
                             writeToNode(progress, toSend);
+                        }
+                        else
+                        {
+                            CustomMessage toSend("cal_inter", "error");
+                            writeToNode(progress, toSend);
+                            neoRADIO2_state = DeviceIdle;
                         }
                     }
                 }

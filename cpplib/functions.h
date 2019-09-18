@@ -399,21 +399,10 @@ int neoRADIO2SetSettingsFromJSON(neoRADIO2_DeviceInfo * deviceInfo, std::string 
         neoRADIO2SetSettings(deviceInfo);
 
         timeout = 2000;
-        while (timeout--)
+        while (timeout-- && deviceInfo->State != neoRADIO2state_Connected)
         {
             std::this_thread::sleep_for(std::chrono::milliseconds(1));
             neoRADIO2ProcessIncomingData(deviceInfo, 1000);
-            if (deviceInfo->rxDataCount > 0 && deviceInfo->State == neoRADIO2state_Connected)
-            {
-                for (unsigned int c = 0; c < deviceInfo->rxDataCount; c++)
-                {
-                    if(deviceInfo->rxDataBuffer[c].header.start_of_frame == 0x55 &&
-                    deviceInfo->rxDataBuffer[c].header.command_status == NEORADIO2_STATUS_WRITE_SETTINGS)
-                    {
-                        timeout = 0;
-                    }
-                }
-            }
         }
 
         return settingsBank;
@@ -710,29 +699,46 @@ bool neoRADIO2returnCalibrationDataJSON(neoRADIO2_DeviceInfo * deviceInfo, nlohm
         uint8_t device = settingsData["device"].get<unsigned int>();
         uint8_t bank = settingsData["bank"].get<unsigned int>();
         uint8_t deviceType = settingsData["type"].get<unsigned int>();
-        uint8_t buf[1] = { NEORADIO2CALTYPE_NOCAL_ENHANCED };
+        uint8_t buf[2];
+        int txlen = 0;
+        buf[txlen++] = NEORADIO2CALTYPE_NOCAL_ENHANCED;
+        if(deviceType == NEORADIO2_DEVTYPE_AIN)
+        {
+            buf[txlen++] = settingsData["range"].get<unsigned int>();
+        }
         bool returnValue = false;
 
         neoRADIO2SetOnline(deviceInfo, 0);
         uint8_t destination = neoRADIO2GetBankDestination(bank);
-        neoRADIO2SendPacket(deviceInfo, NEORADIO2_COMMAND_READ_DATA, device, destination, buf, sizeof(buf));
+        neoRADIO2SendPacket(deviceInfo, NEORADIO2_COMMAND_READ_DATA, device, destination, buf, txlen);
         std::this_thread::sleep_for(std::chrono::microseconds(500));
         (*sample)["type"] = deviceType;
 
-        if (deviceInfo->rxDataCount > 0 && deviceInfo->State == neoRADIO2state_Connected)
+        int timeout = 1000;
+        while (timeout--)
         {
-            for (int i = 0; i < deviceInfo->rxDataCount; i++)
+            std::this_thread::sleep_for(std::chrono::milliseconds(1));
+            neoRADIO2ProcessIncomingData(deviceInfo, 1000);
+            if (deviceInfo->rxDataCount > 0 && deviceInfo->State == neoRADIO2state_Connected)
             {
-                if(deviceInfo->rxDataBuffer[i].header.start_of_frame == 0x55 && deviceInfo->rxDataBuffer[i].header.command_status == NEORADIO2CALTYPE_ENABLED)
+                for (int i = 0; i < deviceInfo->rxDataCount; i++)
                 {
-                    bytesToFloat value;
-                    value.b[0] = deviceInfo->rxDataBuffer[i].data[0];
-                    value.b[1] = deviceInfo->rxDataBuffer[i].data[1];
-                    value.b[2] = deviceInfo->rxDataBuffer[i].data[2];
-                    value.b[3] = deviceInfo->rxDataBuffer[i].data[3];
-                    (*sample)["tempData"] = value.fp;
-                    (*sample)["bank"] = deviceInfo->rxDataBuffer[i].header.bank;
-                    returnValue = true;
+                    if(deviceInfo->rxDataBuffer[i].header.start_of_frame == 0x55 && deviceInfo->rxDataBuffer[i].header.command_status == NEORADIO2CALTYPE_ENABLED)
+                    {
+                        bytesToFloat value;
+                        value.b[0] = deviceInfo->rxDataBuffer[i].data[0];
+                        value.b[1] = deviceInfo->rxDataBuffer[i].data[1];
+                        value.b[2] = deviceInfo->rxDataBuffer[i].data[2];
+                        value.b[3] = deviceInfo->rxDataBuffer[i].data[3];
+                        (*sample)["tempData"] = value.fp;
+                        (*sample)["bank"] = deviceInfo->rxDataBuffer[i].header.bank;
+                        if(deviceType == NEORADIO2_DEVTYPE_AIN)
+                        {
+                            (*sample)["range"] = settingsData["range"].get<unsigned int>();
+                        }
+                        timeout = 0;
+                        returnValue = true;
+                    }
                 }
             }
         }
