@@ -5,7 +5,7 @@
 
     or
 
-    MSVC build tools for PC
+    MSVC build tools & cmake for PC
 
 2. nodejs & npm
 
@@ -14,22 +14,43 @@
 4. yarn
 
 ## Windows build instructions
+1. install MSVC C++ build tools(2015/2017/2019)
 
-1. first install all node modules.
+2. install node.js for windows LTS.
+
+3. install cmake-js globally
+
+        npm install cmake-js -g
+
+4. open node terminal and install all node modules. (project folder)
+
+        cd C:\{PATH TO PROJECT}\
 
         npm install
 
-2. use yarn to download electron-builder
+5. install CMake for windows
+    
+    Set PATH to all users while installing.
+    
+6. run Cmake-js to compile node module for windows.
+
+        cmake-js rebuild
+
+7. install yarn globally
+
+        npm install yarn -g
+
+8. use yarn to download electron-builder
 
         yarn add electron-builder --dev
         
-3. add code signing to /electron-builder.env
+9.(OPTIONAL) add code signing to /electron-builder.env 
 
     "CSC_LINK=" The HTTPS link (or base64-encoded data, or file:// link, or local path) to certificate (*.p12 or *.pfx file). Shorthand ~/ is supported (home directory).
 
     "#CSC_KEY_PASSWORD=" The password to decrypt the certificate given in CSC_LINK. (if applies)
     
-4. use yarn to build installer
+10. use yarn to build installer
         
         yarn dist
         
