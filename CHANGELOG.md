@@ -259,11 +259,12 @@
 
 ###v1.6.5
 #####changed
-#####pwrrly-branch
 1. Disabled tagname for power relay bank 2-8
 2. Removed group select for power relay.
 3. Removed auto fill for power relay.
 4. Changed Init state for power relay to the correct values
 
-#####TC-branch
-1. TC resolution to 1 digit after the decimal.
+###v1.6.6
+#####changed
+1. Updated C library to resolve serial number issue.
+2. TC resolution to 1 digit after the decimal.
