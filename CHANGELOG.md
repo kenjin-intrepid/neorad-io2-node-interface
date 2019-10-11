@@ -256,3 +256,14 @@
 1. Added warning to warn user of data override when using auto fill for can settings.
 2. Added warning for default button.
 3. Added warning for clear calibration button.
+
+###v1.6.5
+#####changed
+#####pwrrly-branch
+1. Disabled tagname for power relay bank 2-8
+2. Removed group select for power relay.
+3. Removed auto fill for power relay.
+4. Changed Init state for power relay to the correct values
+
+#####TC-branch
+1. TC resolution to 1 digit after the decimal.
