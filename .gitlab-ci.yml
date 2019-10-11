@@ -3,6 +3,7 @@ createInstaller:
         - rad-io2
     stage: build
     script:
+        - git submodule update --init --recursive
         - npm install
         - smake-js rebuild
         - yarn add electron-builder --dev
