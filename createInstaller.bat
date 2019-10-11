@@ -1,5 +1,5 @@
 git submodule update --init --recursive
-npm install
-cmake-js rebuild
-yarn add electron-builder --dev
-yarn dist
+call npm install
+call cmake-js rebuild
+call yarn add electron-builder --dev
+call yarn dist
