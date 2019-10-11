@@ -3,6 +3,9 @@ createInstaller:
         - rad-io2
     stage: build
     script:
+        - npm install
+        - smake-js rebuild
+        - yarn add electron-builder --dev
         - yarn dist
     artifacts:
         name: "%CI_JOB_NAME%-%CI_COMMIT_REF_NAME%-%CI_COMMIT_SHA%"
