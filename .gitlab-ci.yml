@@ -1,6 +1,12 @@
-createArtifact:
-    script: echo 1
+createInstaller:
+    tags:
+        - rad-io2
+    stage: build
+    script:
+        - createInstaller
     artifacts:
-            paths:
+        name: "%CI_JOB_NAME%-%CI_COMMIT_REF_NAME%-%CI_COMMIT_SHA%"
+        paths:
             - updater/neoRAD-IO2-Updater.exe
-            expire_in: 1 month
+            - dist/neoRAD-IO2 Setup*.exe
+        expire_in: 1 month
