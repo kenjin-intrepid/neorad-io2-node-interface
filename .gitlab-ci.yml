@@ -5,12 +5,12 @@ createInstaller:
     script:
         - git submodule update --init --recursive
         - npm install
-        - smake-js rebuild
+        - cmake-js rebuild
         - yarn add electron-builder --dev
         - yarn dist
     artifacts:
         name: "%CI_JOB_NAME%-%CI_COMMIT_REF_NAME%-%CI_COMMIT_SHA%"
         paths:
             - updater/neoRAD-IO2-Updater.exe
-            - dist/neoRAD-IO2 Setup 1.6.4.exe
+            - dist/neoRAD-IO2 Setup*.exe
         expire_in: 1 month
