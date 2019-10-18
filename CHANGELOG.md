@@ -272,3 +272,7 @@
 ###v1.6.7
 1. merged changes from 1.6.5 and 1.6.6
 2. fixed issue with power_relay not displaying init state correctly.
+
+###v1.6.8
+1. Changed DBC export naming.
+2. Electron@6.0.12
