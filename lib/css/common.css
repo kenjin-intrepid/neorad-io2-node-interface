@@ -531,6 +531,11 @@ i:hover .tooltip_text
     word-break: break-word;
 }
 
+.errortext, .autofill_errortext
+{
+    color: red;
+}
+
 @keyframes pseudoelement
 {
     0%
@@ -569,7 +574,7 @@ i:hover .tooltip_text
     }
     .em1
     {
-        font-size: 0.8rem!important;
+        font-size: 0.9rem!important;
     }
     .neorad_temp
     {
@@ -627,11 +632,11 @@ i:hover .tooltip_text
     }
     .em1
     {
-        font-size: 0.6rem!important;
+        font-size: 0.8rem!important;
     }
     .form-control-sm
     {
-        font-size: 0.6rem!important;
+        font-size: 0.8rem!important;
     }
     .neorad_temp
     {
