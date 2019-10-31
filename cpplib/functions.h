@@ -852,12 +852,12 @@ void neoRADIO2SetAoutValue(neoRADIO2_DeviceInfo * deviceInfo, std::string * mess
         aout_header.bits.ch3 = 1;
 
         txbuf[0] = aout_header.byte;
-        txbuf[1] = static_cast<uint8_t>(channel1 >> 8);
-        txbuf[2] = static_cast<uint8_t>(channel1);
-        txbuf[3] = static_cast<uint8_t>(channel2 >> 8);
-        txbuf[4] = static_cast<uint8_t>(channel2);
-        txbuf[5] = static_cast<uint8_t>(channel3 >> 8);
-        txbuf[6] = static_cast<uint8_t>(channel3);
+        txbuf[1] = static_cast<uint8_t>(channel1);
+        txbuf[2] = static_cast<uint8_t>(channel1 >> 8);
+        txbuf[3] = static_cast<uint8_t>(channel2);
+        txbuf[4] = static_cast<uint8_t>(channel2 >> 8);
+        txbuf[5] = static_cast<uint8_t>(channel3);
+        txbuf[6] = static_cast<uint8_t>(channel3 >> 8);
 
         uint8_t destination = neoRADIO2GetBankDestination(settingsBank);
         neoRADIO2SendPacket(deviceInfo, NEORADIO2_COMMAND_WRITE_DATA, settingsDeviceNumber, destination, (uint8_t *) &txbuf, sizeof(txbuf));

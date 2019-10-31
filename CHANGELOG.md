@@ -276,3 +276,7 @@
 ###v1.6.8
 1. Changed DBC export naming.
 2. Electron@6.0.12
+
+###v1.6.9
+1. Updated company logo to the latest.
+2. Fixed aout not reporting the correct values.
