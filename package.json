@@ -1,7 +1,7 @@
 {
   "name": "neoRAD-IO2",
   "productName": "neoRAD-IO2",
-  "version": "1.6.6",
+  "version": "1.6.7",
   "description": "neoRAD-IO2 GUI app",
   "main": "main.js",
   "scripts": {

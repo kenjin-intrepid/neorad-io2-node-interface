@@ -268,3 +268,7 @@
 #####changed
 1. Updated C library to resolve serial number issue.
 2. TC resolution to 1 digit after the decimal.
+
+###v1.6.7
+1. merged changes from 1.6.5 and 1.6.6
+2. fixed issue with power_relay not displaying init state correctly.
