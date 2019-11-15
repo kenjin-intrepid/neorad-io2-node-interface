@@ -280,3 +280,6 @@
 ###v1.6.9
 1. Updated company logo to the latest.
 2. Fixed aout not reporting the correct values.
+
+###v1.6.10
+1. Fixes issue with AIN Cal table import not working correctly.
