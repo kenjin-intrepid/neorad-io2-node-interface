@@ -283,3 +283,9 @@
 
 ###v1.6.10
 1. Fixes issue with AIN Cal table import not working correctly.
+
+###v1.6.11
+1. Electron@6.1.7
+2. Added function for Import/Export device settings (JSON file).
+3. Changed text in device tab buttons to fontawesome icons.
+4. Added light & dark theme toggle to navigation tab (removed from settings modal).

@@ -18,19 +18,19 @@
     </a>
     <ul class="navbar-nav">
         <li class="nav-item nav_device active" data-page="ma_device">
-            <a class="nav-link" href="#" tabindex="-1">
+            <a class="nav-link nav-link-click" href="#" tabindex="-1">
                 <i class="fas fa-list-ol"></i>
                 <span id="nav-link-device">Devices</span>
             </a>
         </li>
         <li class="nav-item nav_graph" data-page="ma_graph">
-            <a class="nav-link" href="#" tabindex="-1">
+            <a class="nav-link nav-link-click" href="#" tabindex="-1">
                 <i class="fas fa-chart-line"></i>
                 <span id="nav-link-graph">Graph</span>
             </a>
         </li>
         <li class="nav-item nav_calibration hidden" data-page="ma_calibration">
-            <a class="nav-link" href="#" tabindex="-1">
+            <a class="nav-link nav-link-click" href="#" tabindex="-1">
                 <i class="fas fa-clipboard-list"></i>
                 <span id="nav-link-calibration">Calibration</span>
             </a>
@@ -42,9 +42,15 @@
             <div class="progress-bar em15 status_text errortext hidden"></div>
         </li>
     </ul>
-    <ul class="navbar-nav navbar_items">
+    <ul class="navbar-nav">
+        <li class="nav-item nav-theme">
+            <div class="nav-link" tabindex="-1">
+                <i class="fas fa-sun hidden"></i>
+                <i class="fas fa-moon hidden"></i>
+            </div>
+        </li>
         <li class="nav-item nav_info"  data-page="ma_info">
-            <a class="nav-link" href="#" tabindex="-1">
+            <a class="nav-link nav-link-click" href="#" tabindex="-1">
                 <i class="fas fa-question-circle"></i>
                 <span id="nav-link-help">Help</span>
             </a>
@@ -255,16 +261,6 @@
                     </select>
                 </div>
 
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <label class="input-group-text" for="theme_select">Theme</label>
-                    </div>
-                    <select class="custom-select" id="theme_select">
-                        <option value="0">Light</option>
-                        <option value="1">Dark</option>
-                    </select>
-                </div>
-
                 <hr>
 
                 <div class="input-group mb-3">
@@ -329,8 +325,7 @@
     document.querySelector("#dep_nan").textContent = pkgObj.dependencies.nan;
     document.querySelector("#dep_par").textContent = pkgObj.dependencies.papaparse;
 </script>
-<script src="../../node_modules/bootstrap/dist/js/bootstrap.bundle.js"></script>
-<script src="../../node_modules/bootstrap/dist/js/bootstrap.js"></script>
+<script src="../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="../js/help.js"></script>
 <script src="../js/templates.js"></script>
 <script src="../js/datastream.js"></script>

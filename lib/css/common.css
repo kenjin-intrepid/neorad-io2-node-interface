@@ -42,6 +42,10 @@ input
 {
     font-family: space, Arial, sans-serif !important;
 }
+.nav-item:focus, .nav-link:focus
+{
+    outline: none;
+}
 .modal button
 {
     outline: none;
@@ -110,7 +114,7 @@ input
 .theme-black-bg .ma_device_wrap
 {
     -webkit-box-shadow: 0 0 5px 5px #7a7a7a;
-    margin: 50px 0;
+    /*margin: 50px 0;*/
 }
 .theme-black-bg table
 {
@@ -180,7 +184,7 @@ input[type=number]::-webkit-outer-spin-button {
     height: calc(100% - 71px);
     width: 100%;
 }
-.nav-item
+.nav-item, .nav-theme
 {
     font-size: 1.3rem;
 }
@@ -390,6 +394,11 @@ input[type=number]::-webkit-outer-spin-button {
     color: white;
     border: none;
     border-radius: 0;
+}
+
+.set_import, .set_export, .can_export, .device_save, .device_default
+{
+    width: 44px;
 }
 
 /*button tooltip css*/
