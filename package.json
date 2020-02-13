@@ -57,13 +57,13 @@
       "createDesktopShortcut": true
     },
     "win": {
-      "icon": "lib/img/icon.ico"
+      "icon": "lib/img/logo.ico"
     },
     "mac": {
-      "icon": "lib/img/icon.icns"
+      "icon": "lib/img/logo.icns"
     },
     "linux": {
-      "icon": "lib/img/icon.icns"
+      "icon": "lib/img/logo.icns"
     },
     "copyright": "Copyright © 2019 ${author}"
   }
