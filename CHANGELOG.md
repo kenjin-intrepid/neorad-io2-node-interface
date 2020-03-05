@@ -289,3 +289,11 @@
 2. Added function for Import/Export device settings (JSON file).
 3. Changed text in device tab buttons to fontawesome icons.
 4. Added light & dark theme toggle to navigation tab (removed from settings modal).
+
+###v1.6.12
+1. Electron@6.1.9
+2. Fixes Export DBC not working when power relay is the first device in a chain. #21 #25
+3. Replaces space with underscore( _ ) when exporting dbc with devices that uses custom tag names. #27
+4. Fixes app icon not showing correctly due to update starting from 1.6.9. #24
+
+NOTE: To work properly, node module must be built with cmake-js 6 or above.
