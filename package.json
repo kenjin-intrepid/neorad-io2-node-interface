@@ -1,7 +1,7 @@
 {
   "name": "neoRAD-IO2",
   "productName": "neoRAD-IO2",
-  "version": "1.6.12",
+  "version": "1.6.13",
   "description": "neoRAD-IO2 GUI app",
   "main": "main.js",
   "scripts": {
@@ -27,7 +27,7 @@
     "electron-builder": "^21.2.0"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-free": "^5.12.0",
+    "@fortawesome/fontawesome-free": "^5.13.0",
     "bindings": "^1.5.0",
     "bootstrap": "^4.4.1",
     "electron-is-dev": "^1.1.0",

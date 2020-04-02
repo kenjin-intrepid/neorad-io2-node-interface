@@ -355,6 +355,10 @@ int neoRADIO2SetSettingsFromJSON(neoRADIO2_DeviceInfo * deviceInfo, std::string 
                     channel3.data.enabled = 0x01;
                 }
 
+                channel1.data.initOutputValue = settingsExtraArray[3];
+                channel2.data.initOutputValue = settingsExtraArray[4];
+                channel3.data.initOutputValue = settingsExtraArray[5];
+
                 deviceInfo->ChainList[settingsDeviceNumber][settingsBank].settings.config.channel_1_config = channel1.u32;
                 deviceInfo->ChainList[settingsDeviceNumber][settingsBank].settings.config.channel_2_config = channel2.u32;
                 deviceInfo->ChainList[settingsDeviceNumber][settingsBank].settings.config.channel_3_config = channel3.u32;

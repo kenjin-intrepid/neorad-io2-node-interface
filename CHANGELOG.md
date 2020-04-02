@@ -296,4 +296,7 @@
 3. Replaces space with underscore( _ ) when exporting dbc with devices that uses custom tag names. #27
 4. Fixes app icon not showing correctly due to update starting from 1.6.9. #24
 
-NOTE: To work properly, node module must be built with cmake-js 6 or above.
+###v1.6.13
+1. Added Korean localization
+2. Fixed AOUT init voltage not working
+3. Updated CI script
