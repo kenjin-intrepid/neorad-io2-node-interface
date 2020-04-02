@@ -17,6 +17,7 @@ nlohmann::json neoRADIO2returnChainlistJSON(neoRADIO2_DeviceInfo * deviceInfo);
 nlohmann::json neoRADIO2returnCalibrationJSON(neoRADIO2_DeviceInfo * deviceInfo, uint8_t * device, int * deviceType, uint8_t * deviceChannel, uint8_t * deviceRange);
 nlohmann::json neoRADIO2returnAllCalibrationJSON(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData);
 
+void neoRADIO2_DIO_SetSettingsFromJSON(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData);
 void neoRADIO2SetPwrRly(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData);
 void neoRADIO2ClearCalibration(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData);
 void neoRADIO2SetAoutValue(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData);
@@ -257,11 +258,10 @@ bool neoRADIO2returnDataJSON(neoRADIO2_DeviceInfo * deviceInfo, nlohmann::json *
     return returnValue;
 }
 
-int neoRADIO2SetSettingsFromJSON(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData)
+void neoRADIO2_DIO_SetSettingsFromJSON(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData)
 {
     try
     {
-        uint8_t enables;
         json settingsData = json::parse(* messageData);
         auto settingsBank = settingsData["bank"].get<unsigned int>();
         auto settingsDeviceNumber = settingsData["deviceLink"].get<unsigned int>();
@@ -272,105 +272,39 @@ int neoRADIO2SetSettingsFromJSON(neoRADIO2_DeviceInfo * deviceInfo, std::string 
         auto settingsCanMsgType = settingsData["CanMsgType"].get<unsigned int>();
         auto settingsCanLocation = settingsData["CanLocation"].get<unsigned int>();
         auto settingsTagName = settingsData["tagName"].get<std::vector<unsigned int>>();
+        auto settingsDIN_Mode = settingsData["mode"].get<std::vector<unsigned int>>();
+        auto settingsTripVoltage = settingsData["mode"].get<unsigned int>();
+        auto settingsPreScale = settingsData["mode"].get<unsigned int>();
 
-        switch (settingsDeviceType)
+        neoRADIO2DIN_channelConfig din_channel1 = {0}, din_channel2 = {0}, din_channel3 = {0};
+        din_channel1.u32 = deviceInfo->ChainList[settingsDeviceNumber][settingsBank].settings.config.channel_1_config;
+        din_channel2.u32 = deviceInfo->ChainList[settingsDeviceNumber][settingsBank].settings.config.channel_2_config;
+        din_channel3.u32 = deviceInfo->ChainList[settingsDeviceNumber][settingsBank].settings.config.channel_3_config;
+
+        if(settingsEnables == 0)
         {
-            case NEORADIO2_DEVTYPE_TC:
-            {
-                if(settingsEnables == 0)
-                {
-                    enables = NEORADIO2TC_CONFIG_DISABLE;
-                }
-                else
-                {
-                    enables = NEORADIO2TC_CONFIG_TC;
-                }
-                deviceInfo->ChainList[settingsDeviceNumber][settingsBank].settings.config.channel_1_config = enables;
-            }
-                break;
-
-            case NEORADIO2_DEVTYPE_PWRRLY:
-            {
-                auto settingsExtraArray = settingsData["extraSettings"].get<std::vector<unsigned int>>();
-                if(settingsExtraArray[0] == 0)
-                {
-                    enables = 0;
-                }
-                else
-                {
-                    enables = settingsExtraArray[0];
-                }
-                uint16_t config = 0xFF00 & (enables << 8);
-                config |= 0xFF;
-                deviceInfo->ChainList[settingsDeviceNumber][settingsBank].settings.config.channel_1_config = config;
-            }
-                break;
-
-            case NEORADIO2_DEVTYPE_AIN:
-            {
-                if(settingsEnables == 0)
-                {
-                    enables = NEORADIO2AIN_CONFIG_DISABLE;
-                }
-                else
-                {
-                    enables = settingsEnables;
-                }
-                deviceInfo->ChainList[settingsDeviceNumber][settingsBank].settings.config.channel_1_config = enables;
-            }
-                break;
-
-            case NEORADIO2_DEVTYPE_AOUT:
-            {
-                auto settingsExtraArray = settingsData["extraSettings"].get<std::vector<unsigned int>>();
-                neoRADIO2AOUT_channelConfig channel1 = {0}, channel2 = {0}, channel3 = {0};
-                channel1.u32 = deviceInfo->ChainList[settingsDeviceNumber][settingsBank].settings.config.channel_1_config;
-                channel2.u32 = deviceInfo->ChainList[settingsDeviceNumber][settingsBank].settings.config.channel_2_config;
-                channel3.u32 = deviceInfo->ChainList[settingsDeviceNumber][settingsBank].settings.config.channel_3_config;
-
-                if(settingsExtraArray[0] == 0)
-                {
-                    channel1.data.enabled = 0x00;
-                }
-                else
-                {
-                    channel1.data.enabled = 0x01;
-                }
-
-                if(settingsExtraArray[1] == 0)
-                {
-                    channel2.data.enabled = 0x00;
-                }
-                else
-                {
-                    channel2.data.enabled = 0x01;
-                }
-
-                if(settingsExtraArray[2] == 0)
-                {
-                    channel3.data.enabled = 0x00;
-                }
-                else
-                {
-                    channel3.data.enabled = 0x01;
-                }
-
-                deviceInfo->ChainList[settingsDeviceNumber][settingsBank].settings.config.channel_1_config = channel1.u32;
-                deviceInfo->ChainList[settingsDeviceNumber][settingsBank].settings.config.channel_2_config = channel2.u32;
-                deviceInfo->ChainList[settingsDeviceNumber][settingsBank].settings.config.channel_3_config = channel3.u32;
-
-                int timeout = 200;
-                while(timeout--)
-                {
-                    std::this_thread::sleep_for(std::chrono::milliseconds(1));
-                    neoRADIO2ProcessIncomingData(deviceInfo, 1000);
-                }
-            }
-                break;
-
-            default:
-                break;
+            din_channel1.data.enable = neoRADIO2DIN_MODE_DISABLE;
         }
+        else
+        {
+            din_channel1.data.enable = 1;
+        }
+
+        din_channel1.data.mode = settingsDIN_Mode[0];
+        din_channel1.data.prescale = settingsPreScale;
+        din_channel1.data.tripVoltage = settingsTripVoltage;
+
+        din_channel2.data.mode = settingsDIN_Mode[1];
+        din_channel2.data.prescale = settingsPreScale;
+        din_channel2.data.tripVoltage = settingsTripVoltage;
+
+        din_channel3.data.mode = settingsDIN_Mode[2];
+        din_channel3.data.prescale = settingsPreScale;
+        din_channel3.data.tripVoltage = settingsTripVoltage;
+
+        deviceInfo->ChainList[settingsDeviceNumber][settingsBank].settings.config.channel_1_config = din_channel1.u32;
+        deviceInfo->ChainList[settingsDeviceNumber][settingsBank].settings.config.channel_2_config = din_channel2.u32;
+        deviceInfo->ChainList[settingsDeviceNumber][settingsBank].settings.config.channel_3_config = din_channel3.u32;
 
         deviceInfo->ChainList[settingsDeviceNumber][settingsBank].settings.name1.charSize = 1;
         for(int i = 0; i < settingsTagName.size(); i++)
@@ -425,6 +359,189 @@ int neoRADIO2SetSettingsFromJSON(neoRADIO2_DeviceInfo * deviceInfo, std::string 
         {
             std::this_thread::sleep_for(std::chrono::milliseconds(1));
             neoRADIO2ProcessIncomingData(deviceInfo, 1000);
+        }
+    }
+    catch(const std::exception& e)
+    {
+        std::cout << "Caught exception " << e.what() << std::endl;
+    }
+}
+
+int neoRADIO2SetSettingsFromJSON(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData)
+{
+    try
+    {
+        uint8_t enables;
+        json settingsData = json::parse(* messageData);
+        auto settingsBank = settingsData["bank"].get<unsigned int>();
+        auto settingsDeviceNumber = settingsData["deviceLink"].get<unsigned int>();
+        auto settingsReportRate = settingsData["reportRate"].get<unsigned int>();
+        auto settingsEnables = settingsData["enables"].get<unsigned int>();
+        auto settingsDeviceType = settingsData["deviceType"].get<unsigned int>();
+        auto settingsCanId = settingsData["CanId"].get<unsigned int>();
+        auto settingsCanMsgType = settingsData["CanMsgType"].get<unsigned int>();
+        auto settingsCanLocation = settingsData["CanLocation"].get<unsigned int>();
+        auto settingsTagName = settingsData["tagName"].get<std::vector<unsigned int>>();
+
+        if(settingsDeviceType == NEORADIO2_DEVTYPE_DIO)
+        {
+            neoRADIO2_DIO_SetSettingsFromJSON(deviceInfo, messageData);
+        }
+        else
+        {
+            switch (settingsDeviceType)
+            {
+                case NEORADIO2_DEVTYPE_TC:
+                {
+                    if(settingsEnables == 0)
+                    {
+                        enables = NEORADIO2TC_CONFIG_DISABLE;
+                    }
+                    else
+                    {
+                        enables = NEORADIO2TC_CONFIG_TC;
+                    }
+                    deviceInfo->ChainList[settingsDeviceNumber][settingsBank].settings.config.channel_1_config = enables;
+                }
+                    break;
+
+                case NEORADIO2_DEVTYPE_PWRRLY:
+                {
+                    auto settingsExtraArray = settingsData["extraSettings"].get<std::vector<unsigned int>>();
+                    if(settingsExtraArray[0] == 0)
+                    {
+                        enables = 0;
+                    }
+                    else
+                    {
+                        enables = settingsExtraArray[0];
+                    }
+                    uint16_t config = 0xFF00 & (enables << 8);
+                    config |= 0xFF;
+                    deviceInfo->ChainList[settingsDeviceNumber][settingsBank].settings.config.channel_1_config = config;
+                }
+                    break;
+
+                case NEORADIO2_DEVTYPE_AIN:
+                {
+                    if(settingsEnables == 0)
+                    {
+                        enables = NEORADIO2AIN_CONFIG_DISABLE;
+                    }
+                    else
+                    {
+                        enables = settingsEnables;
+                    }
+                    deviceInfo->ChainList[settingsDeviceNumber][settingsBank].settings.config.channel_1_config = enables;
+                }
+                    break;
+
+                case NEORADIO2_DEVTYPE_AOUT:
+                {
+                    auto settingsExtraArray = settingsData["extraSettings"].get<std::vector<unsigned int>>();
+                    neoRADIO2AOUT_channelConfig channel1 = {0}, channel2 = {0}, channel3 = {0};
+                    channel1.u32 = deviceInfo->ChainList[settingsDeviceNumber][settingsBank].settings.config.channel_1_config;
+                    channel2.u32 = deviceInfo->ChainList[settingsDeviceNumber][settingsBank].settings.config.channel_2_config;
+                    channel3.u32 = deviceInfo->ChainList[settingsDeviceNumber][settingsBank].settings.config.channel_3_config;
+
+                    if(settingsExtraArray[0] == 0)
+                    {
+                        channel1.data.enabled = 0x00;
+                    }
+                    else
+                    {
+                        channel1.data.enabled = 0x01;
+                    }
+
+                    if(settingsExtraArray[1] == 0)
+                    {
+                        channel2.data.enabled = 0x00;
+                    }
+                    else
+                    {
+                        channel2.data.enabled = 0x01;
+                    }
+
+                    if(settingsExtraArray[2] == 0)
+                    {
+                        channel3.data.enabled = 0x00;
+                    }
+                    else
+                    {
+                        channel3.data.enabled = 0x01;
+                    }
+
+                    deviceInfo->ChainList[settingsDeviceNumber][settingsBank].settings.config.channel_1_config = channel1.u32;
+                    deviceInfo->ChainList[settingsDeviceNumber][settingsBank].settings.config.channel_2_config = channel2.u32;
+                    deviceInfo->ChainList[settingsDeviceNumber][settingsBank].settings.config.channel_3_config = channel3.u32;
+
+                    int timeout = 200;
+                    while(timeout--)
+                    {
+                        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+                        neoRADIO2ProcessIncomingData(deviceInfo, 1000);
+                    }
+                }
+                    break;
+
+                default:
+                    break;
+            }
+
+            deviceInfo->ChainList[settingsDeviceNumber][settingsBank].settings.name1.charSize = 1;
+            for(int i = 0; i < settingsTagName.size(); i++)
+            {
+                if(settingsTagName[i] > 255)
+                {
+                    deviceInfo->ChainList[settingsDeviceNumber][settingsBank].settings.name1.charSize = 4;
+                }
+            }
+
+            if(deviceInfo->ChainList[settingsDeviceNumber][settingsBank].settings.name1.charSize == 4)
+            {
+                deviceInfo->ChainList[settingsDeviceNumber][settingsBank].settings.name1.length = settingsTagName.size();
+                if(settingsTagName.size() > 16)
+                {
+                    deviceInfo->ChainList[settingsDeviceNumber][settingsBank].settings.name1.length = 16;
+                }
+                for(int i = 0; i < deviceInfo->ChainList[settingsDeviceNumber][settingsBank].settings.name1.length; i++)
+                {
+                    deviceInfo->ChainList[settingsDeviceNumber][settingsBank].settings.name1.chars.u32[i] = settingsTagName[i];
+                }
+            }
+            else // charSize is 1
+            {
+                deviceInfo->ChainList[settingsDeviceNumber][settingsBank].settings.name1.length = settingsTagName.size();
+                if(settingsTagName.size() > 64)
+                {
+                    deviceInfo->ChainList[settingsDeviceNumber][settingsBank].settings.name1.length = 64;
+                }
+                for(int i = 0; i < deviceInfo->ChainList[settingsDeviceNumber][settingsBank].settings.name1.length; i++)
+                {
+                    deviceInfo->ChainList[settingsDeviceNumber][settingsBank].settings.name1.chars.u8[i] = settingsTagName[i];
+                }
+            }
+
+            deviceInfo->ChainList[settingsDeviceNumber][settingsBank].settings.config.poll_rate_ms = settingsReportRate;
+            deviceInfo->ChainList[settingsDeviceNumber][settingsBank].settings.can.Arbid = settingsCanId;
+            deviceInfo->ChainList[settingsDeviceNumber][settingsBank].settings.can.msgType = settingsCanMsgType;
+            deviceInfo->ChainList[settingsDeviceNumber][settingsBank].settings.can.Location = settingsCanLocation;
+            deviceInfo->ChainList[settingsDeviceNumber][settingsBank].settingsState = neoRADIO2Settings_NeedsWrite;
+
+            int timeout = 200;
+            while(timeout--)
+            {
+                std::this_thread::sleep_for(std::chrono::milliseconds(1));
+                neoRADIO2ProcessIncomingData(deviceInfo, 1000);
+            }
+            neoRADIO2SetSettings(deviceInfo);
+
+            timeout = 2000;
+            while (timeout-- && deviceInfo->State != neoRADIO2state_Connected)
+            {
+                std::this_thread::sleep_for(std::chrono::milliseconds(1));
+                neoRADIO2ProcessIncomingData(deviceInfo, 1000);
+            }
         }
 
         return settingsBank;
