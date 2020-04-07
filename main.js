@@ -52,7 +52,7 @@ app.on('ready', function() {
         defaultHeight: height
     });
 
-    if (isDev)
+    if (true)
     {
         DevENV = true;
     }
@@ -72,7 +72,7 @@ app.on('ready', function() {
         }
     });
 
-    if (isDev)
+    if (true)
     {
         // Open the DevTools.
         mainWindow.webContents.openDevTools();
