@@ -297,6 +297,10 @@
 4. Fixes app icon not showing correctly due to update starting from 1.6.9. #24
 
 ###v1.6.13
-1. Added Korean localization
-2. Fixed AOUT init voltage not working
-3. Updated CI script
+1. Added Korean localization.
+2. Fixed AOUT init voltage not working.
+3. Updated CI script.
+
+###v1.6.14
+1. Fixed AOUT Calibration to support new firmware.
+2. Fixed user unable to export or import calibration table for AOUT.
