@@ -304,3 +304,6 @@
 ###v1.6.14
 1. Fixed AOUT Calibration to support new firmware.
 2. Fixed user unable to export or import calibration table for AOUT.
+
+###v1.6.15
+1. Added prompt before writing Calibration values.
