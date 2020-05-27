@@ -309,4 +309,5 @@
 1. Added prompt before writing Calibration values.
 
 ###v1.6.16
-1.
+1. Changed Powerrelay LED behavior. Only the selected bank will flash LED.
+2. Electron@6.1.12

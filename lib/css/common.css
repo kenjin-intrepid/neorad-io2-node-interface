@@ -501,6 +501,7 @@ i:hover .tooltip_text
 {
     position: relative;
     height: 2rem;
+    line-height: 2rem;
     width: auto;
     font-size: 1.3rem;
     border-radius: 0;
