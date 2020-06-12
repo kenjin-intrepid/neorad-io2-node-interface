@@ -309,4 +309,11 @@
 1. Added prompt before writing Calibration values.
 
 ###v1.6.16
-1.
+1. Changed Powerrelay LED behavior. Only the selected bank will flash LED.
+2. Electron@6.1.12
+
+###v1.6.17
+1. AOUT and Powerrelay DBC can now be used in VSpy.
+
+###v1.6.18
+1. DIN and DOUT functions.
