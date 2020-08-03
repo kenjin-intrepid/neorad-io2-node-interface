@@ -176,17 +176,17 @@ nlohmann::json neoRADIO2returnChainlistJSON(neoRADIO2_DeviceInfo * deviceInfo)
                     dout_channel1.u32 = deviceInfo->ChainList[i][j].settings.config.channel_1_config;
                     dout_channel2.u32 = deviceInfo->ChainList[i][j].settings.config.channel_2_config;
 
-                    unsigned int channel1_pwm = dout_channel1.data.pwm;
-                    unsigned int channel2_pwm = dout_channel2.data.pwm;
-
-                    unsigned int channel1_invert = dout_channel1.data.invert;
-                    unsigned int channel2_invert = dout_channel2.data.invert;
-
-                    unsigned int channel1_hbridge = dout_channel1.data.hbridge;
-                    unsigned int channel2_hbridge = dout_channel2.data.hbridge;
-
-                    unsigned int channel1_oneshot = dout_channel1.data.oneshot;
-                    unsigned int channel2_oneshot = dout_channel2.data.oneshot;
+//                    unsigned int channel1_pwm = dout_channel1.data.pwm;
+//                    unsigned int channel2_pwm = dout_channel2.data.pwm;
+//
+//                    unsigned int channel1_invert = dout_channel1.data.invert;
+//                    unsigned int channel2_invert = dout_channel2.data.invert;
+//
+//                    unsigned int channel1_hbridge = dout_channel1.data.hbridge;
+//                    unsigned int channel2_hbridge = dout_channel2.data.hbridge;
+//
+//                    unsigned int channel1_oneshot = dout_channel1.data.oneshot;
+//                    unsigned int channel2_oneshot = dout_channel2.data.oneshot;
 
                     unsigned int channel1_enable = dout_channel1.data.enable;
                     unsigned int channel2_enable = dout_channel2.data.enable;
@@ -195,19 +195,19 @@ nlohmann::json neoRADIO2returnChainlistJSON(neoRADIO2_DeviceInfo * deviceInfo)
                     auto channel2_mode = 0;
 
                     devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["settings1"]["prescale"] = dout_channel1.data.prescale;
-                    devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["settings1"]["freq"] = dout_channel1.data.freq;
-                    devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["settings1"]["pwm"] = channel1_pwm;
-                    devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["settings1"]["invert"] = channel1_invert;
-                    devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["settings1"]["hbridge"] = channel1_hbridge;
-                    devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["settings1"]["oneshot"] = channel1_oneshot;
+//                    devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["settings1"]["freq"] = dout_channel1.data.freq;
+//                    devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["settings1"]["pwm"] = channel1_pwm;
+//                    devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["settings1"]["invert"] = channel1_invert;
+//                    devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["settings1"]["hbridge"] = channel1_hbridge;
+//                    devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["settings1"]["oneshot"] = channel1_oneshot;
                     devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["settings1"]["enable"] = channel1_enable;
 
                     devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["settings2"]["prescale"] = dout_channel2.data.prescale;
-                    devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["settings2"]["freq"] = dout_channel2.data.freq;
-                    devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["settings2"]["pwm"] = channel2_pwm;
-                    devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["settings2"]["invert"] = channel2_invert;
-                    devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["settings2"]["hbridge"] = channel2_hbridge;
-                    devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["settings2"]["oneshot"] = channel2_oneshot;
+//                    devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["settings2"]["freq"] = dout_channel2.data.freq;
+//                    devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["settings2"]["pwm"] = channel2_pwm;
+//                    devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["settings2"]["invert"] = channel2_invert;
+//                    devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["settings2"]["hbridge"] = channel2_hbridge;
+//                    devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["settings2"]["oneshot"] = channel2_oneshot;
                     devices["chainlist"]["device" + std::to_string(i)]["channel" + std::to_string(j)]["settings2"]["enable"] = channel2_enable;
                 }
             }
@@ -278,118 +278,161 @@ nlohmann::json neoRADIO2returnChainlistJSON(neoRADIO2_DeviceInfo * deviceInfo)
 
 bool neoRADIO2returnDataJSON(neoRADIO2_DeviceInfo * deviceInfo, nlohmann::json * returnData, int index)
 {
-    bool returnValue = false;
-    for(int i = 0; i <= deviceInfo->LastDevice; i++)
+    try
     {
-        (*returnData)["usb" + std::to_string(index)][std::to_string(i)]["deviceType"] = deviceInfo->ChainList[i][0].deviceType;
-    }
-
-    int State = deviceInfo->State;
-    (*returnData)["usb" + std::to_string(index)]["State"] = State;
-    (*returnData)["usb" + std::to_string(index)]["maxID_Device"] = deviceInfo->LastDevice + 1;
-    (*returnData)["usb" + std::to_string(index)]["Timeus"] = deviceInfo->Timeus / 1000;
-
-    for (int i = 0; i < deviceInfo->rxDataCount; i++)
-    {
-        if(deviceInfo->rxDataBuffer[i].header.command_status == NEORADIO2_STATUS_SENSOR)
+        bool returnValue = false;
+        for(int i = 0; i <= deviceInfo->LastDevice; i++)
         {
-            if(deviceInfo->ChainList[deviceInfo->rxDataBuffer[i].header.device][0].deviceType == NEORADIO2_DEVTYPE_DIO)
-            {
-                neoRADIO2DIN_channelConfig channel1 = {0}, channel2 = {0}, channel3 = {0};
-                channel1.u32 = deviceInfo->ChainList[deviceInfo->rxDataBuffer[i].header.device][deviceInfo->rxDataBuffer[i].header.bank].settings.config.channel_1_config;
-                channel2.u32 = deviceInfo->ChainList[deviceInfo->rxDataBuffer[i].header.device][deviceInfo->rxDataBuffer[i].header.bank].settings.config.channel_2_config;
-                channel3.u32 = deviceInfo->ChainList[deviceInfo->rxDataBuffer[i].header.device][deviceInfo->rxDataBuffer[i].header.bank].settings.config.channel_3_config;
-
-                uint16_t peri_ch1 = 0, freq_ch1 = 0, volt_ch1 = 0;
-                uint16_t peri_ch2 = 0, freq_ch2 = 0, volt_ch2 = 0;
-                uint16_t peri_ch3 = 0, freq_ch3 = 0, volt_ch3 = 0;
-
-                switch (channel1.data.mode)
-                {
-                    case neoRADIO2DIN_MODE_DIGITAL:
-                        (*returnData)["usb" + std::to_string(index)][std::to_string(deviceInfo->rxDataBuffer[i].header.device)][std::to_string(deviceInfo->rxDataBuffer[i].header.bank)][0] = deviceInfo->rxDataBuffer[i].data[0];
-                        break;
-                    case neoRADIO2DIN_MODE_PWM:
-                        (*returnData)["usb" + std::to_string(index)][std::to_string(deviceInfo->rxDataBuffer[i].header.device)][std::to_string(deviceInfo->rxDataBuffer[i].header.bank)][0] = deviceInfo->rxDataBuffer[i].data[0];
-                        break;
-                    case neoRADIO2DIN_MODE_PERIOD:
-                        peri_ch1 = (0xFF00 & (deviceInfo->rxDataBuffer[i].data[0] << 8)) | (0xFF & deviceInfo->rxDataBuffer[i].data[1]);
-                        (*returnData)["usb" + std::to_string(index)][std::to_string(deviceInfo->rxDataBuffer[i].header.device)][std::to_string(deviceInfo->rxDataBuffer[i].header.bank)][0] = (peri_ch1 * channel1.data.prescale) / 1200000;
-                        break;
-                    case neoRADIO2DIN_MODE_FREQ:
-                        freq_ch1 = (0xFF00 & (deviceInfo->rxDataBuffer[i].data[0] << 8)) | (0xFF & deviceInfo->rxDataBuffer[i].data[1]);
-                        (*returnData)["usb" + std::to_string(index)][std::to_string(deviceInfo->rxDataBuffer[i].header.device)][std::to_string(deviceInfo->rxDataBuffer[i].header.bank)][0] = freq_ch1 / channel1.data.prescale;
-                        break;
-                    case neoRADIO2DIN_MODE_ANALOG:
-                        volt_ch1 = (0xFF00 & (deviceInfo->rxDataBuffer[i].data[0] << 8)) | (0xFF & deviceInfo->rxDataBuffer[i].data[1]);
-                        (*returnData)["usb" + std::to_string(index)][std::to_string(deviceInfo->rxDataBuffer[i].header.device)][std::to_string(deviceInfo->rxDataBuffer[i].header.bank)][0] = (volt_ch1 * 40.0) / 4096;
-                        break;
-                }
-
-                switch (channel2.data.mode)
-                {
-                    case neoRADIO2DIN_MODE_DIGITAL:
-                        (*returnData)["usb" + std::to_string(index)][std::to_string(deviceInfo->rxDataBuffer[i].header.device)][std::to_string(deviceInfo->rxDataBuffer[i].header.bank)][1] = deviceInfo->rxDataBuffer[i].data[1];
-                        break;
-                    case neoRADIO2DIN_MODE_PWM:
-                        (*returnData)["usb" + std::to_string(index)][std::to_string(deviceInfo->rxDataBuffer[i].header.device)][std::to_string(deviceInfo->rxDataBuffer[i].header.bank)][1] = deviceInfo->rxDataBuffer[i].data[1];
-                        break;
-                    case neoRADIO2DIN_MODE_PERIOD:
-                        peri_ch2 = (0xFF00 & (deviceInfo->rxDataBuffer[i].data[2] << 8)) | (0xFF & deviceInfo->rxDataBuffer[i].data[3]);
-                        (*returnData)["usb" + std::to_string(index)][std::to_string(deviceInfo->rxDataBuffer[i].header.device)][std::to_string(deviceInfo->rxDataBuffer[i].header.bank)][1] = (peri_ch2 * channel2.data.prescale) / 1200000;
-                        break;
-                    case neoRADIO2DIN_MODE_FREQ:
-                        freq_ch2 = (0xFF00 & (deviceInfo->rxDataBuffer[i].data[2] << 8)) | (0xFF & deviceInfo->rxDataBuffer[i].data[3]);
-                        (*returnData)["usb" + std::to_string(index)][std::to_string(deviceInfo->rxDataBuffer[i].header.device)][std::to_string(deviceInfo->rxDataBuffer[i].header.bank)][1] = freq_ch2 / channel2.data.prescale;
-                        break;
-                    case neoRADIO2DIN_MODE_ANALOG:
-                        volt_ch2 = (0xFF00 & (deviceInfo->rxDataBuffer[i].data[2] << 8)) | (0xFF & deviceInfo->rxDataBuffer[i].data[3]);
-                        (*returnData)["usb" + std::to_string(index)][std::to_string(deviceInfo->rxDataBuffer[i].header.device)][std::to_string(deviceInfo->rxDataBuffer[i].header.bank)][1] = (volt_ch2 * 40.0) / 4096;
-                        break;
-                }
-
-                switch (channel3.data.mode)
-                {
-                    case neoRADIO2DIN_MODE_DIGITAL:
-                        (*returnData)["usb" + std::to_string(index)][std::to_string(deviceInfo->rxDataBuffer[i].header.device)][std::to_string(deviceInfo->rxDataBuffer[i].header.bank)][2] = deviceInfo->rxDataBuffer[i].data[2];
-                        break;
-                    case neoRADIO2DIN_MODE_PWM:
-                        (*returnData)["usb" + std::to_string(index)][std::to_string(deviceInfo->rxDataBuffer[i].header.device)][std::to_string(deviceInfo->rxDataBuffer[i].header.bank)][2] = deviceInfo->rxDataBuffer[i].data[2];
-                        break;
-                    case neoRADIO2DIN_MODE_PERIOD:
-                        peri_ch3 = (0xFF00 & (deviceInfo->rxDataBuffer[i].data[4] << 8)) | (0xFF & deviceInfo->rxDataBuffer[i].data[5]);
-                        (*returnData)["usb" + std::to_string(index)][std::to_string(deviceInfo->rxDataBuffer[i].header.device)][std::to_string(deviceInfo->rxDataBuffer[i].header.bank)][2] = (peri_ch3 * channel3.data.prescale) / 1200000;
-                        break;
-                    case neoRADIO2DIN_MODE_FREQ:
-                        freq_ch3 = (0xFF00 & (deviceInfo->rxDataBuffer[i].data[4] << 8)) | (0xFF & deviceInfo->rxDataBuffer[i].data[5]);
-                        (*returnData)["usb" + std::to_string(index)][std::to_string(deviceInfo->rxDataBuffer[i].header.device)][std::to_string(deviceInfo->rxDataBuffer[i].header.bank)][2] = freq_ch3 / channel3.data.prescale;
-                        break;
-                    case neoRADIO2DIN_MODE_ANALOG:
-                        volt_ch3 = (0xFF00 & (deviceInfo->rxDataBuffer[i].data[4] << 8)) | (0xFF & deviceInfo->rxDataBuffer[i].data[5]);
-                        (*returnData)["usb" + std::to_string(index)][std::to_string(deviceInfo->rxDataBuffer[i].header.device)][std::to_string(deviceInfo->rxDataBuffer[i].header.bank)][2] = (volt_ch3 * 40.0) / 4096;
-                        break;
-                }
-            }
-            else
-            {
-                bytesToFloat temp;
-                temp.b[0] = deviceInfo->rxDataBuffer[i].data[0];
-                temp.b[1] = deviceInfo->rxDataBuffer[i].data[1];
-                temp.b[2] = deviceInfo->rxDataBuffer[i].data[2];
-                temp.b[3] = deviceInfo->rxDataBuffer[i].data[3];
-
-                (*returnData)["usb" + std::to_string(index)][std::to_string(deviceInfo->rxDataBuffer[i].header.device)][std::to_string(deviceInfo->rxDataBuffer[i].header.bank)] = temp.fp;
-                if(std::isinf(temp.fp))
-                {
-                    (*returnData)["usb" + std::to_string(index)][std::to_string(deviceInfo->rxDataBuffer[i].header.device)][std::to_string(deviceInfo->rxDataBuffer[i].header.bank)] = "inf";
-                }
-            }
-
-            returnValue = true;
+            (*returnData)["usb" + std::to_string(index)][std::to_string(i)]["deviceType"] = deviceInfo->ChainList[i][0].deviceType;
         }
+
+        int State = deviceInfo->State;
+        (*returnData)["usb" + std::to_string(index)]["State"] = State;
+        (*returnData)["usb" + std::to_string(index)]["maxID_Device"] = deviceInfo->LastDevice + 1;
+        (*returnData)["usb" + std::to_string(index)]["Timeus"] = deviceInfo->Timeus / 1000;
+
+        for (int i = 0; i < deviceInfo->rxDataCount; i++)
+        {
+            if(deviceInfo->rxDataBuffer[i].header.command_status == NEORADIO2_STATUS_SENSOR)
+            {
+                if(deviceInfo->ChainList[deviceInfo->rxDataBuffer[i].header.device][0].deviceType == NEORADIO2_DEVTYPE_DIO)
+                {
+                    neoRADIO2DIN_channelConfig channel1 = {0}, channel2 = {0}, channel3 = {0};
+                    channel1.u32 = deviceInfo->ChainList[deviceInfo->rxDataBuffer[i].header.device][deviceInfo->rxDataBuffer[i].header.bank].settings.config.channel_1_config;
+                    channel2.u32 = deviceInfo->ChainList[deviceInfo->rxDataBuffer[i].header.device][deviceInfo->rxDataBuffer[i].header.bank].settings.config.channel_2_config;
+                    channel3.u32 = deviceInfo->ChainList[deviceInfo->rxDataBuffer[i].header.device][deviceInfo->rxDataBuffer[i].header.bank].settings.config.channel_3_config;
+
+                    uint16_t peri_ch1 = 0, freq_ch1 = 0, volt_ch1 = 0;
+                    uint16_t peri_ch2 = 0, freq_ch2 = 0, volt_ch2 = 0;
+                    uint16_t peri_ch3 = 0, freq_ch3 = 0, volt_ch3 = 0;
+                    uint8_t len = 0;
+                    uint8_t prescale1 = channel1.data.prescale;
+                    uint8_t prescale2 = channel2.data.prescale;
+                    uint8_t prescale3 = channel3.data.prescale;
+
+                    (*returnData)["usb" + std::to_string(index)][std::to_string(deviceInfo->rxDataBuffer[i].header.device)][std::to_string(deviceInfo->rxDataBuffer[i].header.bank)][3] = deviceInfo->rxDataBuffer[i].data[0];
+                    (*returnData)["usb" + std::to_string(index)][std::to_string(deviceInfo->rxDataBuffer[i].header.device)][std::to_string(deviceInfo->rxDataBuffer[i].header.bank)][4] = deviceInfo->rxDataBuffer[i].data[1];
+                    (*returnData)["usb" + std::to_string(index)][std::to_string(deviceInfo->rxDataBuffer[i].header.device)][std::to_string(deviceInfo->rxDataBuffer[i].header.bank)][5] = deviceInfo->rxDataBuffer[i].data[2];
+                    (*returnData)["usb" + std::to_string(index)][std::to_string(deviceInfo->rxDataBuffer[i].header.device)][std::to_string(deviceInfo->rxDataBuffer[i].header.bank)][6] = deviceInfo->rxDataBuffer[i].data[3];
+                    (*returnData)["usb" + std::to_string(index)][std::to_string(deviceInfo->rxDataBuffer[i].header.device)][std::to_string(deviceInfo->rxDataBuffer[i].header.bank)][7] = deviceInfo->rxDataBuffer[i].data[4];
+                    (*returnData)["usb" + std::to_string(index)][std::to_string(deviceInfo->rxDataBuffer[i].header.device)][std::to_string(deviceInfo->rxDataBuffer[i].header.bank)][8] = deviceInfo->rxDataBuffer[i].data[5];
+
+                    switch (channel1.data.mode)
+                    {
+                        case neoRADIO2DIN_MODE_DIGITAL:
+                            (*returnData)["usb" + std::to_string(index)][std::to_string(deviceInfo->rxDataBuffer[i].header.device)][std::to_string(deviceInfo->rxDataBuffer[i].header.bank)][0] = deviceInfo->rxDataBuffer[i].data[len];
+                            len++;
+                            break;
+                        case neoRADIO2DIN_MODE_PWM:
+                            (*returnData)["usb" + std::to_string(index)][std::to_string(deviceInfo->rxDataBuffer[i].header.device)][std::to_string(deviceInfo->rxDataBuffer[i].header.bank)][0] = deviceInfo->rxDataBuffer[i].data[len];
+                            len++;
+                            break;
+                        case neoRADIO2DIN_MODE_PERIOD:
+                            peri_ch1 = (0xFF00 & (deviceInfo->rxDataBuffer[i].data[len] << 8)) | (0xFF & deviceInfo->rxDataBuffer[i].data[len+1]);
+                            len++;
+                            len++;
+                            (*returnData)["usb" + std::to_string(index)][std::to_string(deviceInfo->rxDataBuffer[i].header.device)][std::to_string(deviceInfo->rxDataBuffer[i].header.bank)][0] = (peri_ch1 * prescale1) / 1200000;
+                            break;
+                        case neoRADIO2DIN_MODE_FREQ:
+                            freq_ch1 = (0xFF00 & (deviceInfo->rxDataBuffer[i].data[len] << 8)) | (0xFF & deviceInfo->rxDataBuffer[i].data[len+1]);
+                            len++;
+                            len++;
+                            (*returnData)["usb" + std::to_string(index)][std::to_string(deviceInfo->rxDataBuffer[i].header.device)][std::to_string(deviceInfo->rxDataBuffer[i].header.bank)][0] = freq_ch1;
+                            break;
+                        case neoRADIO2DIN_MODE_ANALOG:
+                            volt_ch1 = (0xFF00 & (deviceInfo->rxDataBuffer[i].data[len] << 8)) | (0xFF & deviceInfo->rxDataBuffer[i].data[len+1]);
+                            len++;
+                            len++;
+                            (*returnData)["usb" + std::to_string(index)][std::to_string(deviceInfo->rxDataBuffer[i].header.device)][std::to_string(deviceInfo->rxDataBuffer[i].header.bank)][0] = (volt_ch1 * 40.0) / 4096;
+                            break;
+                    }
+
+                    switch (channel2.data.mode)
+                    {
+                        case neoRADIO2DIN_MODE_DIGITAL:
+                            (*returnData)["usb" + std::to_string(index)][std::to_string(deviceInfo->rxDataBuffer[i].header.device)][std::to_string(deviceInfo->rxDataBuffer[i].header.bank)][1] = deviceInfo->rxDataBuffer[i].data[len];
+                            len++;
+                            break;
+                        case neoRADIO2DIN_MODE_PWM:
+                            (*returnData)["usb" + std::to_string(index)][std::to_string(deviceInfo->rxDataBuffer[i].header.device)][std::to_string(deviceInfo->rxDataBuffer[i].header.bank)][1] = deviceInfo->rxDataBuffer[i].data[len];
+                            len++;
+                            break;
+                        case neoRADIO2DIN_MODE_PERIOD:
+                            peri_ch2 = (0xFF00 & (deviceInfo->rxDataBuffer[i].data[len] << 8)) | (0xFF & deviceInfo->rxDataBuffer[i].data[len+1]);
+                            len++;
+                            len++;
+                            (*returnData)["usb" + std::to_string(index)][std::to_string(deviceInfo->rxDataBuffer[i].header.device)][std::to_string(deviceInfo->rxDataBuffer[i].header.bank)][1] = (peri_ch2 * prescale2) / 1200000;
+                            break;
+                        case neoRADIO2DIN_MODE_FREQ:
+                            freq_ch2 = (0xFF00 & (deviceInfo->rxDataBuffer[i].data[len] << 8)) | (0xFF & deviceInfo->rxDataBuffer[i].data[len+1]);
+                            len++;
+                            len++;
+                            (*returnData)["usb" + std::to_string(index)][std::to_string(deviceInfo->rxDataBuffer[i].header.device)][std::to_string(deviceInfo->rxDataBuffer[i].header.bank)][1] = freq_ch2;
+                            break;
+                        case neoRADIO2DIN_MODE_ANALOG:
+                            volt_ch2 = (0xFF00 & (deviceInfo->rxDataBuffer[i].data[len] << 8)) | (0xFF & deviceInfo->rxDataBuffer[i].data[len+1]);
+                            len++;
+                            len++;
+                            (*returnData)["usb" + std::to_string(index)][std::to_string(deviceInfo->rxDataBuffer[i].header.device)][std::to_string(deviceInfo->rxDataBuffer[i].header.bank)][1] = (volt_ch2 * 40.0) / 4096;
+                            break;
+                    }
+
+                    switch (channel3.data.mode)
+                    {
+                        case neoRADIO2DIN_MODE_DIGITAL:
+                            (*returnData)["usb" + std::to_string(index)][std::to_string(deviceInfo->rxDataBuffer[i].header.device)][std::to_string(deviceInfo->rxDataBuffer[i].header.bank)][2] = deviceInfo->rxDataBuffer[i].data[len];
+                            len++;
+                            break;
+                        case neoRADIO2DIN_MODE_PWM:
+                            (*returnData)["usb" + std::to_string(index)][std::to_string(deviceInfo->rxDataBuffer[i].header.device)][std::to_string(deviceInfo->rxDataBuffer[i].header.bank)][2] = deviceInfo->rxDataBuffer[i].data[len];
+                            len++;
+                            break;
+                        case neoRADIO2DIN_MODE_PERIOD:
+                            peri_ch3 = (0xFF00 & (deviceInfo->rxDataBuffer[i].data[len] << 8)) | (0xFF & deviceInfo->rxDataBuffer[i].data[len+1]);
+                            len++;
+                            len++;
+                            (*returnData)["usb" + std::to_string(index)][std::to_string(deviceInfo->rxDataBuffer[i].header.device)][std::to_string(deviceInfo->rxDataBuffer[i].header.bank)][2] = (peri_ch3 * prescale3) / 1200000;
+                            break;
+                        case neoRADIO2DIN_MODE_FREQ:
+                            freq_ch3 = (0xFF00 & (deviceInfo->rxDataBuffer[i].data[len] << 8)) | (0xFF & deviceInfo->rxDataBuffer[i].data[len+1]);
+                            len++;
+                            len++;
+                            (*returnData)["usb" + std::to_string(index)][std::to_string(deviceInfo->rxDataBuffer[i].header.device)][std::to_string(deviceInfo->rxDataBuffer[i].header.bank)][2] = freq_ch3;
+                            break;
+                        case neoRADIO2DIN_MODE_ANALOG:
+                            volt_ch3 = (0xFF00 & (deviceInfo->rxDataBuffer[i].data[len] << 8)) | (0xFF & deviceInfo->rxDataBuffer[i].data[len+1]);
+                            len++;
+                            len++;
+                            (*returnData)["usb" + std::to_string(index)][std::to_string(deviceInfo->rxDataBuffer[i].header.device)][std::to_string(deviceInfo->rxDataBuffer[i].header.bank)][2] = (volt_ch3 * 40.0) / 4096;
+                            break;
+                    }
+                }
+                else
+                {
+                    bytesToFloat temp;
+                    temp.b[0] = deviceInfo->rxDataBuffer[i].data[0];
+                    temp.b[1] = deviceInfo->rxDataBuffer[i].data[1];
+                    temp.b[2] = deviceInfo->rxDataBuffer[i].data[2];
+                    temp.b[3] = deviceInfo->rxDataBuffer[i].data[3];
+
+                    (*returnData)["usb" + std::to_string(index)][std::to_string(deviceInfo->rxDataBuffer[i].header.device)][std::to_string(deviceInfo->rxDataBuffer[i].header.bank)] = temp.fp;
+                    if(std::isinf(temp.fp))
+                    {
+                        (*returnData)["usb" + std::to_string(index)][std::to_string(deviceInfo->rxDataBuffer[i].header.device)][std::to_string(deviceInfo->rxDataBuffer[i].header.bank)] = "inf";
+                    }
+                }
+
+                returnValue = true;
+            }
+        }
+
+        return returnValue;
+    }
+    catch(const std::exception& e)
+    {
+        std::cout << "Caught exception " << e.what() << std::endl;
     }
 
-    return returnValue;
 }
 
 void neoRADIO2_DIO_SetSettingsFromJSON(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData)
@@ -465,32 +508,63 @@ void neoRADIO2_DIO_SetSettingsFromJSON(neoRADIO2_DeviceInfo * deviceInfo, std::s
             auto settingsChannel3 = settingsData["channel3"].get<unsigned int>();
 
             neoRADIO2DOUT_channelConfig dout_channel1 = {0}, dout_channel2 = {0};
+            neoRADIO2DOUT_header dout_head1 = {0}, dout_head2 = {0};
 
             settingsReportRate = 1000;
             dout_channel1.data.enable = settingsChannel1[1];
-            dout_channel1.data.hbridge = settingsChannel3;
+            dout_head1.bits.hbridge = settingsChannel3;
+            dout_head1.bits.output_config = settingsChannel1[0];
+            dout_head1.bits.output_state =  settingsChannel1[4];
+            uint8_t buf[4] = {0};
 
             if(settingsChannel1[0] == 2)
             {
-                dout_channel1.data.pwm = 1;
-                dout_channel1.data.freq = settingsChannel1[3];
+                buf[0] = dout_head1.byte;
+                buf[1] = 0xFF & (settingsChannel1[2]);
+                buf[2] = 0xFF & (settingsChannel1[3] >> 8); //freq time is 16 bit
+                buf[3] = 0xFF & (settingsChannel1[3]);
             }
             else if(settingsChannel1[0] == 3)
             {
-                dout_channel1.data.oneshot = 1;
+                buf[0] = dout_head1.byte;
+                buf[1] = 0xFF & (settingsChannel1[2] >> 8); //pulse time is 16 bit
+                buf[2] = 0xFF & (settingsChannel1[2]);
+            }
+
+            neoRADIO2SendPacket(deviceInfo, NEORADIO2_COMMAND_WRITE_DATA, settingsDeviceNumber, (uint8_t) 1 << settingsBank, buf, sizeof(buf));
+            unsigned int timeout = 100;
+            while (deviceInfo->State == neoRADIO2state_Connected && timeout--)
+            {
+                std::this_thread::sleep_for(std::chrono::milliseconds(1));
+                neoRADIO2ProcessIncomingData(deviceInfo, 1000);
             }
 
             if(settingsChannel3 == 0)
             {
                 dout_channel2.data.enable = settingsChannel2[1];
+                dout_head2.bits.output_config = settingsChannel2[0];
+                dout_head2.bits.output_state = settingsChannel2[4];
+
                 if(settingsChannel2[0] == 2)
                 {
-                    dout_channel2.data.pwm = 1;
-                    dout_channel2.data.freq = settingsChannel2[3];
+                    buf[0] = dout_head2.byte;
+                    buf[1] = 0xFF & (settingsChannel2[2]);
+                    buf[2] = 0xFF & (settingsChannel2[3] >> 8); //freq time is 16 bit
+                    buf[3] = 0xFF & (settingsChannel2[3]);
                 }
                 else if(settingsChannel2[0] == 3)
                 {
-                    dout_channel2.data.oneshot = 1;
+                    buf[0] = dout_head2.byte;
+                    buf[1] = 0xFF & (settingsChannel2[2] >> 8); //pulse time is 16 bit
+                    buf[2] = 0xFF & (settingsChannel2[2]);
+                }
+
+                neoRADIO2SendPacket(deviceInfo, NEORADIO2_COMMAND_WRITE_DATA, settingsDeviceNumber, (uint8_t) 1 << settingsBank, buf, sizeof(buf));
+                unsigned int timeout = 100;
+                while (deviceInfo->State == neoRADIO2state_Connected && timeout--)
+                {
+                    std::this_thread::sleep_for(std::chrono::milliseconds(1));
+                    neoRADIO2ProcessIncomingData(deviceInfo, 1000);
                 }
             }
 
