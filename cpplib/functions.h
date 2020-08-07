@@ -310,13 +310,6 @@ bool neoRADIO2returnDataJSON(neoRADIO2_DeviceInfo * deviceInfo, nlohmann::json *
                     uint8_t prescale2 = channel2.data.prescale;
                     uint8_t prescale3 = channel3.data.prescale;
 
-                    (*returnData)["usb" + std::to_string(index)][std::to_string(deviceInfo->rxDataBuffer[i].header.device)][std::to_string(deviceInfo->rxDataBuffer[i].header.bank)][3] = deviceInfo->rxDataBuffer[i].data[0];
-                    (*returnData)["usb" + std::to_string(index)][std::to_string(deviceInfo->rxDataBuffer[i].header.device)][std::to_string(deviceInfo->rxDataBuffer[i].header.bank)][4] = deviceInfo->rxDataBuffer[i].data[1];
-                    (*returnData)["usb" + std::to_string(index)][std::to_string(deviceInfo->rxDataBuffer[i].header.device)][std::to_string(deviceInfo->rxDataBuffer[i].header.bank)][5] = deviceInfo->rxDataBuffer[i].data[2];
-                    (*returnData)["usb" + std::to_string(index)][std::to_string(deviceInfo->rxDataBuffer[i].header.device)][std::to_string(deviceInfo->rxDataBuffer[i].header.bank)][6] = deviceInfo->rxDataBuffer[i].data[3];
-                    (*returnData)["usb" + std::to_string(index)][std::to_string(deviceInfo->rxDataBuffer[i].header.device)][std::to_string(deviceInfo->rxDataBuffer[i].header.bank)][7] = deviceInfo->rxDataBuffer[i].data[4];
-                    (*returnData)["usb" + std::to_string(index)][std::to_string(deviceInfo->rxDataBuffer[i].header.device)][std::to_string(deviceInfo->rxDataBuffer[i].header.bank)][8] = deviceInfo->rxDataBuffer[i].data[5];
-
                     switch (channel1.data.mode)
                     {
                         case neoRADIO2DIN_MODE_DIGITAL:
