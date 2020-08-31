@@ -318,3 +318,4 @@
 ###v1.6.18
 1. DIN and DOUT functions.
 2. DIO DBC export.
+3. Updated CI script.

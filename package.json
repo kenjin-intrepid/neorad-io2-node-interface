@@ -1,7 +1,7 @@
 {
   "name": "neoRAD-IO2",
   "productName": "neoRAD-IO2",
-  "version": "1.6.18preview5",
+  "version": "1.6.18preview6",
   "description": "neoRAD-IO2 GUI app",
   "main": "main.js",
   "scripts": {
@@ -35,7 +35,7 @@
     "electron-window-state": "^5.0.3",
     "jquery": "^3.5.1",
     "nan": "^2.14.1",
-    "papaparse": "^5.2.0",
+    "papaparse": "^5.3.0",
     "popper.js": "^1.16.0",
     "sudo-prompt": "^9.2.1"
   },

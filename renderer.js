@@ -13,6 +13,7 @@ window.$ = window.jQuery = require('jquery');
 window.fs = require('fs');
 window.Papa = require('papaparse');
 window.path = require('path');
+window.isDev = require('electron-is-dev');
 
 const mypath = ipcRenderer.sendSync('get-path', 'get-path');
 
