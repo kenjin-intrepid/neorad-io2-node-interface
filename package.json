@@ -1,7 +1,7 @@
 {
   "name": "neoRAD-IO2",
   "productName": "neoRAD-IO2",
-  "version": "1.6.18preview7",
+  "version": "1.6.18preview8",
   "description": "neoRAD-IO2 GUI app",
   "main": "main.js",
   "scripts": {
@@ -41,7 +41,7 @@
   },
   "cmake-js": {
     "runtime": "electron",
-    "runtimeVersion": "6.1.9",
+    "runtimeVersion": "6.1.12",
     "arch": "x64"
   },
   "build": {
