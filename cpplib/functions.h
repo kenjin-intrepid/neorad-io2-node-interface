@@ -298,9 +298,15 @@ bool neoRADIO2returnDataJSON(neoRADIO2_DeviceInfo * deviceInfo, nlohmann::json *
                     neoRADIO2DIN_frame returnDataValue = {0};
                     memcpy(&returnDataValue, deviceInfo->rxDataBuffer[i].data, sizeof(neoRADIO2DIN_frame));
 
-                    const auto ch1_data = returnDataValue.channel1_data;
-                    const auto ch2_data = returnDataValue.channel2_data;
-                    const auto ch3_data = returnDataValue.channel3_data;
+#ifdef _MSC_VER
+                    const uint16_t ch1_data = (0xFF00 & (deviceInfo->rxDataBuffer[i].data[3] << 8)) | (0xFF & deviceInfo->rxDataBuffer[i].data[2]);
+                    const uint16_t ch2_data = (0xFF00 & (deviceInfo->rxDataBuffer[i].data[5] << 8)) | (0xFF & deviceInfo->rxDataBuffer[i].data[4]);
+                    const uint16_t ch3_data = (0xFF00 & (deviceInfo->rxDataBuffer[i].data[7] << 8)) | (0xFF & deviceInfo->rxDataBuffer[i].data[6]);
+#else
+                    const uint16_t ch1_data = returnDataValue.channel1_data;
+                    const uint16_t ch2_data = returnDataValue.channel2_data;
+                    const uint16_t ch3_data = returnDataValue.channel3_data;
+#endif
 
                     switch (channel1.data.mode)
                     {
