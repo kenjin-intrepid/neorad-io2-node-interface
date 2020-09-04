@@ -319,7 +319,7 @@ bool neoRADIO2returnDataJSON(neoRADIO2_DeviceInfo * deviceInfo, nlohmann::json *
                     switch (channel1.data.mode)
                     {
                         case neoRADIO2DIN_MODE_PERIOD:
-                            (*returnData)["usb" + std::to_string(index)][std::to_string(deviceInfo->rxDataBuffer[i].header.device)][std::to_string(deviceInfo->rxDataBuffer[i].header.bank)][0] = (ch1_data_float * prescale1) / 1200000;
+                            (*returnData)["usb" + std::to_string(index)][std::to_string(deviceInfo->rxDataBuffer[i].header.device)][std::to_string(deviceInfo->rxDataBuffer[i].header.bank)][0] = (ch1_data_float * (prescale1 + 1)) / 1200000;
                             break;
                         case neoRADIO2DIN_MODE_ANALOG:
                             (*returnData)["usb" + std::to_string(index)][std::to_string(deviceInfo->rxDataBuffer[i].header.device)][std::to_string(deviceInfo->rxDataBuffer[i].header.bank)][0] = (ch1_data * 40.0) / 4096;
@@ -332,7 +332,7 @@ bool neoRADIO2returnDataJSON(neoRADIO2_DeviceInfo * deviceInfo, nlohmann::json *
                     switch (channel2.data.mode)
                     {
                         case neoRADIO2DIN_MODE_PERIOD:
-                            (*returnData)["usb" + std::to_string(index)][std::to_string(deviceInfo->rxDataBuffer[i].header.device)][std::to_string(deviceInfo->rxDataBuffer[i].header.bank)][1] = (ch2_data_float * prescale2) / 1200000;
+                            (*returnData)["usb" + std::to_string(index)][std::to_string(deviceInfo->rxDataBuffer[i].header.device)][std::to_string(deviceInfo->rxDataBuffer[i].header.bank)][1] = (ch2_data_float * (prescale2 + 1)) / 1200000;
                             break;
                         case neoRADIO2DIN_MODE_ANALOG:
                             (*returnData)["usb" + std::to_string(index)][std::to_string(deviceInfo->rxDataBuffer[i].header.device)][std::to_string(deviceInfo->rxDataBuffer[i].header.bank)][1] = (ch2_data * 40.0) / 4096;
@@ -345,7 +345,7 @@ bool neoRADIO2returnDataJSON(neoRADIO2_DeviceInfo * deviceInfo, nlohmann::json *
                     switch (channel3.data.mode)
                     {
                         case neoRADIO2DIN_MODE_PERIOD:
-                            (*returnData)["usb" + std::to_string(index)][std::to_string(deviceInfo->rxDataBuffer[i].header.device)][std::to_string(deviceInfo->rxDataBuffer[i].header.bank)][2] = (ch3_data_float * prescale3) / 1200000;
+                            (*returnData)["usb" + std::to_string(index)][std::to_string(deviceInfo->rxDataBuffer[i].header.device)][std::to_string(deviceInfo->rxDataBuffer[i].header.bank)][2] = (ch3_data_float * (prescale3 + 1)) / 1200000;
                             break;
                         case neoRADIO2DIN_MODE_ANALOG:
                             (*returnData)["usb" + std::to_string(index)][std::to_string(deviceInfo->rxDataBuffer[i].header.device)][std::to_string(deviceInfo->rxDataBuffer[i].header.bank)][2] = (ch3_data * 40.0) / 4096;
