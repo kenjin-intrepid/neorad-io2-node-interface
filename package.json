@@ -35,7 +35,7 @@
     "electron-window-state": "^5.0.3",
     "jquery": "^3.4.1",
     "nan": "^2.14.0",
-    "papaparse": "^4.6.3",
+    "papaparse": "^5.2.0",
     "popper.js": "^1.16.0",
     "sudo-prompt": "^9.0.0"
   },
