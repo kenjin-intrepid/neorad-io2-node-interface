@@ -319,3 +319,4 @@
 1. DIN and DOUT functions.
 2. DIO DBC export.
 3. Updated CI script.
+4. Changed CSV format.
