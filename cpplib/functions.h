@@ -456,70 +456,83 @@ void neoRADIO2_DIO_SetSettingsFromJSON(neoRADIO2_DeviceInfo * deviceInfo, std::s
             auto settingsChannel3 = settingsData["channel3"].get<unsigned int>();
 
             neoRADIO2DOUT_channelConfig dout_channel1 = {0}, dout_channel2 = {0};
-            neoRADIO2DOUT_header dout_head1 = {0}, dout_head2 = {0};
-
             settingsReportRate = 1000;
             dout_channel1.data.enable = settingsChannel1[1];
+            dout_channel1.data.prescale = 0;
+
+            dout_channel2.data.enable = settingsChannel2[1];
+            dout_channel2.data.prescale = 0;
+
+            neoRADIO2DOUT_header dout_head1 = {0}, dout_head2 = {0};
+
             dout_head1.bits.hbridge = settingsChannel3;
+            dout_head1.bits.invert = 0;
+            dout_head1.bits.channel = 0;
             dout_head1.bits.output_config = settingsChannel1[0];
             dout_head1.bits.output_state =  settingsChannel1[4];
+
             uint8_t buf[4] = {0};
+
+            // 0 = mode
+            // 1 = enable
+            // 2 = pwm or oneshot data
+            // 3 = pwm freq
+            // 4 = state
 
             buf[0] = dout_head1.byte;
 
-            if(settingsChannel1[0] == 2)
+            if(settingsChannel1[0] == neoRADIO2DOUT_CONFIG_PWM)
             {
                 buf[0] = dout_head1.byte;
                 buf[1] = 0xFF & (settingsChannel1[2]);
-                buf[2] = 0xFF & (settingsChannel1[3] >> 8); //freq time is 16 bit
-                buf[3] = 0xFF & (settingsChannel1[3]);
+                buf[2] = 0xFF & (settingsChannel1[3]);
+                buf[3] = 0xFF & (settingsChannel1[3] >> 8); //freq time is 16 bit
             }
-            else if(settingsChannel1[0] == 3)
+            else if(settingsChannel1[0] == neoRADIO2DOUT_CONFIG_ONESHOT)
             {
                 buf[0] = dout_head1.byte;
-                buf[1] = 0xFF & (settingsChannel1[2] >> 8); //pulse time is 16 bit
-                buf[2] = 0xFF & (settingsChannel1[2]);
+                buf[1] = 0xFF & (settingsChannel1[2]);
+                buf[2] = 0xFF & (settingsChannel1[2] >> 8); //pulse time is 16 bit
             }
 
             neoRADIO2SendPacket(deviceInfo, NEORADIO2_COMMAND_WRITE_DATA, settingsDeviceNumber, (uint8_t) 1 << settingsBank, buf, sizeof(buf));
-            unsigned int timeout = 100;
+            uint8_t timeout = 100;
             while (deviceInfo->State == neoRADIO2state_Connected && timeout--)
             {
                 std::this_thread::sleep_for(std::chrono::milliseconds(1));
                 neoRADIO2ProcessIncomingData(deviceInfo, 1000);
             }
 
-            if(settingsChannel3 == 0)
+            dout_head2.bits.hbridge = settingsChannel3;
+            dout_head2.bits.invert = 0;
+            dout_head2.bits.channel = 1;
+            dout_head2.bits.output_config = settingsChannel2[0];
+            dout_head2.bits.output_state = settingsChannel2[4];
+
+            uint8_t buf2[4] = {0};
+
+            buf2[0] = dout_head2.byte;
+
+            if(settingsChannel2[0] == neoRADIO2DOUT_CONFIG_PWM)
             {
-                dout_channel2.data.enable = settingsChannel2[1];
-                dout_head2.bits.output_config = settingsChannel2[0];
-                dout_head2.bits.output_state = settingsChannel2[4];
-
-                uint8_t buf2[4] = {0};
-
                 buf2[0] = dout_head2.byte;
+                buf2[1] = 0xFF & (settingsChannel2[2]);
+                buf2[2] = 0xFF & (settingsChannel2[3]);
+                buf2[3] = 0xFF & (settingsChannel2[3] >> 8); //freq time is 16 bit
+            }
+            else if(settingsChannel2[0] == neoRADIO2DOUT_CONFIG_ONESHOT)
+            {
+                buf2[0] = dout_head2.byte;
+                buf2[1] = 0xFF & (settingsChannel2[2]);
+                buf2[2] = 0xFF & (settingsChannel2[2] >> 8); //pulse time is 16 bit
+            }
 
-                if(settingsChannel2[0] == 2)
-                {
-                    buf2[0] = dout_head2.byte;
-                    buf2[1] = 0xFF & (settingsChannel2[2]);
-                    buf2[2] = 0xFF & (settingsChannel2[3] >> 8); //freq time is 16 bit
-                    buf2[3] = 0xFF & (settingsChannel2[3]);
-                }
-                else if(settingsChannel2[0] == 3)
-                {
-                    buf2[0] = dout_head2.byte;
-                    buf2[1] = 0xFF & (settingsChannel2[2] >> 8); //pulse time is 16 bit
-                    buf2[2] = 0xFF & (settingsChannel2[2]);
-                }
-
-                neoRADIO2SendPacket(deviceInfo, NEORADIO2_COMMAND_WRITE_DATA, settingsDeviceNumber, (uint8_t) 1 << settingsBank, buf2, sizeof(buf2));
-                unsigned int timeout = 100;
-                while (deviceInfo->State == neoRADIO2state_Connected && timeout--)
-                {
-                    std::this_thread::sleep_for(std::chrono::milliseconds(1));
-                    neoRADIO2ProcessIncomingData(deviceInfo, 1000);
-                }
+            neoRADIO2SendPacket(deviceInfo, NEORADIO2_COMMAND_WRITE_DATA, settingsDeviceNumber, (uint8_t) 1 << settingsBank, buf2, sizeof(buf2));
+            timeout = 100;
+            while (deviceInfo->State == neoRADIO2state_Connected && timeout--)
+            {
+                std::this_thread::sleep_for(std::chrono::milliseconds(1));
+                neoRADIO2ProcessIncomingData(deviceInfo, 1000);
             }
 
             deviceInfo->ChainList[settingsDeviceNumber][settingsBank].settings.config.channel_1_config = dout_channel1.u32;
