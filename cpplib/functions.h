@@ -20,8 +20,6 @@ void neoRADIO2_DIO_SetSettingsFromJSON(neoRADIO2_DeviceInfo * deviceInfo, std::s
 void neoRADIO2SetPwrRly(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData);
 void neoRADIO2ClearCalibration(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData);
 void neoRADIO2SetAoutValue(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData);
-void neoRADIO2SetDIN(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData);
-void neoRADIO2SetDOUT(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData);
 
 using json = nlohmann::json;
 
@@ -1249,29 +1247,4 @@ int neoRADIO2DefaultSettings(neoRADIO2_DeviceInfo * deviceInfo, std::string * me
     }
 
     return returnValue;
-}
-
-void neoRADIO2SetDIN(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData)
-{
-    try
-    {
-        json settingsData = json::parse(* messageData);
-    }
-    catch(const std::exception& e)
-    {
-        std::cout << "Caught exception " << e.what() << std::endl;
-    }
-}
-
-void neoRADIO2SetDOUT(neoRADIO2_DeviceInfo * deviceInfo, std::string * messageData)
-{
-    try
-    {
-        json settingsData = json::parse(* messageData);
-
-    }
-    catch(const std::exception& e)
-    {
-        std::cout << "Caught exception " << e.what() << std::endl;
-    }
 }
