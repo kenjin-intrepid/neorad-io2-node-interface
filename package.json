@@ -1,8 +1,8 @@
 {
-  "name": "neoRAD-IO2",
-  "productName": "neoRAD-IO2",
-  "version": "1.6.19",
-  "description": "neoRAD-IO2 GUI app",
+  "name": "RAD-IO2",
+  "productName": "RAD-IO2",
+  "version": "1.6.20",
+  "description": "RAD-IO2 GUI app",
   "main": "main.js",
   "scripts": {
     "install": "cmake-js compile",
@@ -12,7 +12,7 @@
   },
   "repository": "",
   "keywords": [
-    "neoRAD-IO2",
+    "RAD-IO2",
     "IntrepidCS"
   ],
   "author": "IntrepidCS",

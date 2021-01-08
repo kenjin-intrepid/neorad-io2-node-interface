@@ -16,7 +16,7 @@ if(process.platform === 'linux')
 {
     const sudo = require('sudo-prompt');
     let options = {
-      name: 'neoRAD-IO2'
+      name: 'RAD-IO2'
     };
     fs.readFile('/etc/udev/rules.d/99-hidraw-permissions.rules', (err, data) => {
         if(err)
@@ -199,12 +199,12 @@ function setMenu() {
                     click() {
                         if(process.platform === 'win32')
                         {
-                            let Path = path.join("C:\/", `IntrepidCS\/neoRAD-IO2`);
+                            let Path = path.join("C:\/", `IntrepidCS\/RAD-IO2`);
                             shell.showItemInFolder(Path);
                         }
                         else
                         {
-                            let Path = path.join(app.getPath('home'), `IntrepidCS\/neoRAD-IO2`);
+                            let Path = path.join(app.getPath('home'), `IntrepidCS\/RAD-IO2`);
                             shell.showItemInFolder(Path);
                         }
                     }
