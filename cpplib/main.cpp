@@ -441,13 +441,83 @@ class Sensor : public DataWorker
 
                 case SetDIN:
                 {
+                    if(result == 0)
+                    {
+                        try
+                        {
+                            json settingsData = json::parse(messageData);
+                            int usbIndex = settingsData["usbIndex"].get<unsigned int>();
+                            if(usbIndex < 1 || usbIndex > 8)
+                            {
+                                usbIndex = 0;
+                            }
 
+                            int returnValue = RADIO2SetDINValue(&deviceInfo[usbIndex], &messageData);
+                            if(returnValue == 2)
+                            {
+                                neoRADIO2_state = DeviceOnline;
+                            }
+                            else if(returnValue == 1)
+                            {
+                                neoRADIO2_state = DeviceIdle;
+                            }
+                            else
+                            {
+                                CustomMessage sendError("error_msg", "410");
+                                writeToNode(progress, sendError);
+                                neoRADIO2_state = DeviceIdle;
+                            }
+
+                        }
+                        catch(const std::exception& e)
+                        {
+                            std::cout << "Caught exception " << e.what() << std::endl;
+                            deviceConnected = false;
+                        }
+                    }
                 }
                     break;
 
                 case SetDOUT:
                 {
+                    if(result == 0)
+                    {
+                        try
+                        {
+                            json settingsData = json::parse(messageData);
+                            int usbIndex = settingsData["usbIndex"].get<unsigned int>();
+                            if(usbIndex < 1 || usbIndex > 8)
+                            {
+                                usbIndex = 0;
+                            }
 
+                            int returnValue = RADIO2SetDOUTValue(&deviceInfo[usbIndex], &messageData);
+                            if(returnValue == 2)
+                            {
+                                CustomMessage sendError("error_msg", "401");
+                                writeToNode(progress, sendError);
+                                neoRADIO2_state = DeviceOnline;
+                            }
+                            else if(returnValue == 1)
+                            {
+                                CustomMessage sendError("error_msg", "401");
+                                writeToNode(progress, sendError);
+                                neoRADIO2_state = DeviceIdle;
+                            }
+                            else
+                            {
+                                CustomMessage sendError("error_msg", "400");
+                                writeToNode(progress, sendError);
+                                neoRADIO2_state = DeviceIdle;
+                            }
+
+                        }
+                        catch(const std::exception& e)
+                        {
+                            std::cout << "Caught exception " << e.what() << std::endl;
+                            deviceConnected = false;
+                        }
+                    }
                 }
                     break;
 

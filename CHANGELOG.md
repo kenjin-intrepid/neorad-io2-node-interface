@@ -320,3 +320,20 @@
 2. DIO DBC export.
 3. Updated CI script.
 4. Changed CSV format.
+
+###v1.6.19
+1. Fixed DIN DBC
+
+###v1.6.20
+1. Updated auto mode detection
+
+###v1.6.21
+1. Fixed when device is Powerrelay or aout, settings can't be saved
+2. Fixed DIO DBC
+
+###v1.6.22
+1. Fixed AOUT DBC missing scaling
+
+###v1.6.23
+1. Fixed when DIO is the first device in a chain, all other devices won't show polling data.
+2. Updated DIO settings to work in real-time.
