@@ -337,3 +337,6 @@
 ###v1.6.23
 1. Fixed when DIO is the first device in a chain, all other devices won't show polling data.
 2. Updated DIO settings to work in real-time.
+
+###v1.6.24
+1. Updated DIO UI.
