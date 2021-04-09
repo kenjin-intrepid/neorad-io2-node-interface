@@ -340,3 +340,6 @@
 
 ###v1.6.24
 1. Updated DIO UI.
+
+###v1.6.25
+1. Fixed DIO UI bugs.
