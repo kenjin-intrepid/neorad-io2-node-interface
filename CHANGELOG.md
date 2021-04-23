@@ -343,3 +343,7 @@
 
 ###v1.6.25
 1. Fixed DIO UI bugs.
+
+###v1.6.26
+1. Changed typos.
+2. Fixed an issue with DOUT period mode.
