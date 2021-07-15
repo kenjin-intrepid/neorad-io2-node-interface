@@ -14,6 +14,8 @@ window.fs = require('fs');
 window.Papa = require('papaparse');
 window.path = require('path');
 window.isDev = require('electron-is-dev');
+window.Child_Process = require('child_process').execFile;
+window.msvc_path = path.join(__dirname, "msvc", "vc_redist.x64.exe");
 
 const mypath = ipcRenderer.sendSync('get-path', 'get-path');
 

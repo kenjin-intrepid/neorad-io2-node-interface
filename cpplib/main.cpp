@@ -134,7 +134,7 @@ class Sensor : public DataWorker
                     }
                     else
                     {
-                        if(InitRetry > 1000)
+                        if(InitRetry > 500)
                         {
                             CustomMessage sendError("error_msg", "101");
                             writeToNode(progress, sendError);

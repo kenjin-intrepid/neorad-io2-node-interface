@@ -347,3 +347,9 @@
 ###v1.6.26
 1. Changed typos.
 2. Fixed an issue with DOUT period mode.
+
+###v1.6.27
+1. Fixed a problem for AOUT when using calibration store points.
+
+###v1.6.28
+1. Added MSVC++ redistributable 2015-2019 to Windows installer.

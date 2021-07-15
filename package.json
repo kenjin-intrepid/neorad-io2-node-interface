@@ -1,7 +1,7 @@
 {
   "name": "RAD-IO2",
   "productName": "RAD-IO2",
-  "version": "1.6.27",
+  "version": "1.6.28",
   "description": "RAD-IO2 GUI app",
   "main": "main.js",
   "scripts": {
@@ -19,12 +19,12 @@
   "license": "MIT",
   "devDependencies": {
     "electron": "^6.1.12",
-    "electron-builder": "^21.2.0",
+    "electron-builder": "^22.11.7",
     "electron-notarize": "^0.3.0"
   },
   "versions": {
     "electron": "^6.1.12",
-    "electron-builder": "^21.2.0"
+    "electron-builder": "^22.11.7"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.15.1",
@@ -57,7 +57,22 @@
       "createDesktopShortcut": true
     },
     "win": {
-      "icon": "lib/img/logo.ico"
+      "icon": "lib/img/logo.ico",
+      "files": [
+        "**/*",
+        "!**/node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme}",
+        "!**/node_modules/*/{test,__tests__,tests,powered-test,example,examples}",
+        "!**/node_modules/*.d.ts",
+        "!**/node_modules/.bin",
+        "!**/*.{iml,o,hprof,orig,pyc,pyo,rbc,swp,csproj,sln,xproj}",
+        "!.editorconfig",
+        "!**/._*",
+        "!**/{.DS_Store,.git,.hg,.svn,CVS,RCS,SCCS,.gitignore,.gitattributes}",
+        "!**/{__pycache__,thumbs.db,.flowconfig,.idea,.vs,.nyc_output}",
+        "!**/{appveyor.yml,.travis.yml,circle.yml}",
+        "!**/{npm-debug.log,yarn.lock,.yarn-integrity,.yarn-metadata.json}",
+        "msvc/vc_redist.x64.exe"
+      ]
     },
     "mac": {
       "icon": "lib/img/logo.icns"
@@ -65,6 +80,6 @@
     "linux": {
       "icon": "lib/img/logo.icns"
     },
-    "copyright": "Copyright © 2020 ${author}"
+    "copyright": "Copyright © 2021 ${author}"
   }
 }
