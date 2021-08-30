@@ -71,7 +71,8 @@
         "!**/{__pycache__,thumbs.db,.flowconfig,.idea,.vs,.nyc_output}",
         "!**/{appveyor.yml,.travis.yml,circle.yml}",
         "!**/{npm-debug.log,yarn.lock,.yarn-integrity,.yarn-metadata.json}",
-        "msvc/vc_redist.x64.exe"
+        "msvc/vc_redist.x64.exe",
+        "updater/neoRAD-IO2-Updater.exe"
       ]
     },
     "mac": {
