@@ -5,8 +5,6 @@ const path = require('path');
 const url = require('url');
 const isDev = require('electron-is-dev');
 const fs = require('fs');
-const Child_Process = require('child_process').execFile;
-const firmware_updater = path.join(__dirname, "updater", "neoRAD-IO2-Updater.exe");
 
 const windowStateKeeper = require('electron-window-state');
 
@@ -233,28 +231,19 @@ function setMenu() {
                 },
                 {type:'separator'},
                 {
-                    label: 'Update Firmware',
+                    label: 'Update Firmware(v3.18)',
                     click() {
                         if(process.platform === 'win32')
                         {
-                            Child_Process(firmware_updater, function (err, data) {
-                                if(err)
-                                {
-                                    console.log(err)
-                                }
-
-                                if(data)
-                                {
-                                    console.log(data.toString());
-                                }
-                            });
+                            let focusedWindow = BrowserWindow.getFocusedWindow();
+                            focusedWindow.webContents.send('update_firmware');
                         }
                         else
                         {
                             dialog.showMessageBox({
                                 type:"warning",
                                 buttons:[template[locale]['reload_ok']],
-                                message: "Please run this on Windows"
+                                message: "Firmware updater only works in Windows"
                             });
                         }
                     }

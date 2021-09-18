@@ -353,3 +353,7 @@
 
 ###v1.6.28
 1. Added MSVC++ redistributable 2015-2019 to Windows installer.
+
+###v1.6.29
+1. Bundled firmware updater 3.18 to the program.
+2. Fixed AIN daisy chain issues.
