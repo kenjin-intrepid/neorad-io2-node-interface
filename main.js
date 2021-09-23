@@ -7,6 +7,7 @@ const isDev = require('electron-is-dev');
 const fs = require('fs');
 
 const windowStateKeeper = require('electron-window-state');
+const template = require("./lib/js/temp_main");
 
 let mainWindow;
 let menu;
@@ -121,7 +122,6 @@ function loadMain(page){
 }
 
 function setMenu() {
-    const template = require('./lib/js/temp_main');
     let locale = "en";
     let local_locale = settings.get('locale');
     if(local_locale)
@@ -231,7 +231,7 @@ function setMenu() {
                 },
                 {type:'separator'},
                 {
-                    label: 'Update Firmware(v3.18)',
+                    label: `${template[locale]['firmware']}(v3.18)`,
                     click() {
                         if(process.platform === 'win32')
                         {
@@ -243,7 +243,7 @@ function setMenu() {
                             dialog.showMessageBox({
                                 type:"warning",
                                 buttons:[template[locale]['reload_ok']],
-                                message: "Firmware updater only works in Windows"
+                                message: template[locale]['firmware_msg']
                             });
                         }
                     }

@@ -3,6 +3,7 @@ window.eval = global.eval = function () {
 };
 
 const electron = require('electron');
+const crypto = require("crypto");
 const {spawn: Child_ProcessSpawn} = require("child_process");
 const {ipcRenderer} = electron;
 window.ipcRenderer = ipcRenderer;
@@ -53,7 +54,6 @@ if(!fs.existsSync(`${mypath}\/IntrepidCS\/RAD-IO2\/PlotHistory`))
 
 ipcRenderer.on('update_firmware', function() {
     if(!fs.existsSync(`${mypath}\/IntrepidCS\/RAD-IO2\/updater318.exe`)){
-        console.log('copied')
         fs.copyFile( firmware_updater, `${mypath}\/IntrepidCS\/RAD-IO2\/updater318.exe`, function (){
             Child_ProcessSpawn(`${mypath}\/IntrepidCS\/RAD-IO2\/updater318.exe`,{
                 shell: true,
@@ -63,10 +63,29 @@ ipcRenderer.on('update_firmware', function() {
     }
     else
     {
-        console.log('run')
-        Child_ProcessSpawn(`${mypath}\/IntrepidCS\/RAD-IO2\/updater318.exe`,{
-            shell: true,
-            detached: true
+        let shasum = crypto.createHash('md5');
+        let stream = fs.ReadStream(`${mypath}\/IntrepidCS\/RAD-IO2\/updater318.exe`);
+        stream.on('data', function(data) {
+            shasum.update(data);
+        });
+        stream.on('end', function() {
+            let d = shasum.digest('hex');
+            if(d !== "cbfec33b67cc76a75c9823632d65d28d")
+            {
+                fs.copyFile( firmware_updater, `${mypath}\/IntrepidCS\/RAD-IO2\/updater318.exe`, function (){
+                    Child_ProcessSpawn(`${mypath}\/IntrepidCS\/RAD-IO2\/updater318.exe`,{
+                        shell: true,
+                        detached: true
+                    });
+                });
+            }
+            else
+            {
+                Child_ProcessSpawn(`${mypath}\/IntrepidCS\/RAD-IO2\/updater318.exe`,{
+                    shell: true,
+                    detached: true
+                });
+            }
         });
     }
 });
