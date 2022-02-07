@@ -19,7 +19,6 @@ window.isDev = require('electron-is-dev');
 window.Child_Process = require('child_process').execFile;
 window.msvc_path = path.join(__dirname, "updater", "vc_redist.x64.exe");
 const firmware_updater = path.join(__dirname, "updater", "neoRAD-IO2-Updater-v3.19.exe");
-
 const mypath = ipcRenderer.sendSync('get-path', 'get-path');
 
 if(!fs.existsSync(`${mypath}\/IntrepidCS\/RAD-IO2\/PlotHistory`))
@@ -70,7 +69,7 @@ ipcRenderer.on('update_firmware', function() {
         });
         stream.on('end', function() {
             let d = shasum.digest('hex');
-            if(d !== "cbfec33b67cc76a75c9823632d65d28d")
+            if(d !== "471e2c93912e62ddd8906dfc4aa8e3ec")
             {
                 fs.copyFile( firmware_updater, `${mypath}\/IntrepidCS\/RAD-IO2\/neoRAD-IO2-Updater-v3.19.exe`, function (){
                     Child_ProcessSpawn(`${mypath}\/IntrepidCS\/RAD-IO2\/neoRAD-IO2-Updater-v3.19.exe`,{
