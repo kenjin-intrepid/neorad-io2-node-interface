@@ -6,3 +6,5 @@ dist/
 cmake-build-debug/
 !/build/Release/
 /build/Release/
+cpplib/dout_test.c
+cpplib/temp.cpp

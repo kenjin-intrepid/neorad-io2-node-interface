@@ -357,3 +357,6 @@
 ###v1.6.29
 1. Bundled firmware updater 3.18 to the program.
 2. Fixed AIN daisy chain issues.
+
+###v1.6.30
+1. Updated firmware updater to 3.19.
