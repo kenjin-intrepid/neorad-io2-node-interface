@@ -18,7 +18,8 @@ window.path = require('path');
 window.isDev = require('electron-is-dev');
 window.Child_Process = require('child_process').execFile;
 window.msvc_path = path.join(__dirname, "updater", "vc_redist.x64.exe");
-const firmware_updater = path.join(__dirname, "updater", "neoRAD-IO2-Updater-v3.19.exe");
+const firmware_updater_name = "neoRAD-IO2-Updater-v3.19.exe";
+const firmware_updater = path.join(__dirname, "updater", firmware_updater_name);
 const mypath = ipcRenderer.sendSync('get-path', 'get-path');
 
 if(!fs.existsSync(`${mypath}\/IntrepidCS\/RAD-IO2\/PlotHistory`))
@@ -52,9 +53,9 @@ if(!fs.existsSync(`${mypath}\/IntrepidCS\/RAD-IO2\/PlotHistory`))
 }
 
 ipcRenderer.on('update_firmware', function() {
-    if(!fs.existsSync(`${mypath}\/IntrepidCS\/RAD-IO2\/updater318.exe`)){
-        fs.copyFile( firmware_updater, `${mypath}\/IntrepidCS\/RAD-IO2\/neoRAD-IO2-Updater-v3.19.exe`, function (){
-            Child_ProcessSpawn(`${mypath}\/IntrepidCS\/RAD-IO2\/neoRAD-IO2-Updater-v3.19.exe`,{
+    if(!fs.existsSync(`${mypath}\/IntrepidCS\/RAD-IO2\/${firmware_updater_name}`)){
+        fs.copyFile( firmware_updater, `${mypath}\/IntrepidCS\/RAD-IO2\/${firmware_updater_name}`, function (){
+            Child_ProcessSpawn(`${mypath}\/IntrepidCS\/RAD-IO2\/${firmware_updater_name}`,{
                 shell: true,
                 detached: true
             });
@@ -63,7 +64,7 @@ ipcRenderer.on('update_firmware', function() {
     else
     {
         let shasum = crypto.createHash('md5');
-        let stream = fs.ReadStream(`${mypath}\/IntrepidCS\/RAD-IO2\/neoRAD-IO2-Updater-v3.19.exe`);
+        let stream = fs.ReadStream(`${mypath}\/IntrepidCS\/RAD-IO2\/${firmware_updater_name}`);
         stream.on('data', function(data) {
             shasum.update(data);
         });
@@ -71,8 +72,8 @@ ipcRenderer.on('update_firmware', function() {
             let d = shasum.digest('hex');
             if(d !== "471e2c93912e62ddd8906dfc4aa8e3ec")
             {
-                fs.copyFile( firmware_updater, `${mypath}\/IntrepidCS\/RAD-IO2\/neoRAD-IO2-Updater-v3.19.exe`, function (){
-                    Child_ProcessSpawn(`${mypath}\/IntrepidCS\/RAD-IO2\/neoRAD-IO2-Updater-v3.19.exe`,{
+                fs.copyFile( firmware_updater, `${mypath}\/IntrepidCS\/RAD-IO2\/${firmware_updater_name}`, function (){
+                    Child_ProcessSpawn(`${mypath}\/IntrepidCS\/RAD-IO2\/${firmware_updater_name}`,{
                         shell: true,
                         detached: true
                     });
@@ -80,7 +81,7 @@ ipcRenderer.on('update_firmware', function() {
             }
             else
             {
-                Child_ProcessSpawn(`${mypath}\/IntrepidCS\/RAD-IO2\/neoRAD-IO2-Updater-v3.19.exe`,{
+                Child_ProcessSpawn(`${mypath}\/IntrepidCS\/RAD-IO2\/${firmware_updater_name}`,{
                     shell: true,
                     detached: true
                 });
