@@ -1,7 +1,7 @@
 {
   "name": "RAD-IO2",
   "productName": "RAD-IO2",
-  "version": "1.6.31",
+  "version": "1.6.32",
   "description": "RAD-IO2 GUI app",
   "main": "main.js",
   "scripts": {
@@ -72,7 +72,7 @@
         "!**/{appveyor.yml,.travis.yml,circle.yml}",
         "!**/{npm-debug.log,yarn.lock,.yarn-integrity,.yarn-metadata.json}",
         "updater/vc_redist.x64.exe",
-        "updater/neoRAD-IO2-Updater-v3.19.exe"
+        "updater/neoRAD-IO2-Updater-v3.20.exe"
       ]
     },
     "mac": {

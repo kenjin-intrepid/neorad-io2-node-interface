@@ -231,7 +231,7 @@ function setMenu() {
                 },
                 {type:'separator'},
                 {
-                    label: `${template[locale]['firmware']}(v3.19)`,
+                    label: `${template[locale]['firmware']}(v3.20)`,
                     click() {
                         if(process.platform === 'win32')
                         {
